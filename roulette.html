@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>European Roulette 3D Live - รูเล็ตยุโรปคาสิโนสด</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --felt: radial-gradient(circle at 50% 30%, #0d4432 0%, #06261b 70%, #02120d 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+      --red: #c0392b;
+      --black: #2c3e50;
+      --green: #27ae60;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #020b08;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+    .roulette-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 980px;
+      max-height: 980px;
+      background: var(--felt);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #846522;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(3, 16, 12, 0.95);
+      border-bottom: 2px solid #a67c2e;
+      z-index: 20;
+    }
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover { background: rgba(255, 215, 0, 0.2); }
+    .btn-top.btn-exit {
+      background: #3a1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+    .game-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: var(--gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      background: linear-gradient(180deg, #163625 0%, #07170f 100%);
+      border: 1.5px solid #a67c2e;
+      border-radius: 20px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .wallet-badge .val { color: #ffd700; font-weight: 800; }
+    /* Wheel & Billboard Area */
+    .wheel-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1.5px solid rgba(245, 176, 39, 0.3);
+      position: relative;
+    }
+    .wheel-container {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(0,0,0,0.8), 0 0 12px rgba(245, 176, 39, 0.4);
+      border: 4px solid #846522;
+      overflow: hidden;
+      background: #111;
+    }
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transition: transform 4s cubic-bezier(0.12, 0.8, 0.33, 1);
+    }
+    .wheel-pointer {
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 14px solid #ffd700;
+      filter: drop-shadow(0 2px 4px #000);
+      z-index: 10;
+    }
+    /* History Billboard */
+    .billboard {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(5, 15, 10, 0.85);
+      border: 1.5px solid #a67c2e;
+      border-radius: 10px;
+      padding: 8px 14px;
+      min-width: 200px;
+    }
+    .billboard-title {
+      font-size: 11px;
+      color: #ffd700;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .history-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      min-height: 30px;
+      align-items: center;
+    }
+    .hist-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      animation: popIn 0.3s ease-out;
+    }
+    .hist-badge.red   { background: var(--red); }
+    .hist-badge.black { background: var(--black); }
+    .hist-badge.green { background: var(--green); }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .current-result-pill {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffd700;
+      margin-top: 2px;
+    }
+    /* Roulette Betting Board Grid */
+    .table-section {
+      flex: 1;
+      padding: 10px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .board-grid {
+      display: grid;
+      grid-template-columns: 44px repeat(12, 1fr) 46px;
+      grid-template-rows: repeat(3, 42px) 38px 38px;
+      gap: 2px;
+      background: #082a1f;
+      padding: 4px;
+      border: 2px solid #846522;
+      border-radius: 8px;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+      font-size: 13px;
+      font-weight: 800;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .grid-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .grid-cell:hover {
+      filter: brightness(1.3);
+      border-color: #ffd700;
+    }
+    .grid-cell.red   { background: #b71520; color: #fff; }
+    .grid-cell.black { background: #1c2331; color: #fff; }
+    .grid-cell.green { background: #1b5e20; color: #fff; }
+    .grid-cell.outside {
+      background: #093728;
+      color: #ffd700;
+      font-size: 12px;
+    }
+    .grid-cell.highlight {
+      box-shadow: inset 0 0 12px #ffd700, 0 0 10px #ffd700;
+      border-color: #fff;
+    }
+    /* Chip indicator inside grid cell */
+    .cell-chip {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f39c12, #d35400);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fff;
+      box-shadow: 0 2px 4px #000;
+      pointer-events: none;
+      animation: chipPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes chipPop {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    /* Bottom Controls */
+    .console-bar {
+      background: rgba(3, 16, 12, 0.98);
+      border-top: 2px solid #a67c2e;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+    }
+    .chips-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .chip-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    .chip-btn:hover, .chip-btn.selected {
+      transform: scale(1.15) translateY(-3px);
+      border-style: solid;
+      border-color: #fff;
+      box-shadow: 0 0 14px rgba(255,215,0,0.8);
+    }
+    .chip-10   { background: #3498db; color: #fff; }
+    .chip-50   { background: #e67e22; color: #fff; }
+    .chip-100  { background: #c0392b; color: #fff; }
+    .chip-500  { background: #27ae60; color: #fff; }
+    .chip-1000 { background: #8e44ad; color: #fff; }
+    .chip-5000 { background: radial-gradient(circle, #f1c40f, #d35400); color: #000; }
+    /* Action Buttons Row */
+    .actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 24px;
+      border-radius: 22px;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: all 0.15s;
+    }
+    .action-btn:active { transform: scale(0.95); }
+    .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-spin  { background: linear-gradient(180deg, #f39c12, #d35400); color: #fff; border: 1.5px solid #ffd54f; }
+    .btn-clear { background: #2c3e50; color: #bdc3c7; border: 1px solid #7f8c8d; }
+    .btn-double{ background: linear-gradient(180deg, #8e44ad, #5e2a77); color: #fff; border: 1.5px solid #dcdde1; }
+    /* Toast Banner */
+    .toast-banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(3, 18, 12, 0.96);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 18px 30px;
+      text-align: center;
+      z-index: 50;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast-banner.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+    .toast-title { font-size: 28px; font-weight: 900; color: #ffd700; }
+    .toast-desc { font-size: 16px; color: #fff; margin: 8px 0 14px; }
+
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .roulette-app {
+        width: 100vw;
+        height: 100dvh;
+        max-width: 100vw;
+        max-height: 100dvh;
+        border-radius: 0;
+        border: none;
+      }
+      .top-bar { padding: 6px 10px; }
+      .brand-title { font-size: 15px; }
+      .wheel-wrapper { transform: scale(0.85); margin: 0 auto; }
+      .board-scroll-container { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+      .chips-row { gap: 6px; }
+      .casino-chip { width: 38px; height: 38px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="roulette-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">
+          <span>◀</span> กลับล็อบบี้
+        </button>
+        <span class="game-logo">EUROPEAN ROULETTE 3D</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal" style="background:rgba(255,215,0,0.1); border-color:rgba(255,215,0,0.4);">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill" title="คลิกเพื่อเติมเงิน">
+          <span>💰 กระเป๋า:</span>
+          <span class="val" id="balanceVal">50,000.00</span>
+          <span style="color:#ffd700;">THB ➕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinning Wheel & Billboard -->
+    <div class="wheel-section">
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="300" height="300"></canvas>
+      </div>
+
+      <div class="billboard">
+        <div class="billboard-title">สถิติผลที่ผ่านมา</div>
+        <div class="history-row" id="historyRow"></div>
+        <div class="current-result-pill" id="resultPill">รอการหมุน</div>
+      </div>
+    </div>
+
+    <!-- Table Grid -->
+    <div class="table-section">
+      <div class="board-grid" id="boardGrid">
+        <!-- Grid cells injected via JS -->
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="console-bar">
+      <div class="chips-row">
+        <div class="chip-btn chip-10 selected" data-val="10">10</div>
+        <div class="chip-btn chip-50" data-val="50">50</div>
+        <div class="chip-btn chip-100" data-val="100">100</div>
+        <div class="chip-btn chip-500" data-val="500">500</div>
+        <div class="chip-btn chip-1000" data-val="1000">1K</div>
+        <div class="chip-btn chip-5000" data-val="5000">5K</div>
+      </div>
+
+      <div class="actions-row">
+        <button class="action-btn btn-clear" id="btnClear">ล้างชิป</button>
+        <button class="action-btn btn-double" id="btnDouble">คูณ 2</button>
+        <button class="action-btn btn-spin" id="btnSpin" disabled>หมุนรูเล็ต (SPIN)</button>
+      </div>
+    </div>
+
+    <!-- Toast Modal -->
+    <div class="toast-banner" id="toastBanner">
+      <div class="toast-title" id="toastTitle">WIN!</div>
+      <div class="toast-desc" id="toastDesc">ลูกเหล็กลงหมายเลข 17 สีดำ (+฿3,600.00)</div>
+      <button class="action-btn btn-spin" id="btnCloseToast">ตกลง</button>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // Real-Time Wallet Synchronization
+    // ============================================================
+    const BALANCE_KEY = 'balance';
+    let balance = Number(localStorage.getItem(BALANCE_KEY)) || 50000;
+
+    function renderWallet() {
+      const el = document.getElementById('balanceVal');
+      if (el) el.textContent = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function setBalance(newBal) {
+      balance = Number(newBal);
+      localStorage.setItem(BALANCE_KEY, balance);
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance: balance }, '*');
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === BALANCE_KEY && e.newValue !== null) {
+        balance = Number(e.newValue);
+        renderWallet();
+      }
+    });
+
+    window.addEventListener('message', (event) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === 'object') {
+          if (typeof data.balance === 'number') {
+            balance = Number(data.balance);
+            renderWallet();
+          }
+        }
+      } catch (e) {}
+    });
+
+    setInterval(() => {
+      const val = Number(localStorage.getItem(BALANCE_KEY));
+      if (!isNaN(val) && val > 0 && val !== balance) {
+        balance = val;
+        renderWallet();
+      }
+    }, 400);
+
+    // ============================================================
+    // Sound FX
+    // ============================================================
+    class SoundFX {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const Cls = window.AudioContext || window.webkitAudioContext;
+          if (Cls) this.ctx = new Cls();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(()=>{});
+      }
+      tone(freq, type='sine', dur=0.1, gainVal=0.1) {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + dur);
+        } catch (e) {}
+      }
+      chip() { this.tone(900, 'triangle', 0.05, 0.15); }
+      tick() { this.tone(450, 'square', 0.03, 0.08); }
+      ball() { [600, 750, 900].forEach((f, i) => setTimeout(() => this.tone(f, 'sine', 0.04, 0.1), i * 35)); }
+      win()  { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 'sine', 0.15, 0.15), i * 50)); }
+    }
+    const sfx = new SoundFX();
+
+    // ============================================================
+    // European Roulette Numbers Wheel Sequence
+    // ============================================================
+    const WHEEL_NUMBERS = [
+      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10,
+      5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
+    ];
+
+    const RED_NUMS = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+
+    function getNumColor(n) {
+      if (n === 0) return 'green';
+      return RED_NUMS.includes(n) ? 'red' : 'black';
+    }
+
+    // Canvas Wheel Rendering
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentWheelRotation = 0;
+
+    function drawWheel() {
+      const cx = 150;
+      const cy = 150;
+      const radius = 145;
+      const totalSlices = WHEEL_NUMBERS.length;
+      const sliceAngle = (2 * Math.PI) / totalSlices;
+
+      ctx.clearRect(0, 0, 300, 300);
+
+      // Slices
+      WHEEL_NUMBERS.forEach((num, i) => {
+        const startAngle = i * sliceAngle - Math.PI / 2;
+        const endAngle = startAngle + sliceAngle;
+        const color = getNumColor(num);
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.fillStyle = color === 'green' ? '#1b5e20' : color === 'red' ? '#b71520' : '#1c2331';
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#846522';
+        ctx.stroke();
+
+        // Number Text
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(startAngle + sliceAngle / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px Kanit, sans-serif';
+        ctx.fillText(num.toString(), radius - 8, 4);
+        ctx.restore();
+      });
+
+      // Center Hub
+      ctx.beginPath();
+      ctx.arc(cx, cy, 38, 0, 2 * Math.PI);
+      ctx.fillStyle = '#846522';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#ffd700';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 26, 0, 2 * Math.PI);
+      ctx.fillStyle = '#111';
+      ctx.fill();
+    }
+    drawWheel();
+
+    // Game State
+    const state = {
+      selectedChip: 10,
+      bets: {}, // e.g. { '17': 50, 'red': 100 }
+      isSpinning: false,
+      history: [15, 32, 0, 26, 7],
+      adminForceNum: null
+    };
+    let isAdminAuth = false;
+
+    function renderHistory() {
+      const container = document.getElementById('historyRow');
+      container.innerHTML = state.history.slice(0, 6).map(n => {
+        const c = getNumColor(n);
+        return `<div class="hist-badge ${c}">${n}</div>`;
+      }).join('');
+    }
+    renderHistory();
+
+    // Render Board Grid
+    function setupBoard() {
+      const grid = document.getElementById('boardGrid');
+      grid.innerHTML = '';
+
+      // 0 Cell (Spans 3 rows)
+      const cell0 = document.createElement('div');
+      cell0.className = 'grid-cell green';
+      cell0.style.gridRow = '1 / span 3';
+      cell0.style.gridColumn = '1';
+      cell0.textContent = '0';
+      cell0.dataset.bet = '0';
+      grid.appendChild(cell0);
+
+      // 36 Numbers Grid (Columns 1..12, Rows 1..3)
+      // Row 1: 3, 6, 9 ... 36
+      // Row 2: 2, 5, 8 ... 35
+      // Row 3: 1, 4, 7 ... 34
+      for (let r = 0; r < 3; r++) {
+        for (let col = 1; col <= 12; col++) {
+          const num = (12 - col) * 3 + (3 - r); // correctly lays out 3..36, 2..35, 1..34
+          // Or simpler: col 1 has 3, 2, 1
+          const n = (col - 1) * 3 + (3 - r);
+          const c = getNumColor(n);
+
+          const cell = document.createElement('div');
+          cell.className = `grid-cell ${c}`;
+          cell.style.gridRow = (r + 1).toString();
+          cell.style.gridColumn = (col + 1).toString();
+          cell.textContent = n;
+          cell.dataset.bet = n.toString();
+          grid.appendChild(cell);
+        }
+      }
+
+      // Column 2 to 1 Bets (Row 1..3, Column 14)
+      for (let r = 1; r <= 3; r++) {
+        const cell2to1 = document.createElement('div');
+        cell2to1.className = 'grid-cell outside';
+        cell2to1.style.gridRow = r.toString();
+        cell2to1.style.gridColumn = '14';
+        cell2to1.textContent = '2:1';
+        cell2to1.dataset.bet = `col_${r}`;
+        grid.appendChild(cell2to1);
+      }
+
+      // Dozens Row (Row 4)
+      const dozens = [
+        { name: '1st 12', key: 'doz_1', span: '2 / span 4' },
+        { name: '2nd 12', key: 'doz_2', span: '6 / span 4' },
+        { name: '3rd 12', key: 'doz_3', span: '10 / span 4' }
+      ];
+      dozens.forEach(d => {
+        const cellDoz = document.createElement('div');
+        cellDoz.className = 'grid-cell outside';
+        cellDoz.style.gridRow = '4';
+        cellDoz.style.gridColumn = d.span;
+        cellDoz.textContent = d.name;
+        cellDoz.dataset.bet = d.key;
+        grid.appendChild(cellDoz);
+      });
+
+      // Outside Bets Row (Row 5: 1-18, EVEN, RED, BLACK, ODD, 19-36)
+      const outsides = [
+        { name: '1-18', key: 'low', span: '2 / span 2' },
+        { name: 'EVEN', key: 'even', span: '4 / span 2' },
+        { name: 'RED', key: 'red', span: '6 / span 2', extra: 'red' },
+        { name: 'BLACK', key: 'black', span: '8 / span 2', extra: 'black' },
+        { name: 'ODD', key: 'odd', span: '10 / span 2' },
+        { name: '19-36', key: 'high', span: '12 / span 2' }
+      ];
+      outsides.forEach(o => {
+        const cellOut = document.createElement('div');
+        cellOut.className = `grid-cell outside ${o.extra || ''}`;
+        cellOut.style.gridRow = '5';
+        cellOut.style.gridColumn = o.span;
+        cellOut.textContent = o.name;
+        cellOut.dataset.bet = o.key;
+        grid.appendChild(cellOut);
+      });
+
+      // Cell Click to Place Bet
+      grid.querySelectorAll('.grid-cell').forEach(cell => {
+        cell.addEventListener('click', () => {
+          if (state.isSpinning) return;
+          const betKey = cell.dataset.bet;
+          if (!betKey) return;
+
+          if (balance >= state.selectedChip) {
+            setBalance(balance - state.selectedChip);
+            state.bets[betKey] = (state.bets[betKey] || 0) + state.selectedChip;
+            sfx.chip();
+            updateCellChips();
+            updateControls();
+          } else {
+            alert('ยอดเงินคงเหลือไม่พอ');
+          }
+        });
+      });
+    }
+    setupBoard();
+
+    function updateCellChips() {
+      document.querySelectorAll('.cell-chip').forEach(el => el.remove());
+      for (const [key, amount] of Object.entries(state.bets)) {
+        if (amount > 0) {
+          const cell = document.querySelector(`.grid-cell[data-bet="${key}"]`);
+          if (cell) {
+            const chip = document.createElement('div');
+            chip.className = 'cell-chip';
+            chip.textContent = amount >= 1000 ? (amount/1000) + 'k' : amount;
+            cell.appendChild(chip);
+          }
+        }
+      }
+    }
+
+    function updateControls() {
+      const totalBet = Object.values(state.bets).reduce((a, b) => a + b, 0);
+      document.getElementById('btnSpin').disabled = totalBet === 0 || state.isSpinning;
+    }
+
+    // Chips selection
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        state.selectedChip = Number(btn.dataset.val);
+        sfx.chip();
+      });
+    });
+
+    // Clear
+    document.getElementById('btnClear').addEventListener('click', () => {
+      if (state.isSpinning) return;
+      const refund = Object.values(state.bets).reduce((a, b) => a + b, 0);
+      if (refund > 0) {
+        setBalance(balance + refund);
+        state.bets = {};
+        sfx.chip();
+        updateCellChips();
+        updateControls();
+      }
+    });
+
+    // Double Bets
+    document.getElementById('btnDouble').addEventListener('click', () => {
+      if (state.isSpinning) return;
+      const currentTotal = Object.values(state.bets).reduce((a, b) => a + b, 0);
+      if (currentTotal > 0 && balance >= currentTotal) {
+        setBalance(balance - currentTotal);
+        for (const k in state.bets) state.bets[k] *= 2;
+        sfx.chip();
+        updateCellChips();
+        updateControls();
+      }
+    });
+
+    // Spin Action
+    document.getElementById('btnSpin').addEventListener('click', () => {
+      if (state.isSpinning) return;
+      const totalBet = Object.values(state.bets).reduce((a, b) => a + b, 0);
+      if (totalBet === 0) return;
+
+      state.isSpinning = true;
+      updateControls();
+
+      // Pick Random Winning Number (with God Mode override)
+      let winIndex;
+      if (state.adminForceNum !== null) {
+        const idx = WHEEL_NUMBERS.indexOf(state.adminForceNum);
+        winIndex = idx >= 0 ? idx : Math.floor(Math.random() * WHEEL_NUMBERS.length);
+      } else {
+        winIndex = Math.floor(Math.random() * WHEEL_NUMBERS.length);
+      }
+      const winNumber = WHEEL_NUMBERS[winIndex];
+
+      // Calculate Rotation Angle
+      const sliceAngle = 360 / WHEEL_NUMBERS.length;
+      const targetSlice = winIndex * sliceAngle;
+      // Add multiple full spins (5-8 rounds)
+      const fullRotations = (6 + Math.floor(Math.random() * 3)) * 360;
+      currentWheelRotation += fullRotations + targetSlice;
+
+      canvas.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+      // Wheel clicking sound
+      let ticks = 0;
+      const tickInterval = setInterval(() => {
+        sfx.tick();
+        ticks++;
+        if (ticks > 25) clearInterval(tickInterval);
+      }, 120);
+
+      document.getElementById('resultPill').textContent = 'กำลังหมุน...';
+
+      // Finish Spin after 4.2 seconds
+      setTimeout(() => {
+        sfx.ball();
+        state.isSpinning = false;
+        evaluateWinnings(winNumber);
+      }, 4200);
+    });
+
+    // Evaluate Winnings
+    function evaluateWinnings(winNum) {
+      const color = getNumColor(winNum);
+      state.history.unshift(winNum);
+      renderHistory();
+
+      document.getElementById('resultPill').textContent = `ผล: ${winNum} (${color.toUpperCase()})`;
+
+      let totalWin = 0;
+      const winDetails = [];
+
+      // 1. Straight up (35:1)
+      if (state.bets[winNum.toString()]) {
+        const payout = state.bets[winNum.toString()] * 36;
+        totalWin += payout;
+        winDetails.push(`เต็งเลข ${winNum} (+฿${payout.toLocaleString()})`);
+      }
+
+      if (winNum !== 0) {
+        // Red / Black (1:1)
+        if (color === 'red' && state.bets['red']) {
+          const payout = state.bets['red'] * 2;
+          totalWin += payout;
+          winDetails.push(`สีแดง (+฿${payout.toLocaleString()})`);
+        } else if (color === 'black' && state.bets['black']) {
+          const payout = state.bets['black'] * 2;
+          totalWin += payout;
+          winDetails.push(`สีดำ (+฿${payout.toLocaleString()})`);
+        }
+
+        // Even / Odd (1:1)
+        if (winNum % 2 === 0 && state.bets['even']) {
+          const payout = state.bets['even'] * 2;
+          totalWin += payout;
+          winDetails.push(`คู่ (EVEN) (+฿${payout.toLocaleString()})`);
+        } else if (winNum % 2 !== 0 && state.bets['odd']) {
+          const payout = state.bets['odd'] * 2;
+          totalWin += payout;
+          winDetails.push(`คี่ (ODD) (+฿${payout.toLocaleString()})`);
+        }
+
+        // Low (1-18) / High (19-36) (1:1)
+        if (winNum >= 1 && winNum <= 18 && state.bets['low']) {
+          const payout = state.bets['low'] * 2;
+          totalWin += payout;
+          winDetails.push(`ต่ำ 1-18 (+฿${payout.toLocaleString()})`);
+        } else if (winNum >= 19 && winNum <= 36 && state.bets['high']) {
+          const payout = state.bets['high'] * 2;
+          totalWin += payout;
+          winDetails.push(`สูง 19-36 (+฿${payout.toLocaleString()})`);
+        }
+
+        // Dozens (2:1 -> payout = bet * 3)
+        if (winNum >= 1 && winNum <= 12 && state.bets['doz_1']) {
+          const payout = state.bets['doz_1'] * 3;
+          totalWin += payout;
+          winDetails.push(`1st 12 (+฿${payout.toLocaleString()})`);
+        } else if (winNum >= 13 && winNum <= 24 && state.bets['doz_2']) {
+          const payout = state.bets['doz_2'] * 3;
+          totalWin += payout;
+          winDetails.push(`2nd 12 (+฿${payout.toLocaleString()})`);
+        } else if (winNum >= 25 && winNum <= 36 && state.bets['doz_3']) {
+          const payout = state.bets['doz_3'] * 3;
+          totalWin += payout;
+          winDetails.push(`3rd 12 (+฿${payout.toLocaleString()})`);
+        }
+
+        // Columns (2:1)
+        const colRemainder = winNum % 3; // 1 -> col 3, 2 -> col 2, 0 -> col 1
+        const colKey = colRemainder === 0 ? 'col_1' : colRemainder === 2 ? 'col_2' : 'col_3';
+        if (state.bets[colKey]) {
+          const payout = state.bets[colKey] * 3;
+          totalWin += payout;
+          winDetails.push(`แถว 2:1 (+฿${payout.toLocaleString()})`);
+        }
+      }
+
+      if (totalWin > 0) {
+        sfx.win();
+        setBalance(balance + totalWin);
+        document.getElementById('toastTitle').textContent = '🎉 YOU WIN!';
+        document.getElementById('toastDesc').innerHTML = `ลูกเหล็กลงหมายเลข <strong>${winNum}</strong> (${color.toUpperCase()})<br>${winDetails.join('<br>')}<br><strong style="color:#ffd700; font-size:18px;">รวมรับ: ฿${totalWin.toLocaleString()}</strong>`;
+        document.getElementById('toastBanner').classList.add('show');
+      } else {
+        document.getElementById('toastTitle').textContent = 'ROUND OVER';
+        document.getElementById('toastDesc').innerHTML = `ลูกเหล็กลงหมายเลข <strong>${winNum}</strong> (${color.toUpperCase()})<br>รอบนี้ไม่ถูกรางวัล`;
+        document.getElementById('toastBanner').classList.add('show');
+      }
+
+      state.bets = {};
+      updateCellChips();
+      updateControls();
+    }
+
+    document.getElementById('btnCloseToast').addEventListener('click', () => {
+      document.getElementById('toastBanner').classList.remove('show');
+    });
+
+    // Navigation & Wallet Top-up
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    document.getElementById('walletPill').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'OPEN_WALLET' }, '*');
+          return;
+        }
+      } catch (e) {}
+      openAdminModal();
+    });
+
+    // ============================================================
+    // Admin Modal (PIN: 888) + God Mode — Roulette
+    // ============================================================
+    const modalAdmin = document.createElement('div');
+    modalAdmin.id = 'modalAdmin';
+    modalAdmin.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;';
+    modalAdmin.innerHTML = `
+      <div style="background:#09150d;border:2px solid #a67c2e;border-radius:16px;width:100%;max-width:440px;padding:20px;box-shadow:0 0 40px rgba(166,124,46,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:10px;margin-bottom:14px;">
+          <h3 style="color:#ffd700;font-size:16px;">🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+          <button id="btnCloseAdmin" style="background:transparent;border:none;color:#aaa;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="adminAuthSec">
+          <label style="font-size:13px;color:#ccc;display:block;margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+          <input type="password" id="adminPinInput" style="width:100%;background:#030e08;border:1.5px solid #a67c2e;color:#fff;font-size:18px;padding:10px;border-radius:8px;text-align:center;letter-spacing:4px;margin-bottom:10px;" placeholder="ระบุรหัส (888)" maxlength="6">
+          <button id="btnAdminLogin" style="width:100%;background:linear-gradient(180deg,#f7b731,#c58610);border:none;color:#000;font-weight:800;padding:10px;border-radius:8px;cursor:pointer;font-size:15px;font-family:inherit;">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" style="color:#e74c3c;font-size:13px;text-align:center;margin-top:8px;"></div>
+        </div>
+        <div id="adminPanelSec" style="display:none;">
+          <div style="font-size:13px;color:#ffd700;font-weight:800;margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+            <button class="radm-btn" data-add="1000">+1,000</button>
+            <button class="radm-btn" data-add="5000">+5,000</button>
+            <button class="radm-btn" data-add="10000">+10,000</button>
+            <button class="radm-btn" data-add="50000">+50,000</button>
+            <button class="radm-btn" data-add="100000">+100,000</button>
+            <button class="radm-btn" id="rBtnCustomAmt">กำหนดเอง...</button>
+          </div>
+          <button class="radm-btn" id="rBtnResetBal" style="width:100%;border-color:#e74c3c;color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+          <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;">
+            <div style="font-size:13px;font-weight:800;color:#ffd700;">🎯 ล็อคผลรูเล็ตรอบถัดไป (God Mode):</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px;">
+              <button class="rgod-btn active" data-force-num="none">🎲 สุ่มปกติ (RNG)</button>
+              <button class="rgod-btn" data-force-num="0" style="border-color:#27ae60;color:#2ecc71;">🟢 บังคับ 0 (เขียว)</button>
+              <button class="rgod-btn" data-force-num="17" style="border-color:#e74c3c;color:#ff7675;">🔴 บังคับ 17 (เต็งฮอต)</button>
+              <button class="rgod-btn" data-force-num="32" style="border-color:#e74c3c;color:#ff7675;">🔴 บังคับ 32 (เต็ง)</button>
+              <button class="rgod-btn" data-force-num="7" style="border-color:#3498db;color:#74b9ff;">⚫ บังคับ 7 (ดำ)</button>
+              <button class="rgod-btn" data-force-num="36" style="border-color:#e74c3c;color:#ff7675;">🔴 บังคับ 36 (แดง)</button>
+              <button class="rgod-btn" data-force-num="custom" style="border-color:#ffd700;color:#ffd700;grid-column:span 2;">🎯 กำหนดเลขเอง (0-36)...</button>
+            </div>
+            <div id="godStatusRoulette" style="font-size:12px;color:#00ffcc;margin-top:6px;text-align:center;font-weight:700;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modalAdmin);
+
+    const radmStyle = document.createElement('style');
+    radmStyle.textContent = `.radm-btn{background:#091a0f;border:1px solid #a67c2e;color:#ffd7a0;padding:8px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}.radm-btn:hover{background:#a67c2e;color:#000;} .rgod-btn{background:#060f09;border:1.5px solid #555;color:#bbb;padding:7px 4px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:inherit;} .rgod-btn:hover{filter:brightness(1.2);} .rgod-btn.active{background:#1e3826;border-color:#ffd700;color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.4);}`;
+    document.head.appendChild(radmStyle);
+
+    function openAdminModal() {
+      modalAdmin.style.display = 'flex';
+      document.getElementById('adminErrorMsg').textContent = '';
+      if (isAdminAuth) {
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminAuthSec').style.display = 'block';
+        document.getElementById('adminPanelSec').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
+      }
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => { modalAdmin.style.display = 'none'; });
+
+    document.getElementById('btnAdminLogin').addEventListener('click', () => {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin === '888') {
+        isAdminAuth = true;
+        sfx.win();
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminErrorMsg').textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        document.getElementById('adminPinInput').value = '';
+      }
+    });
+    document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnAdminLogin').click();
+    });
+
+    document.querySelectorAll('.radm-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setBalance(balance + parseInt(btn.dataset.add));
+        sfx.win();
+        alert(`เติมเงิน +฿${parseInt(btn.dataset.add).toLocaleString()} เรียบร้อยแล้ว!`);
+      });
+    });
+    document.getElementById('rBtnCustomAmt').addEventListener('click', () => {
+      const amt = prompt('กรอกจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (amt && !isNaN(amt) && Number(amt) > 0) { setBalance(balance + Number(amt)); }
+    });
+    document.getElementById('rBtnResetBal').addEventListener('click', () => {
+      setBalance(50000); alert('รีเซ็ตยอดเงินเป็น ฿50,000 เรียบร้อยแล้ว!');
+    });
+
+    document.querySelectorAll('.rgod-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.rgod-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.forceNum;
+        const stat = document.getElementById('godStatusRoulette');
+        if (val === 'none') {
+          state.adminForceNum = null;
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else if (val === 'custom') {
+          const num = prompt('กรอกเลขที่ต้องการบังคับ (0-36):', '17');
+          const n = parseInt(num);
+          if (!isNaN(n) && n >= 0 && n <= 36) {
+            state.adminForceNum = n;
+            stat.textContent = `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ เลข ${n} ]`;
+          }
+        } else {
+          state.adminForceNum = parseInt(val);
+          stat.textContent = `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ เลข ${val} ]`;
+        }
+        sfx.chip();
+      });
+    });
+
+    // Init
+    renderWallet();
+    updateControls();
+  </script>
+</body>
+</html>

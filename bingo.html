@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>บิงโกนำโชค VIP Live Bingo - Royal VIP Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: radial-gradient(circle at 50% 25%, #1f1235 0%, #10061e 65%, #07020d 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #06020c;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+    .bingo-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 980px;
+      max-height: 980px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #8e44ad;
+      box-shadow: 0 0 50px rgba(142, 68, 173, 0.4), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(18, 6, 33, 0.95);
+      border-bottom: 2px solid #9b59b6;
+      z-index: 20;
+    }
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover { background: rgba(255, 215, 0, 0.2); }
+    .btn-top.btn-exit {
+      background: #3a1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+    .game-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: var(--gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1.5px solid #f1c40f;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(241, 196, 15, 0.25);
+      cursor: pointer;
+    }
+    .wallet-badge .val { color: #ffd700; font-weight: 800; }
+
+    /* Bingo Main Arena */
+    .bingo-arena {
+      flex: 1;
+      display: flex;
+      gap: 14px;
+      padding: 12px 16px;
+      overflow-y: auto;
+    }
+    @media (max-width: 720px) {
+      .bingo-arena {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* Left: Live Ball Machine & Callout */
+    .ball-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1.5px solid rgba(155, 89, 182, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      min-width: 280px;
+    }
+    /* Animated Ball Blower Orb */
+    .ball-orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), rgba(40,15,65,0.95));
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 25px rgba(241, 196, 15, 0.4), inset 0 0 20px rgba(0,0,0,0.8);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .orb-inner-balls {
+      position: absolute;
+      inset: 0;
+      opacity: 0.6;
+    }
+    .current-ball {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #e74c3c);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.7), inset 0 0 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffd700;
+      transform: scale(0);
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 5;
+    }
+    .current-ball.pop {
+      transform: scale(1);
+    }
+    .current-ball .b-letter {
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .current-ball .b-num {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* Ball Colors based on Column */
+    .ball-B { background: radial-gradient(circle at 30% 30%, #fff, #e74c3c); }
+    .ball-I { background: radial-gradient(circle at 30% 30%, #fff, #3498db); }
+    .ball-N { background: radial-gradient(circle at 30% 30%, #fff, #2ecc71); }
+    .ball-G { background: radial-gradient(circle at 30% 30%, #fff, #f39c12); }
+    .ball-O { background: radial-gradient(circle at 30% 30%, #fff, #9b59b6); }
+
+    .called-history {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .called-label {
+      font-size: 11px;
+      color: #ccc;
+      font-weight: 700;
+    }
+    .called-tray {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding: 4px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      min-height: 40px;
+      align-items: center;
+    }
+    .mini-ball {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Payout Table Mini */
+    .payout-box {
+      width: 100%;
+      background: rgba(142, 68, 173, 0.15);
+      border: 1px solid rgba(142, 68, 173, 0.4);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 10px;
+      font-size: 11px;
+    }
+    .payout-box table { width: 100%; }
+    .payout-box td:last-child { text-align: right; font-weight: 800; color: #ffd700; }
+
+    /* Right: Player 5x5 Bingo Card */
+    .card-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 320px;
+      max-width: 380px;
+      width: 100%;
+    }
+    .bingo-card {
+      width: 100%;
+      background: #17092c;
+      border: 3px solid #f1c40f;
+      border-radius: 14px;
+      padding: 8px;
+      box-shadow: 0 0 25px rgba(241, 196, 15, 0.35);
+    }
+    /* Card Header B-I-N-G-O */
+    .card-header-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .hdr-col {
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .hdr-B { background: #e74c3c; }
+    .hdr-I { background: #3498db; }
+    .hdr-N { background: #2ecc71; }
+    .hdr-G { background: #f39c12; }
+    .hdr-O { background: #9b59b6; }
+
+    /* 5x5 Grid Cells */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+    .bingo-cell {
+      height: 52px;
+      background: #251047;
+      border: 1.5px solid #4a217c;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+    .bingo-cell:hover { background: #39186d; border-color: #ffd700; }
+    .bingo-cell.free {
+      background: radial-gradient(circle, #f39c12, #b7950b);
+      color: #000;
+      font-weight: 900;
+      border-color: #ffd700;
+    }
+    .bingo-cell.daubed {
+      background: radial-gradient(circle, #e74c3c, #962d22);
+      border-color: #ffd700;
+      color: #fff;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+      transform: scale(0.96);
+    }
+    .bingo-cell.daubed::after {
+      content: '✓';
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 11px;
+      color: #ffd700;
+      font-weight: 900;
+    }
+    .bingo-cell.win-line {
+      animation: pulseWinCell 0.5s infinite alternate;
+      border-color: #ffd700;
+      background: radial-gradient(circle, #2ecc71, #1e8449);
+    }
+    @keyframes pulseWinCell {
+      0% { transform: scale(0.96); box-shadow: 0 0 6px #ffd700; }
+      100% { transform: scale(1.02); box-shadow: 0 0 16px #ffd700; }
+    }
+
+    /* Controls & Bottom Bar */
+    .controls-bar {
+      background: rgba(18, 6, 33, 0.95);
+      border-top: 2px solid #8e44ad;
+      padding: 10px 16px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .card-cost-select {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cost-pill {
+      background: #251047;
+      border: 1.5px solid #6c3483;
+      color: #d2b4de;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .cost-pill.active {
+      border-color: #ffd700;
+      background: #5b2c6f;
+      color: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    .btn-act {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-act:hover { background: rgba(255,255,255,0.18); }
+    .btn-start-bingo {
+      background: linear-gradient(180deg, #f1c40f 0%, #e67e22 100%);
+      color: #000;
+      border: 2px solid #ffd700;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 10px 24px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-start-bingo:hover { filter: brightness(1.15); transform: translateY(-2px); }
+    .btn-start-bingo:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      filter: grayscale(0.8);
+    }
+
+    /* Win Toast Banner */
+    .win-toast {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      background: rgba(25, 8, 45, 0.95);
+      border: 2px solid #ffd700;
+      border-radius: 14px;
+      padding: 14px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 35px rgba(241, 196, 15, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 50;
+      min-width: 290px;
+      text-align: center;
+    }
+    .win-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .win-toast h2 {
+      font-family: 'Cinzel', serif;
+      color: #ffd700;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .win-toast p { font-size: 14px; color: #ecf0f1; margin-bottom: 10px; }
+    .btn-close-toast {
+      background: #ffd700;
+      color: #000;
+      border: none;
+      padding: 5px 16px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Modal Admin / God Mode */
+    .modal-admin {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-admin.open { display: flex; }
+    .admin-card {
+      background: #190930;
+      border: 2px solid #9b59b6;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+      box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .admin-header h3 {
+      color: #ffd700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-close-admin {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .admin-input {
+      width: 100%;
+      background: #090314;
+      border: 1.5px solid #8e44ad;
+      color: #fff;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+    .admin-btn-submit {
+      width: 100%;
+      background: linear-gradient(180deg, #9b59b6, #8e44ad);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .admin-error {
+      color: #e74c3c;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quick-btn {
+      background: #250f44;
+      border: 1px solid #8e44ad;
+      color: #e0d0f5;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .quick-btn:hover { background: #8e44ad; color: #fff; }
+    .god-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .god-btn {
+      background: #17072d;
+      border: 1.5px solid #555;
+      color: #bbb;
+      padding: 7px 4px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .god-btn:hover { filter: brightness(1.2); }
+    .god-btn.active {
+      background: #4a1975;
+      border-color: #ffd700;
+      color: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    .god-status {
+      font-size: 12px;
+      color: #00ffcc;
+      margin-top: 6px;
+      text-align: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bingo-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">✕ ล็อบบี้</button>
+        <span class="game-logo">🎱 VIP BINGO</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill" title="คลิกเพื่อเติมเงิน">
+          <span>💰</span>
+          <span class="val" id="walletBal">50,000</span>
+          <span>THB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Bingo Arena -->
+    <div class="bingo-arena">
+      <!-- Left: Ball Machine & Master Board -->
+      <div class="ball-stage">
+        <!-- Blower Orb -->
+        <div class="ball-orb">
+          <div class="current-ball" id="currentBallEl">
+            <span class="b-letter" id="curBallLetter">B</span>
+            <span class="b-num" id="curBallNum">7</span>
+          </div>
+        </div>
+        <div style="font-size:13px; font-weight:800; color:#ffd700; margin-bottom:4px;" id="drawStatusText">ลูกบอลที่ออกล่าสุด</div>
+
+        <!-- Recent Tray -->
+        <div class="called-history">
+          <div class="called-label">ประวัติลูกบอลที่ออกแล้ว (<span id="ballsCount">0</span>/75):</div>
+          <div class="called-tray" id="calledTray">
+            <!-- Mini Balls inserted here -->
+          </div>
+        </div>
+
+        <!-- Mini Payout Box -->
+        <div class="payout-box">
+          <div style="font-weight:800; color:#ffd700; margin-bottom:4px;">อัตราการจ่ายเงินรางวัล (Payouts):</div>
+          <table>
+            <tr><td>✓ 1 แถว (แนวนอน/ตั้ง/ทแยง):</td><td>5x</td></tr>
+            <tr><td>✓ 2 แถว (Double Lines):</td><td>15x</td></tr>
+            <tr><td>✓ 4 มุม (Four Corners):</td><td>20x</td></tr>
+            <tr><td>👑 FULL HOUSE (เต็มใบ 25 ช่อง):</td><td style="color:#f1c40f;">100x JACKPOT</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Player 5x5 Card -->
+      <div class="card-stage">
+        <div class="bingo-card">
+          <!-- Card Header B-I-N-G-O -->
+          <div class="card-header-row">
+            <div class="hdr-col hdr-B">B</div>
+            <div class="hdr-col hdr-I">I</div>
+            <div class="hdr-col hdr-N">N</div>
+            <div class="hdr-col hdr-G">G</div>
+            <div class="hdr-col hdr-O">O</div>
+          </div>
+          <!-- 5x5 Matrix -->
+          <div class="card-grid" id="cardGrid">
+            <!-- 25 Cells generated dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Win Toast Banner -->
+    <div class="win-toast" id="toastBanner">
+      <h2 id="toastTitle">🎉 BINGO WINNER!</h2>
+      <p id="toastDesc">คุณทำบิงโกได้สำเร็จ!</p>
+      <button class="btn-close-toast" id="btnCloseToast">รับรางวัล</button>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <!-- Card Cost Selection -->
+      <div class="card-cost-select">
+        <span style="font-size:12px; color:#aaa; font-weight:700;">ราคาการ์ด:</span>
+        <div class="cost-pill active" data-cost="100">฿100</div>
+        <div class="cost-pill" data-cost="200">฿200</div>
+        <div class="cost-pill" data-cost="500">฿500</div>
+        <div class="cost-pill" data-cost="1000">฿1,000</div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-act" id="btnNewCard">🔄 เปลี่ยนการ์ดใหม่</button>
+        <button class="btn-start-bingo" id="btnStartBingo">🎱 ซื้อการ์ด & เริ่มเล่น</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal (PIN: 888) -->
+  <div class="modal-admin" id="modalAdmin">
+    <div class="admin-card">
+      <div class="admin-header">
+        <h3>🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+        <button class="btn-close-admin" id="btnCloseAdmin">✕</button>
+      </div>
+
+      <!-- Auth Section -->
+      <div id="adminAuth">
+        <label style="font-size:13px; color:#ccc; display:block; margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+        <input type="password" id="adminPinInput" class="admin-input" placeholder="ระบุรหัส (888)" maxlength="6">
+        <button class="admin-btn-submit" id="btnAdminLogin">ยืนยันรหัสผ่าน</button>
+        <div class="admin-error" id="adminError"></div>
+      </div>
+
+      <!-- Panel Section -->
+      <div id="adminPanel" style="display:none;">
+        <div style="font-size:13px; color:#ffd700; font-weight:800; margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+        <div class="quick-grid">
+          <button class="quick-btn" data-add="1000">+1,000</button>
+          <button class="quick-btn" data-add="5000">+5,000</button>
+          <button class="quick-btn" data-add="10000">+10,000</button>
+          <button class="quick-btn" data-add="50000">+50,000</button>
+          <button class="quick-btn" data-add="100000">+100,000</button>
+          <button class="quick-btn" id="btnCustomAdd">กำหนดเอง...</button>
+        </div>
+        <button class="quick-btn" id="btnResetBal" style="width:100%; margin-top:8px; border-color:#e74c3c; color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+
+        <!-- God Mode / ล็อคผลลูกบอลบิงโก -->
+        <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.15); padding-top:10px;">
+          <div style="font-size:13px; font-weight:800; color:#ffd700;">🎯 ล็อคผลลูกบอลบิงโก (God Mode):</div>
+          <div class="god-grid">
+            <button class="god-btn active" data-force="none">🎲 สุ่มลูกบอลปกติ (RNG)</button>
+            <button class="god-btn" data-force="match_only" style="border-color:#2ecc71; color:#2ecc71;">⚡ ออกเฉพาะเลขในการ์ด</button>
+            <button class="god-btn" data-force="force_line" style="border-color:#3498db; color:#74b9ff;">🏆 บังคับบิงโก 1 แถว (5x)</button>
+            <button class="god-btn" data-force="force_full" style="border-color:#f1c40f; color:#ffd700;">👑 บังคับ FULL HOUSE (100x)</button>
+            <button class="god-btn" data-force="force_lose" style="border-color:#7f8c8d; color:#b2bec3;">💀 บังคับไม่ออกเลขการ์ด</button>
+          </div>
+          <div class="god-status" id="godStatusText">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Synthesizer
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+    function getAudio() {
+      if (!actx) actx = new AudioCtx();
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    }
+    const sfx = {
+      pop: () => {
+        try {
+          const ctx = getAudio();
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(450, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.08);
+          g.gain.setValueAtTime(0.2, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.08);
+        } catch (e) {}
+      },
+      daub: () => {
+        try {
+          const ctx = getAudio();
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(880, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.06);
+          g.gain.setValueAtTime(0.25, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.06);
+        } catch (e) {}
+      },
+      chip: () => {
+        try {
+          const ctx = getAudio();
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.05);
+          g.gain.setValueAtTime(0.18, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.05);
+        } catch (e) {}
+      },
+      win: () => {
+        try {
+          const ctx = getAudio();
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+            g.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.08);
+            g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + idx * 0.08 + 0.3);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.08);
+            osc.stop(ctx.currentTime + idx * 0.08 + 0.35);
+          });
+        } catch (e) {}
+      },
+      jackpot: () => {
+        try {
+          const ctx = getAudio();
+          [523, 659, 784, 1046, 1318, 1568].forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.07);
+            g.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.07);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.07 + 0.4);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.07);
+            osc.stop(ctx.currentTime + i * 0.07 + 0.45);
+          });
+        } catch (e) {}
+      }
+    };
+
+    // State
+    let cardCost = 100;
+    let cardNumbers = []; // 25 elements, row-major
+    let daubed = new Array(25).fill(false);
+    daubed[12] = true; // Free center
+    let isDrawing = false;
+    let drawInterval = null;
+    let drawnBalls = [];
+    let adminForceMode = null; // 'none', 'match_only', 'force_line', 'force_full', 'force_lose'
+    let isAdminAuth = false;
+
+    // Balance
+    let balance = parseFloat(localStorage.getItem('balance')) || 50000;
+    function renderWallet() {
+      document.getElementById('walletBal').textContent = Math.floor(balance).toLocaleString();
+    }
+    function setBalance(n) {
+      balance = Math.max(0, n);
+      localStorage.setItem('balance', balance.toString());
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance }, '*');
+        }
+      } catch (e) {}
+    }
+
+    // Sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'balance' && e.newValue !== null) {
+        const v = parseFloat(e.newValue);
+        if (!isNaN(v) && v !== balance) {
+          balance = v;
+          renderWallet();
+        }
+      }
+    });
+    setInterval(() => {
+      const v = parseFloat(localStorage.getItem('balance'));
+      if (!isNaN(v) && v !== balance) {
+        balance = v;
+        renderWallet();
+      }
+    }, 400);
+
+    // Generate 5x5 Bingo Card
+    // B: 1-15, I: 16-30, N: 31-45, G: 46-60, O: 61-75
+    function getRandomSample(min, max, count) {
+      const arr = [];
+      for (let i = min; i <= max; i++) arr.push(i);
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr.slice(0, count);
+    }
+
+    function generateCard() {
+      const cols = [
+        getRandomSample(1, 15, 5),
+        getRandomSample(16, 30, 5),
+        getRandomSample(31, 45, 5),
+        getRandomSample(46, 60, 5),
+        getRandomSample(61, 75, 5)
+      ];
+
+      cardNumbers = [];
+      daubed = new Array(25).fill(false);
+      daubed[12] = true; // Free center cell
+
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          if (r === 2 && c === 2) {
+            cardNumbers.push('FREE');
+          } else {
+            cardNumbers.push(cols[c][r]);
+          }
+        }
+      }
+
+      renderCard();
+    }
+
+    function renderCard() {
+      const grid = document.getElementById('cardGrid');
+      grid.innerHTML = '';
+
+      cardNumbers.forEach((val, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'bingo-cell';
+        if (idx === 12) {
+          cell.classList.add('free');
+          cell.innerHTML = '★<br><span style="font-size:10px;">FREE</span>';
+        } else {
+          cell.textContent = val;
+        }
+
+        if (daubed[idx]) {
+          cell.classList.add('daubed');
+        }
+
+        cell.addEventListener('click', () => {
+          if (idx === 12) return;
+          daubed[idx] = !daubed[idx];
+          if (daubed[idx]) sfx.daub();
+          renderCard();
+          checkBingoPatterns();
+        });
+
+        grid.appendChild(cell);
+      });
+    }
+
+    // Helper for ball letter and class
+    function getBallInfo(n) {
+      if (n <= 15) return { letter: 'B', cls: 'ball-B' };
+      if (n <= 30) return { letter: 'I', cls: 'ball-I' };
+      if (n <= 45) return { letter: 'N', cls: 'ball-N' };
+      if (n <= 60) return { letter: 'G', cls: 'ball-G' };
+      return { letter: 'O', cls: 'ball-O' };
+    }
+
+    // Check Bingo Patterns
+    // 1 Line, 2 Lines, 4 Corners, Full House
+    function checkBingoPatterns() {
+      const lines = [];
+
+      // 5 Rows
+      for (let r = 0; r < 5; r++) {
+        const row = [];
+        for (let c = 0; c < 5; c++) row.push(r * 5 + c);
+        lines.push(row);
+      }
+
+      // 5 Columns
+      for (let c = 0; c < 5; c++) {
+        const col = [];
+        for (let r = 0; r < 5; r++) col.push(r * 5 + c);
+        lines.push(col);
+      }
+
+      // 2 Diagonals
+      lines.push([0, 6, 12, 18, 24]);
+      lines.push([4, 8, 12, 16, 20]);
+
+      let completedLines = 0;
+      const winIndices = new Set();
+
+      lines.forEach(line => {
+        if (line.every(idx => daubed[idx])) {
+          completedLines++;
+          line.forEach(idx => winIndices.add(idx));
+        }
+      });
+
+      // Highlight winning cells
+      const cells = document.querySelectorAll('.bingo-cell');
+      winIndices.forEach(idx => {
+        if (cells[idx]) cells[idx].classList.add('win-line');
+      });
+
+      // 4 Corners
+      const fourCorners = [0, 4, 20, 24].every(idx => daubed[idx]);
+
+      // Full House (all 25 daubed)
+      const fullHouse = daubed.every(d => d === true);
+
+      return { completedLines, fourCorners, fullHouse, winIndices };
+    }
+
+    // Draw Next Ball
+    function drawNextBall() {
+      // Remaining balls 1-75
+      const available = [];
+      for (let i = 1; i <= 75; i++) {
+        if (!drawnBalls.includes(i)) available.push(i);
+      }
+
+      if (available.length === 0) {
+        stopGame();
+        return;
+      }
+
+      let ballNum;
+
+      // God Mode Logic
+      if (adminForceMode === 'force_full') {
+        // Draw unmatched card numbers first!
+        const needed = [];
+        cardNumbers.forEach((n, idx) => {
+          if (n !== 'FREE' && !daubed[idx] && available.includes(n)) {
+            needed.push(n);
+          }
+        });
+        if (needed.length > 0) {
+          ballNum = needed[Math.floor(Math.random() * needed.length)];
+        } else {
+          ballNum = available[Math.floor(Math.random() * available.length)];
+        }
+      } else if (adminForceMode === 'force_line') {
+        // Force complete row 0 (or row 1)
+        const targetRow = [0, 1, 2, 3, 4];
+        const needed = [];
+        targetRow.forEach(idx => {
+          const val = cardNumbers[idx];
+          if (val !== 'FREE' && !daubed[idx] && available.includes(val)) {
+            needed.push(val);
+          }
+        });
+        if (needed.length > 0) {
+          ballNum = needed[0];
+        } else {
+          ballNum = available[Math.floor(Math.random() * available.length)];
+        }
+      } else if (adminForceMode === 'match_only') {
+        const cardAvailable = available.filter(n => cardNumbers.includes(n));
+        if (cardAvailable.length > 0) {
+          ballNum = cardAvailable[Math.floor(Math.random() * cardAvailable.length)];
+        } else {
+          ballNum = available[Math.floor(Math.random() * available.length)];
+        }
+      } else if (adminForceMode === 'force_lose') {
+        const nonCardAvailable = available.filter(n => !cardNumbers.includes(n));
+        if (nonCardAvailable.length > 0) {
+          ballNum = nonCardAvailable[Math.floor(Math.random() * nonCardAvailable.length)];
+        } else {
+          ballNum = available[Math.floor(Math.random() * available.length)];
+        }
+      } else {
+        // Normal RNG
+        ballNum = available[Math.floor(Math.random() * available.length)];
+      }
+
+      drawnBalls.push(ballNum);
+      const info = getBallInfo(ballNum);
+
+      // Display ball in orb
+      const ballEl = document.getElementById('currentBallEl');
+      ballEl.className = `current-ball ${info.cls}`;
+      document.getElementById('curBallLetter').textContent = info.letter;
+      document.getElementById('curBallNum').textContent = ballNum;
+      ballEl.classList.remove('pop');
+      void ballEl.offsetWidth; // reflow
+      ballEl.classList.add('pop');
+      sfx.pop();
+
+      // Add to tray
+      const tray = document.getElementById('calledTray');
+      const mini = document.createElement('div');
+      mini.className = `mini-ball ${info.cls}`;
+      mini.textContent = ballNum;
+      tray.insertBefore(mini, tray.firstChild);
+      document.getElementById('ballsCount').textContent = drawnBalls.length;
+
+      // Auto-daub if on card!
+      const cardIdx = cardNumbers.indexOf(ballNum);
+      if (cardIdx !== -1) {
+        daubed[cardIdx] = true;
+        renderCard();
+        sfx.daub();
+      }
+
+      // Check for win conditions
+      const result = checkBingoPatterns();
+      if (result.fullHouse) {
+        stopGame();
+        triggerWin('FULL HOUSE 👑 JACKPOT!', cardCost * 100, true);
+      } else if (result.completedLines >= 2) {
+        stopGame();
+        triggerWin('2 LINES BINGO! 🎉', cardCost * 15, false);
+      } else if (result.completedLines === 1 && (adminForceMode === 'force_line' || drawnBalls.length >= 30)) {
+        stopGame();
+        triggerWin('1 LINE BINGO! 🎉', cardCost * 5, false);
+      } else if (drawnBalls.length >= 35) {
+        // Round ends after 35 balls if no bingo
+        stopGame();
+        if (result.completedLines === 1) {
+          triggerWin('1 LINE BINGO! 🎉', cardCost * 5, false);
+        } else {
+          document.getElementById('toastTitle').textContent = 'จบการแข่งขัน';
+          document.getElementById('toastDesc').innerHTML = `ออกลูกบอลครบ 35 ลูกแล้ว<br>รอบนี้ไม่ถูกรางวัล ลองใหม่อีกครั้ง!`;
+          document.getElementById('toastBanner').classList.add('show');
+        }
+      }
+    }
+
+    function triggerWin(title, winAmt, isJackpot) {
+      if (isJackpot) sfx.jackpot();
+      else sfx.win();
+
+      setBalance(balance + winAmt);
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastDesc').innerHTML = `ยินดีด้วย! คุณถูกรางวัลบิงโก<br>รับเงินรางวัล: <strong style="color:#ffd700; font-size:20px;">+฿${winAmt.toLocaleString()}</strong>`;
+      document.getElementById('toastBanner').classList.add('show');
+    }
+
+    function startGame() {
+      if (isDrawing) return;
+
+      if (balance < cardCost) {
+        alert('ยอดเงินคงเหลือไม่เพียงพอ กรุณาเติมเงินผ่านระบบหลังบ้าน!');
+        return;
+      }
+
+      setBalance(balance - cardCost);
+      isDrawing = true;
+      drawnBalls = [];
+      document.getElementById('calledTray').innerHTML = '';
+      document.getElementById('ballsCount').textContent = '0';
+      document.getElementById('toastBanner').classList.remove('show');
+      document.getElementById('btnStartBingo').disabled = true;
+      document.getElementById('btnNewCard').disabled = true;
+
+      // Start drawing interval
+      drawInterval = setInterval(drawNextBall, 1400);
+      drawNextBall();
+    }
+
+    function stopGame() {
+      isDrawing = false;
+      if (drawInterval) clearInterval(drawInterval);
+      document.getElementById('btnStartBingo').disabled = false;
+      document.getElementById('btnNewCard').disabled = false;
+    }
+
+    document.getElementById('btnStartBingo').addEventListener('click', startGame);
+    document.getElementById('btnNewCard').addEventListener('click', () => {
+      if (isDrawing) return;
+      generateCard();
+      sfx.chip();
+    });
+    document.getElementById('btnCloseToast').addEventListener('click', () => {
+      document.getElementById('toastBanner').classList.remove('show');
+    });
+
+    // Cost Selection
+    document.querySelectorAll('.cost-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        if (isDrawing) return;
+        document.querySelectorAll('.cost-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        cardCost = parseInt(pill.dataset.cost, 10);
+        sfx.chip();
+      });
+    });
+
+    // Exit Button
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    // Admin Modal Logic (PIN: 888)
+    const modalAdmin = document.getElementById('modalAdmin');
+    const adminAuth = document.getElementById('adminAuth');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminPinInput = document.getElementById('adminPinInput');
+    const adminError = document.getElementById('adminError');
+
+    function openAdmin() {
+      modalAdmin.classList.add('open');
+      adminError.textContent = '';
+      if (isAdminAuth) {
+        adminAuth.style.display = 'none';
+        adminPanel.style.display = 'block';
+      } else {
+        adminAuth.style.display = 'block';
+        adminPanel.style.display = 'none';
+        adminPinInput.value = '';
+        setTimeout(() => adminPinInput.focus(), 150);
+      }
+    }
+    document.getElementById('btnAdminModal').addEventListener('click', openAdmin);
+    document.getElementById('walletPill').addEventListener('click', openAdmin);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => {
+      modalAdmin.classList.remove('open');
+    });
+
+    function verifyPin() {
+      if (adminPinInput.value.trim() === '888') {
+        isAdminAuth = true;
+        sfx.win();
+        adminAuth.style.display = 'none';
+        adminPanel.style.display = 'block';
+      } else {
+        adminError.textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        adminPinInput.value = '';
+        adminPinInput.focus();
+      }
+    }
+    document.getElementById('btnAdminLogin').addEventListener('click', verifyPin);
+    adminPinInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyPin();
+    });
+
+    // Quick Add Funds
+    document.querySelectorAll('.quick-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.add, 10);
+        setBalance(balance + val);
+        sfx.chip();
+        alert(`เติมเงิน +฿${val.toLocaleString()} เรียบร้อยแล้ว!`);
+      });
+    });
+
+    document.getElementById('btnCustomAdd').addEventListener('click', () => {
+      const amt = prompt('กรอกจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (amt && !isNaN(amt) && Number(amt) > 0) {
+        setBalance(balance + Number(amt));
+        sfx.chip();
+      }
+    });
+
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      setBalance(50000);
+      sfx.chip();
+      alert('รีเซ็ตยอดเงินเป็น ฿50,000 เรียบร้อยแล้ว!');
+    });
+
+    // God Mode Selector
+    document.querySelectorAll('.god-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.god-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        adminForceMode = btn.dataset.force;
+        sfx.chip();
+        const stat = document.getElementById('godStatusText');
+        if (adminForceMode === 'none') {
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else {
+          stat.textContent = `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ${btn.textContent.trim()} ]`;
+        }
+      });
+    });
+
+    // Init
+    generateCard();
+    renderWallet();
+  </script>
+</body>
+</html>

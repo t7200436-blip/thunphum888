@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>วงล้อนำโชค VIP Fortune Wheel - Royal VIP Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: radial-gradient(circle at 50% 30%, #1a0f30 0%, #0d0618 65%, #05020a 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #06020a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+    .wheel-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 980px;
+      max-height: 980px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #6b3ba7;
+      box-shadow: 0 0 50px rgba(107, 59, 167, 0.4), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(15, 6, 28, 0.95);
+      border-bottom: 2px solid #8e44ad;
+      z-index: 20;
+    }
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover { background: rgba(255, 215, 0, 0.2); }
+    .btn-top.btn-exit {
+      background: #3a1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+    .game-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: var(--gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1.5px solid #f1c40f;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(241, 196, 15, 0.25);
+      cursor: pointer;
+    }
+    .wallet-badge .val { color: #ffd700; font-weight: 800; }
+
+    /* Main Wheel Stage */
+    .wheel-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 10px;
+      overflow: hidden;
+    }
+    .wheel-container {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      max-width: 85vw;
+      max-height: 85vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas#wheelCanvas {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 25px rgba(241, 196, 15, 0.35));
+    }
+    /* Indicator Flapper Needle */
+    .wheel-needle {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 42px;
+      z-index: 15;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+      transform-origin: 50% 10px;
+      transition: transform 0.05s ease-out;
+    }
+    .wheel-needle svg {
+      width: 100%;
+      height: 100%;
+    }
+    .wheel-needle.tick {
+      transform: translateX(-50%) rotate(-18deg);
+    }
+
+    /* History Billboard */
+    .history-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .history-tag {
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    /* Betting Board */
+    .betting-section {
+      background: rgba(12, 5, 22, 0.92);
+      border-top: 2px solid #5a2e91;
+      padding: 10px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10;
+    }
+    .multiplier-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 650px) {
+      .multiplier-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .multiplier-grid .bet-cell:last-child {
+        grid-column: span 2;
+      }
+    }
+    .bet-cell {
+      background: #190c33;
+      border: 2px solid #4a217c;
+      border-radius: 10px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+    .bet-cell:hover {
+      background: #2a1452;
+      border-color: #ffd700;
+      transform: translateY(-2px);
+    }
+    .bet-cell.active {
+      border-color: #ffd700;
+      background: #39166f;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+    .cell-mult {
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffd700;
+      font-family: 'Cinzel', serif;
+    }
+    .cell-label {
+      font-size: 10px;
+      color: #a4b0be;
+    }
+    .cell-chips {
+      position: absolute;
+      bottom: -6px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 8px;
+      border: 1px solid #ffd700;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      display: none;
+    }
+    .bet-cell.has-chips .cell-chips {
+      display: block;
+    }
+
+    /* Controls & Chips Bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .chips-tray {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 2px;
+    }
+    .chip-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed #ffd700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .chip-btn:hover { transform: scale(1.1); }
+    .chip-btn.active {
+      border-style: solid;
+      border-width: 3px;
+      box-shadow: 0 0 15px #ffd700;
+      transform: scale(1.15) translateY(-3px);
+    }
+    .chip-20 { background: #16a085; }
+    .chip-50 { background: #2980b9; }
+    .chip-100 { background: #8e44ad; }
+    .chip-500 { background: #d35400; }
+    .chip-1000 { background: #c0392b; }
+    .chip-5000 { background: radial-gradient(circle, #f39c12, #b7950b); color: #000; }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-act {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-act:hover { background: rgba(255,255,255,0.18); }
+    .btn-spin {
+      background: linear-gradient(180deg, #f1c40f 0%, #e67e22 100%);
+      color: #000;
+      border: 2px solid #ffd700;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 10px 24px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-spin:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+    .btn-spin:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      filter: grayscale(0.8);
+    }
+
+    /* Win Toast Banner */
+    .win-toast {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-30px);
+      background: rgba(20, 5, 35, 0.95);
+      border: 2px solid #f1c40f;
+      border-radius: 14px;
+      padding: 14px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 0 30px rgba(241, 196, 15, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 50;
+      min-width: 280px;
+      text-align: center;
+    }
+    .win-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .win-toast h2 {
+      font-family: 'Cinzel', serif;
+      color: #ffd700;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .win-toast p { font-size: 14px; color: #ecf0f1; margin-bottom: 10px; }
+    .btn-close-toast {
+      background: #f1c40f;
+      color: #000;
+      border: none;
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Modal Admin / God Mode */
+    .modal-admin {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-admin.open { display: flex; }
+    .admin-card {
+      background: #140828;
+      border: 2px solid #9b59b6;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+      box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .admin-header h3 {
+      color: #ffd700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-close-admin {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .admin-input {
+      width: 100%;
+      background: #090314;
+      border: 1.5px solid #8e44ad;
+      color: #fff;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+    .admin-btn-submit {
+      width: 100%;
+      background: linear-gradient(180deg, #9b59b6, #8e44ad);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .admin-error {
+      color: #e74c3c;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quick-btn {
+      background: #250f44;
+      border: 1px solid #8e44ad;
+      color: #e0d0f5;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .quick-btn:hover { background: #8e44ad; color: #fff; }
+    .god-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .god-btn {
+      background: #17072d;
+      border: 1.5px solid #555;
+      color: #bbb;
+      padding: 7px 4px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .god-btn:hover { filter: brightness(1.2); }
+    .god-btn.active {
+      background: #4a1975;
+      border-color: #ffd700;
+      color: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    .god-status {
+      font-size: 12px;
+      color: #00ffcc;
+      margin-top: 6px;
+      text-align: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wheel-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">✕ ล็อบบี้</button>
+        <span class="game-logo">🎡 VIP WHEEL</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill" title="คลิกเพื่อเติมเงิน">
+          <span>💰</span>
+          <span class="val" id="walletBal">50,000</span>
+          <span>THB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Wheel Stage -->
+    <div class="wheel-stage">
+      <div class="wheel-container">
+        <!-- Needle Arrow -->
+        <div class="wheel-needle" id="wheelNeedle">
+          <svg viewBox="0 0 32 42">
+            <polygon points="16,42 0,6 7,0 25,0 32,6" fill="#ffd700" stroke="#b7950b" stroke-width="2"/>
+            <circle cx="16" cy="10" r="5" fill="#e74c3c" stroke="#fff" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <canvas id="wheelCanvas" width="480" height="480"></canvas>
+      </div>
+
+      <!-- History Record Bar -->
+      <div class="history-bar">
+        <span style="color:#ffd700; font-weight:800;">ประวัติ:</span>
+        <div id="historyList" style="display:flex; gap:6px;">
+          <span class="history-tag" style="background:#8e44ad; color:#fff;">x5</span>
+          <span class="history-tag" style="background:#2980b9; color:#fff;">x2</span>
+          <span class="history-tag" style="background:#16a085; color:#fff;">x1.2</span>
+          <span class="history-tag" style="background:#c0392b; color:#fff;">x10</span>
+          <span class="history-tag" style="background:#f39c12; color:#000;">x50</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Win Toast Banner -->
+    <div class="win-toast" id="toastBanner">
+      <h2 id="toastTitle">🎉 WINNER!</h2>
+      <p id="toastDesc">วงล้อหยุดที่: x10</p>
+      <button class="btn-close-toast" id="btnCloseToast">รับรางวัล</button>
+    </div>
+
+    <!-- Betting Board -->
+    <div class="betting-section">
+      <div class="multiplier-grid">
+        <div class="bet-cell" data-mult="x1.2">
+          <span class="cell-mult">x1.2</span>
+          <span class="cell-label">ปลอดภัย</span>
+          <span class="cell-chips" id="chip_x1_2">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x2">
+          <span class="cell-mult">x2</span>
+          <span class="cell-label">สองเท่า</span>
+          <span class="cell-chips" id="chip_x2">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x5">
+          <span class="cell-mult">x5</span>
+          <span class="cell-label">ห้าเท่า</span>
+          <span class="cell-chips" id="chip_x5">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x10">
+          <span class="cell-mult">x10</span>
+          <span class="cell-label">สิบเท่า</span>
+          <span class="cell-chips" id="chip_x10">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x20">
+          <span class="cell-mult">x20</span>
+          <span class="cell-label">ยี่สิบเท่า</span>
+          <span class="cell-chips" id="chip_x20">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x50">
+          <span class="cell-mult" style="color:#ff9ff3;">x50</span>
+          <span class="cell-label">เมก้าวิน</span>
+          <span class="cell-chips" id="chip_x50">฿0</span>
+        </div>
+        <div class="bet-cell" data-mult="x100" style="border-color:#ffd700; background:linear-gradient(135deg, #3d1b63, #6b2880);">
+          <span class="cell-mult" style="color:#f9ca24;">👑 x100</span>
+          <span class="cell-label" style="color:#ffeaa7;">JACKPOT</span>
+          <span class="cell-chips" id="chip_x100">฿0</span>
+        </div>
+      </div>
+
+      <!-- Controls & Chips -->
+      <div class="controls-bar">
+        <div class="chips-tray">
+          <div class="chip-btn chip-20 active" data-val="20">20</div>
+          <div class="chip-btn chip-50" data-val="50">50</div>
+          <div class="chip-btn chip-100" data-val="100">100</div>
+          <div class="chip-btn chip-500" data-val="500">500</div>
+          <div class="chip-btn chip-1000" data-val="1000">1K</div>
+          <div class="chip-btn chip-5000" data-val="5000">5K</div>
+        </div>
+
+        <div class="action-group">
+          <button class="btn-act" id="btnClearBets">ล้างชิป</button>
+          <button class="btn-act" id="btnDoubleBets">x2 ชิป</button>
+          <button class="btn-spin" id="btnSpin">🎡 หมุนวงล้อ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Modal (PIN: 888) -->
+  <div class="modal-admin" id="modalAdmin">
+    <div class="admin-card">
+      <div class="admin-header">
+        <h3>🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+        <button class="btn-close-admin" id="btnCloseAdmin">✕</button>
+      </div>
+
+      <!-- Auth Section -->
+      <div id="adminAuth">
+        <label style="font-size:13px; color:#ccc; display:block; margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+        <input type="password" id="adminPinInput" class="admin-input" placeholder="ระบุรหัส (888)" maxlength="6">
+        <button class="admin-btn-submit" id="btnAdminLogin">ยืนยันรหัสผ่าน</button>
+        <div class="admin-error" id="adminError"></div>
+      </div>
+
+      <!-- Panel Section -->
+      <div id="adminPanel" style="display:none;">
+        <div style="font-size:13px; color:#ffd700; font-weight:800; margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+        <div class="quick-grid">
+          <button class="quick-btn" data-add="1000">+1,000</button>
+          <button class="quick-btn" data-add="5000">+5,000</button>
+          <button class="quick-btn" data-add="10000">+10,000</button>
+          <button class="quick-btn" data-add="50000">+50,000</button>
+          <button class="quick-btn" data-add="100000">+100,000</button>
+          <button class="quick-btn" id="btnCustomAdd">กำหนดเอง...</button>
+        </div>
+        <button class="quick-btn" id="btnResetBal" style="width:100%; margin-top:8px; border-color:#e74c3c; color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+
+        <!-- God Mode / ล็อคผล -->
+        <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.15); padding-top:10px;">
+          <div style="font-size:13px; font-weight:800; color:#ffd700;">🎯 ล็อคผลวงล้อรอบถัดไป (God Mode):</div>
+          <div class="god-grid">
+            <button class="god-btn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+            <button class="god-btn" data-force="x100" style="border-color:#f1c40f; color:#ffd700;">👑 บังคับ x100 JACKPOT</button>
+            <button class="god-btn" data-force="x50" style="border-color:#e056fd; color:#e056fd;">🏆 บังคับ x50 เมก้า</button>
+            <button class="god-btn" data-force="x20" style="border-color:#ff7675; color:#ff7675;">💎 บังคับ x20</button>
+            <button class="god-btn" data-force="x10" style="border-color:#e67e22; color:#e67e22;">🔥 บังคับ x10</button>
+            <button class="god-btn" data-force="x5" style="border-color:#9b59b6; color:#be2edd;">⭐ บังคับ x5</button>
+            <button class="god-btn" data-force="x2" style="border-color:#3498db; color:#74b9ff;">⚡ บังคับ x2</button>
+            <button class="god-btn" data-force="x0" style="border-color:#7f8c8d; color:#b2bec3;">💀 บังคับ x0 (กินเรียบ)</button>
+          </div>
+          <div class="god-status" id="godStatusText">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Synthesizer
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+    function getAudio() {
+      if (!actx) actx = new AudioCtx();
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    }
+    const sfx = {
+      tick: () => {
+        try {
+          const ctx = getAudio();
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.04);
+          g.gain.setValueAtTime(0.12, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.04);
+        } catch (e) {}
+      },
+      chip: () => {
+        try {
+          const ctx = getAudio();
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.05);
+          g.gain.setValueAtTime(0.18, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.05);
+        } catch (e) {}
+      },
+      win: () => {
+        try {
+          const ctx = getAudio();
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+            g.gain.setValueAtTime(0, ctx.currentTime);
+            g.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.08);
+            g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + idx * 0.08 + 0.3);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.08);
+            osc.stop(ctx.currentTime + idx * 0.08 + 0.35);
+          });
+        } catch (e) {}
+      },
+      jackpot: () => {
+        try {
+          const ctx = getAudio();
+          [523, 659, 784, 1046, 1318, 1568].forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.07);
+            g.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.07);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.07 + 0.4);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.07);
+            osc.stop(ctx.currentTime + i * 0.07 + 0.45);
+          });
+        } catch (e) {}
+      }
+    };
+
+    // Wheel Sectors Definition (12 Wedges, 30 deg each)
+    const SECTORS = [
+      { id: 0, mult: 'x1.2', val: 1.2, color: '#16a085', label: '1.2x', bg: '#0e6251' },
+      { id: 1, mult: 'x2',   val: 2.0, color: '#2980b9', label: '2x',   bg: '#1b4f72' },
+      { id: 2, mult: 'x0',   val: 0.0, color: '#2c3e50', label: 'MISS', bg: '#17202a' },
+      { id: 3, mult: 'x5',   val: 5.0, color: '#8e44ad', label: '5x',   bg: '#512e5f' },
+      { id: 4, mult: 'x2',   val: 2.0, color: '#2980b9', label: '2x',   bg: '#1b4f72' },
+      { id: 5, mult: 'x10',  val: 10.0, color: '#d35400', label: '10x',  bg: '#7e3204' },
+      { id: 6, mult: 'x1.2', val: 1.2, color: '#16a085', label: '1.2x', bg: '#0e6251' },
+      { id: 7, mult: 'x20',  val: 20.0, color: '#c0392b', label: '20x',  bg: '#78281f' },
+      { id: 8, mult: 'x0',   val: 0.0, color: '#2c3e50', label: 'MISS', bg: '#17202a' },
+      { id: 9, mult: 'x5',   val: 5.0, color: '#8e44ad', label: '5x',   bg: '#512e5f' },
+      { id: 10, mult: 'x50', val: 50.0, color: '#f39c12', label: '50x',  bg: '#9a6309' },
+      { id: 11, mult: 'x100', val: 100.0, color: '#9b59b6', label: '100x 👑', bg: '#4a235a' }
+    ];
+
+    // State
+    const numSectors = SECTORS.length;
+    const arc = (2 * Math.PI) / numSectors;
+    let currentAngle = 0;
+    let isSpinning = false;
+    let selectedChip = 20;
+    let bets = {}; // e.g. { 'x1.2': 100, 'x5': 500 }
+    let adminForce = null; // 'none', 'x100', 'x50', etc.
+    let isAdminAuth = false;
+
+    // Balance
+    let balance = parseFloat(localStorage.getItem('balance')) || 50000;
+    function renderWallet() {
+      document.getElementById('walletBal').textContent = Math.floor(balance).toLocaleString();
+    }
+    function setBalance(n) {
+      balance = Math.max(0, n);
+      localStorage.setItem('balance', balance.toString());
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance }, '*');
+        }
+      } catch (e) {}
+    }
+
+    // Sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'balance' && e.newValue !== null) {
+        const v = parseFloat(e.newValue);
+        if (!isNaN(v) && v !== balance) {
+          balance = v;
+          renderWallet();
+        }
+      }
+    });
+    setInterval(() => {
+      const v = parseFloat(localStorage.getItem('balance'));
+      if (!isNaN(v) && v !== balance) {
+        balance = v;
+        renderWallet();
+      }
+    }, 400);
+
+    // Canvas Rendering
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width;
+    const center = size / 2;
+    const radius = size / 2 - 14;
+
+    function drawWheel(angle) {
+      ctx.clearRect(0, 0, size, size);
+
+      // Outer Glow & Gold Rim
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(center, center, radius + 8, 0, 2 * Math.PI);
+      ctx.fillStyle = '#110520';
+      ctx.fill();
+      ctx.lineWidth = 12;
+      const rimGrad = ctx.createLinearGradient(0, 0, size, size);
+      rimGrad.addColorStop(0, '#ffd700');
+      rimGrad.addColorStop(0.5, '#b7950b');
+      rimGrad.addColorStop(1, '#ffd700');
+      ctx.strokeStyle = rimGrad;
+      ctx.stroke();
+
+      // Outer light bulbs (24 bulbs)
+      const numBulbs = 24;
+      for (let i = 0; i < numBulbs; i++) {
+        const bAngle = (i * 2 * Math.PI) / numBulbs;
+        const bx = center + (radius + 2) * Math.cos(bAngle);
+        const by = center + (radius + 2) * Math.sin(bAngle);
+        ctx.beginPath();
+        ctx.arc(bx, by, 3.5, 0, 2 * Math.PI);
+        const isBlink = Math.floor((angle * 5) + i) % 2 === 0;
+        ctx.fillStyle = isBlink ? '#fff' : '#f39c12';
+        ctx.shadowColor = '#ffd700';
+        ctx.shadowBlur = isBlink ? 8 : 2;
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // Wedges
+      for (let i = 0; i < numSectors; i++) {
+        const sAngle = angle + i * arc;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius - 6, sAngle, sAngle + arc);
+        ctx.closePath();
+        ctx.fillStyle = SECTORS[i].bg;
+        ctx.fill();
+
+        // Wedge border
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Sector content / Label
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(sAngle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#fff';
+
+        if (SECTORS[i].mult === 'x100') {
+          ctx.font = '900 20px Kanit';
+          ctx.fillStyle = '#ffd700';
+          ctx.shadowColor = '#ffd700';
+          ctx.shadowBlur = 10;
+        } else if (SECTORS[i].mult === 'x50') {
+          ctx.font = '800 18px Kanit';
+          ctx.fillStyle = '#ff9ff3';
+        } else if (SECTORS[i].mult === 'x0') {
+          ctx.font = '700 15px Kanit';
+          ctx.fillStyle = '#7f8c8d';
+        } else {
+          ctx.font = '800 17px Kanit';
+        }
+
+        ctx.fillText(SECTORS[i].label, radius - 24, 6);
+        ctx.restore();
+
+        // Outer Pegs on wedge lines
+        const px = center + (radius - 6) * Math.cos(sAngle);
+        const py = center + (radius - 6) * Math.sin(sAngle);
+        ctx.beginPath();
+        ctx.arc(px, py, 3.5, 0, 2 * Math.PI);
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = '#ffd700';
+        ctx.shadowBlur = 4;
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // Center Hub
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(center, center, 44, 0, 2 * Math.PI);
+      const hubGrad = ctx.createRadialGradient(center, center, 5, center, center, 44);
+      hubGrad.addColorStop(0, '#fff3a8');
+      hubGrad.addColorStop(0.5, '#f7b731');
+      hubGrad.addColorStop(1, '#684102');
+      ctx.fillStyle = hubGrad;
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Center VIP Text
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '900 16px Cinzel';
+      ctx.fillStyle = '#06020a';
+      ctx.fillText('VIP', center, center - 2);
+      ctx.restore();
+    }
+
+    drawWheel(currentAngle);
+
+    // Needle Tick Animation & Sound
+    let lastSectorIndex = -1;
+    function checkNeedleTick(deg) {
+      // Top pointer is at -90 deg (or 3*PI/2)
+      // Normalized angle relative to pointer
+      let norm = (3 * Math.PI / 2 - deg) % (2 * Math.PI);
+      if (norm < 0) norm += 2 * Math.PI;
+      const idx = Math.floor(norm / arc) % numSectors;
+      if (idx !== lastSectorIndex) {
+        lastSectorIndex = idx;
+        sfx.tick();
+        const needle = document.getElementById('wheelNeedle');
+        needle.classList.add('tick');
+        setTimeout(() => needle.classList.remove('tick'), 50);
+      }
+    }
+
+    // Spin Mechanics
+    function spinWheel() {
+      if (isSpinning) return;
+
+      const totalBet = Object.values(bets).reduce((a, b) => a + b, 0);
+      if (totalBet <= 0) {
+        alert('กรุณาวางชิปเดิมพันบนตัวคูณที่ต้องการลุ้นก่อนหมุนวงล้อ!');
+        return;
+      }
+      if (balance < totalBet) {
+        alert('ยอดเงินคงเหลือไม่เพียงพอ กรุณาเติมเงินผ่านระบบหลังบ้าน!');
+        return;
+      }
+
+      // Deduct balance
+      setBalance(balance - totalBet);
+      isSpinning = true;
+      document.getElementById('btnSpin').disabled = true;
+      document.getElementById('toastBanner').classList.remove('show');
+
+      // Determine Target Sector
+      let targetIndex;
+      if (adminForce && adminForce !== 'none') {
+        const matches = [];
+        SECTORS.forEach((s, idx) => {
+          if (s.mult === adminForce) matches.push(idx);
+        });
+        if (matches.length > 0) {
+          targetIndex = matches[Math.floor(Math.random() * matches.length)];
+        } else {
+          targetIndex = Math.floor(Math.random() * numSectors);
+        }
+      } else {
+        targetIndex = Math.floor(Math.random() * numSectors);
+      }
+
+      // Calculate Target Angle so that targetIndex lands exactly at Top (-PI/2)
+      // Top pointer is at (3*PI / 2)
+      // We want: (3*PI/2 - finalAngle) % (2*PI) to fall inside [targetIndex*arc, (targetIndex+1)*arc]
+      const wedgeCenter = targetIndex * arc + arc / 2 + (Math.random() * 0.4 - 0.2) * arc;
+      let finalTargetNorm = (3 * Math.PI / 2 - wedgeCenter) % (2 * Math.PI);
+      if (finalTargetNorm < 0) finalTargetNorm += 2 * Math.PI;
+
+      // Spin minimum 5 to 8 full rotations
+      const fullRotations = 6 + Math.floor(Math.random() * 3);
+      const startAngle = currentAngle % (2 * Math.PI);
+      const totalDelta = (fullRotations * 2 * Math.PI) + (finalTargetNorm - startAngle + 2 * Math.PI) % (2 * Math.PI);
+
+      const duration = 5200; // ms
+      const startTime = performance.now();
+
+      function animateSpin(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Cubic ease out
+        const ease = 1 - Math.pow(1 - progress, 3.5);
+        currentAngle = startAngle + totalDelta * ease;
+
+        drawWheel(currentAngle);
+        checkNeedleTick(currentAngle);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateSpin);
+        } else {
+          finishSpin(targetIndex);
+        }
+      }
+
+      requestAnimationFrame(animateSpin);
+    }
+
+    function finishSpin(targetIndex) {
+      isSpinning = false;
+      document.getElementById('btnSpin').disabled = false;
+      const winningSector = SECTORS[targetIndex];
+
+      // Add to History
+      const hist = document.getElementById('historyList');
+      const tag = document.createElement('span');
+      tag.className = 'history-tag';
+      tag.style.background = winningSector.color;
+      tag.style.color = '#fff';
+      tag.textContent = winningSector.label;
+      hist.insertBefore(tag, hist.firstChild);
+      if (hist.children.length > 7) hist.removeChild(hist.lastChild);
+
+      // Payout Calculation
+      const betOnWinner = bets[winningSector.mult] || 0;
+      let winAmount = 0;
+
+      if (winningSector.val > 0 && betOnWinner > 0) {
+        winAmount = betOnWinner * winningSector.val;
+      }
+
+      if (winAmount > 0) {
+        if (winningSector.val >= 50) sfx.jackpot();
+        else sfx.win();
+        setBalance(balance + winAmount);
+        document.getElementById('toastTitle').textContent = winningSector.val >= 50 ? '👑 MEGA JACKPOT!' : '🎉 YOU WIN!';
+        document.getElementById('toastDesc').innerHTML = `วงล้อหยุดที่: <strong>${winningSector.label}</strong><br>รับเงินรางวัล: <strong style="color:#ffd700; font-size:18px;">+฿${winAmount.toLocaleString()}</strong>`;
+      } else {
+        document.getElementById('toastTitle').textContent = 'ROUND OVER';
+        document.getElementById('toastDesc').innerHTML = `วงล้อหยุดที่: <strong>${winningSector.label}</strong><br>รอบนี้ไม่ถูกรางวัล`;
+      }
+      document.getElementById('toastBanner').classList.add('show');
+    }
+
+    document.getElementById('btnSpin').addEventListener('click', spinWheel);
+    document.getElementById('btnCloseToast').addEventListener('click', () => {
+      document.getElementById('toastBanner').classList.remove('show');
+    });
+
+    // Chip Selection
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedChip = parseInt(btn.dataset.val, 10);
+        sfx.chip();
+      });
+    });
+
+    // Bet Cells
+    document.querySelectorAll('.bet-cell').forEach(cell => {
+      cell.addEventListener('click', () => {
+        if (isSpinning) return;
+        const mult = cell.dataset.mult;
+        bets[mult] = (bets[mult] || 0) + selectedChip;
+        sfx.chip();
+        updateBetUI();
+      });
+    });
+
+    function updateBetUI() {
+      document.querySelectorAll('.bet-cell').forEach(cell => {
+        const mult = cell.dataset.mult;
+        const amt = bets[mult] || 0;
+        const badge = cell.querySelector('.cell-chips');
+        if (amt > 0) {
+          cell.classList.add('active');
+          cell.classList.add('has-chips');
+          badge.textContent = `฿${amt.toLocaleString()}`;
+        } else {
+          cell.classList.remove('active');
+          cell.classList.remove('has-chips');
+        }
+      });
+    }
+
+    document.getElementById('btnClearBets').addEventListener('click', () => {
+      if (isSpinning) return;
+      bets = {};
+      sfx.chip();
+      updateBetUI();
+    });
+
+    document.getElementById('btnDoubleBets').addEventListener('click', () => {
+      if (isSpinning) return;
+      for (const k in bets) {
+        bets[k] *= 2;
+      }
+      sfx.chip();
+      updateBetUI();
+    });
+
+    // Exit Button
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    // Admin Modal Logic (PIN: 888)
+    const modalAdmin = document.getElementById('modalAdmin');
+    const adminAuth = document.getElementById('adminAuth');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminPinInput = document.getElementById('adminPinInput');
+    const adminError = document.getElementById('adminError');
+
+    function openAdmin() {
+      modalAdmin.classList.add('open');
+      adminError.textContent = '';
+      if (isAdminAuth) {
+        adminAuth.style.display = 'none';
+        adminPanel.style.display = 'block';
+      } else {
+        adminAuth.style.display = 'block';
+        adminPanel.style.display = 'none';
+        adminPinInput.value = '';
+        setTimeout(() => adminPinInput.focus(), 150);
+      }
+    }
+    document.getElementById('btnAdminModal').addEventListener('click', openAdmin);
+    document.getElementById('walletPill').addEventListener('click', openAdmin);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => {
+      modalAdmin.classList.remove('open');
+    });
+
+    function verifyPin() {
+      if (adminPinInput.value.trim() === '888') {
+        isAdminAuth = true;
+        sfx.win();
+        adminAuth.style.display = 'none';
+        adminPanel.style.display = 'block';
+      } else {
+        adminError.textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        adminPinInput.value = '';
+        adminPinInput.focus();
+      }
+    }
+    document.getElementById('btnAdminLogin').addEventListener('click', verifyPin);
+    adminPinInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyPin();
+    });
+
+    // Quick Add Funds
+    document.querySelectorAll('.quick-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.add, 10);
+        setBalance(balance + val);
+        sfx.chip();
+        alert(`เติมเงิน +฿${val.toLocaleString()} เรียบร้อยแล้ว!`);
+      });
+    });
+
+    document.getElementById('btnCustomAdd').addEventListener('click', () => {
+      const amt = prompt('กรอกจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (amt && !isNaN(amt) && Number(amt) > 0) {
+        setBalance(balance + Number(amt));
+        sfx.chip();
+      }
+    });
+
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      setBalance(50000);
+      sfx.chip();
+      alert('รีเซ็ตยอดเงินเป็น ฿50,000 เรียบร้อยแล้ว!');
+    });
+
+    // God Mode Selector
+    document.querySelectorAll('.god-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.god-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        adminForce = btn.dataset.force;
+        sfx.chip();
+        const stat = document.getElementById('godStatusText');
+        if (adminForce === 'none') {
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else {
+          stat.textContent = `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ${btn.textContent.trim()} ]`;
+        }
+      });
+    });
+
+    // Init
+    renderWallet();
+  </script>
+</body>
+</html>

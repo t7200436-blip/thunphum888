@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VIP Blackjack 21 Live - แบล็กแจ็กระดับวีไอพี</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --felt: radial-gradient(circle at 50% 30%, #541115 0%, #290709 70%, #100203 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #060102;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+    .bj-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 980px;
+      max-height: 960px;
+      background: var(--felt);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #846522;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(18, 4, 6, 0.95);
+      border-bottom: 2px solid #a67c2e;
+      z-index: 20;
+    }
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover { background: rgba(255, 215, 0, 0.2); }
+    .btn-top.btn-exit {
+      background: #3a1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+    .game-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: var(--gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      background: linear-gradient(180deg, #351316 0%, #170507 100%);
+      border: 1.5px solid #a67c2e;
+      border-radius: 20px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .wallet-badge .val { color: #ffd700; font-weight: 800; }
+    /* Table Felt & Hands */
+    .table-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 12px 18px;
+      position: relative;
+    }
+    .dealer-box, .player-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .role-badge {
+      font-size: 13px;
+      color: #ffd700;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-pill {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #ffd700;
+      border-radius: 14px;
+      padding: 2px 10px;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 800;
+    }
+    .cards-box {
+      display: flex;
+      gap: 8px;
+      min-height: 96px;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Playing Cards */
+    .bj-card {
+      width: 66px;
+      height: 94px;
+      background: #fff;
+      border-radius: 7px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 5px;
+      color: #111;
+      font-weight: 900;
+      font-family: 'Cinzel', serif;
+      animation: cardIn 0.25s ease-out;
+    }
+    .bj-card.red { color: #d63031; }
+    .bj-card.black { color: #2d3436; }
+    .bj-card.back {
+      background: repeating-linear-gradient(45deg, #800000, #800000 8px, #b22222 8px, #b22222 16px);
+      border: 2px solid #ffcc80;
+    }
+    .bj-top { font-size: 14px; line-height: 1; }
+    .bj-mid { font-size: 26px; text-align: center; }
+    .bj-bot { font-size: 14px; line-height: 1; transform: rotate(180deg); }
+    @keyframes cardIn {
+      from { transform: translateY(-30px) scale(0.85); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    /* Betting Circle */
+    .bet-circle {
+      width: 140px;
+      height: 76px;
+      border: 2.5px dashed rgba(255, 215, 0, 0.45);
+      border-radius: 50% / 30%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.4);
+      transition: all 0.2s;
+    }
+    .bet-circle:hover {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+    }
+    .bet-circle.active {
+      border-style: solid;
+      border-color: #ffd700;
+      background: rgba(243, 156, 18, 0.25);
+    }
+    .bet-circle-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffd700;
+    }
+    .bet-circle-amount {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+    }
+    /* Console Controls */
+    .console-bar {
+      background: rgba(14, 2, 4, 0.98);
+      border-top: 2px solid #a67c2e;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+    }
+    .chips-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .chip-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    .chip-btn:hover, .chip-btn.selected {
+      transform: scale(1.15) translateY(-3px);
+      border-style: solid;
+      border-color: #fff;
+      box-shadow: 0 0 14px rgba(255,215,0,0.8);
+    }
+    .chip-10   { background: #3498db; color: #fff; }
+    .chip-50   { background: #e67e22; color: #fff; }
+    .chip-100  { background: #c0392b; color: #fff; }
+    .chip-500  { background: #27ae60; color: #fff; }
+    .chip-1000 { background: #8e44ad; color: #fff; }
+    .chip-5000 { background: radial-gradient(circle, #f1c40f, #d35400); color: #000; }
+    /* Action Buttons Row */
+    .actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 22px;
+      border-radius: 22px;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: all 0.15s;
+    }
+    .action-btn:active { transform: scale(0.95); }
+    .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-deal   { background: linear-gradient(180deg, #f39c12, #d35400); color: #fff; border: 1.5px solid #ffd54f; }
+    .btn-hit    { background: linear-gradient(180deg, #27ae60, #1e824c); color: #fff; border: 1.5px solid #a8e6cf; }
+    .btn-stand  { background: linear-gradient(180deg, #e74c3c, #962d22); color: #fff; border: 1.5px solid #ff7675; }
+    .btn-double { background: linear-gradient(180deg, #8e44ad, #5e2a77); color: #fff; border: 1.5px solid #dcdde1; }
+    .btn-clear  { background: #2c3e50; color: #bdc3c7; border: 1px solid #7f8c8d; }
+    /* Toast Banner */
+    .toast-banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(18, 3, 5, 0.96);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 18px 30px;
+      text-align: center;
+      z-index: 50;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast-banner.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+    .toast-title { font-size: 28px; font-weight: 900; color: #ffd700; }
+    .toast-desc { font-size: 16px; color: #fff; margin: 8px 0 14px; }
+
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .blackjack-app {
+        width: 100vw;
+        height: 100dvh;
+        max-width: 100vw;
+        max-height: 100dvh;
+        border-radius: 0;
+        border: none;
+      }
+      .top-bar { padding: 6px 10px; }
+      .brand-title { font-size: 15px; }
+      .stat-pill { font-size: 11px; padding: 2px 8px; }
+      .table-stage { padding: 6px 8px; overflow-y: auto; }
+      .playing-card { width: 54px; height: 80px; padding: 4px; }
+      .card-val { font-size: 12px; }
+      .card-suit { font-size: 10px; }
+      .card-center-suit { font-size: 20px; }
+      .chips-row { gap: 6px; }
+      .casino-chip { width: 38px; height: 38px; font-size: 11px; }
+      .action-btn { padding: 8px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bj-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">
+          <span>◀</span> กลับล็อบบี้
+        </button>
+        <span class="game-logo">VIP BLACKJACK 21</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal" style="background:rgba(255,215,0,0.1); border-color:rgba(255,215,0,0.4);">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill" title="คลิกเพื่อเติมเงิน">
+          <span>💰 กระเป๋า:</span>
+          <span class="val" id="balanceVal">50,000.00</span>
+          <span style="color:#ffd700;">THB ➕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Canvas Area -->
+    <div class="table-area">
+      <!-- Dealer Hand -->
+      <div class="dealer-box">
+        <div class="role-badge">
+          <span>👑 เจ้ามือ (DEALER)</span>
+          <span class="score-pill" id="dealerScore">0</span>
+        </div>
+        <div class="cards-box" id="dealerCards"></div>
+      </div>
+
+      <!-- Betting Circle -->
+      <div class="bet-circle" id="betCircle">
+        <span class="bet-circle-label">PLACE BET</span>
+        <span class="bet-circle-amount" id="betDisplay">฿0</span>
+      </div>
+
+      <!-- Player Hand -->
+      <div class="player-box">
+        <div class="cards-box" id="playerCards"></div>
+        <div class="role-badge">
+          <span>🃏 ผู้เล่น (PLAYER)</span>
+          <span class="score-pill" id="playerScore">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="console-bar">
+      <div class="chips-row">
+        <div class="chip-btn chip-10 selected" data-val="10">10</div>
+        <div class="chip-btn chip-50" data-val="50">50</div>
+        <div class="chip-btn chip-100" data-val="100">100</div>
+        <div class="chip-btn chip-500" data-val="500">500</div>
+        <div class="chip-btn chip-1000" data-val="1000">1K</div>
+        <div class="chip-btn chip-5000" data-val="5000">5K</div>
+      </div>
+
+      <div class="actions-row">
+        <button class="action-btn btn-clear" id="btnClear">ล้างเดิมพัน</button>
+        <button class="action-btn btn-deal" id="btnDeal" disabled>แจกไพ่ (DEAL)</button>
+        <button class="action-btn btn-hit" id="btnHit" style="display:none;">HIT (จั่ว)</button>
+        <button class="action-btn btn-stand" id="btnStand" style="display:none;">STAND (อยู่)</button>
+        <button class="action-btn btn-double" id="btnDouble" style="display:none;">DOUBLE (2 เท่า)</button>
+      </div>
+    </div>
+
+    <!-- Toast Modal -->
+    <div class="toast-banner" id="toastBanner">
+      <div class="toast-title" id="toastTitle">BLACKJACK!</div>
+      <div class="toast-desc" id="toastDesc">ชนะรับ 3:2 (+฿1,500.00)</div>
+      <button class="action-btn btn-deal" id="btnNextRound">เล่นรอบถัดไป</button>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // Real-Time Wallet Synchronization
+    // ============================================================
+    const BALANCE_KEY = 'balance';
+    let balance = Number(localStorage.getItem(BALANCE_KEY)) || 50000;
+
+    function renderWallet() {
+      const el = document.getElementById('balanceVal');
+      if (el) el.textContent = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function setBalance(newBal) {
+      balance = Number(newBal);
+      localStorage.setItem(BALANCE_KEY, balance);
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance: balance }, '*');
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === BALANCE_KEY && e.newValue !== null) {
+        balance = Number(e.newValue);
+        renderWallet();
+      }
+    });
+
+    window.addEventListener('message', (event) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === 'object') {
+          if (typeof data.balance === 'number') {
+            balance = Number(data.balance);
+            renderWallet();
+          }
+        }
+      } catch (e) {}
+    });
+
+    setInterval(() => {
+      const val = Number(localStorage.getItem(BALANCE_KEY));
+      if (!isNaN(val) && val > 0 && val !== balance) {
+        balance = val;
+        renderWallet();
+      }
+    }, 400);
+
+    // ============================================================
+    // Sound FX
+    // ============================================================
+    class SoundFX {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const Cls = window.AudioContext || window.webkitAudioContext;
+          if (Cls) this.ctx = new Cls();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(()=>{});
+      }
+      tone(freq, type='sine', dur=0.1, gainVal=0.1) {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + dur);
+        } catch (e) {}
+      }
+      chip() { this.tone(900, 'triangle', 0.05, 0.15); }
+      card() { this.tone(350, 'sine', 0.06, 0.2); }
+      win()  { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 'sine', 0.15, 0.15), i * 50)); }
+      lose() { [320, 260, 200].forEach((f, i) => setTimeout(() => this.tone(f, 'sawtooth', 0.12, 0.1), i * 70)); }
+    }
+    const sfx = new SoundFX();
+
+    // ============================================================
+    // Blackjack Core Engine
+    // ============================================================
+    const SUITS = [
+      { sym: '♠', color: 'black' },
+      { sym: '♥', color: 'red' },
+      { sym: '♦', color: 'red' },
+      { sym: '♣', color: 'black' }
+    ];
+    const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+    function createShoe(deckCount=6) {
+      const shoe = [];
+      for (let d = 0; d < deckCount; d++) {
+        for (const s of SUITS) {
+          for (const r of RANKS) {
+            let val = parseInt(r, 10);
+            if (['J', 'Q', 'K'].includes(r)) val = 10;
+            if (r === 'A') val = 11;
+            shoe.push({ rank: r, val, suit: s.sym, color: s.color });
+          }
+        }
+      }
+      for (let i = shoe.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shoe[i], shoe[j]] = [shoe[j], shoe[i]];
+      }
+      return shoe;
+    }
+
+    function calculateScore(cards) {
+      let score = 0;
+      let aces = 0;
+      for (const c of cards) {
+        score += c.val;
+        if (c.rank === 'A') aces++;
+      }
+      while (score > 21 && aces > 0) {
+        score -= 10;
+        aces--;
+      }
+      return score;
+    }
+
+    const state = {
+      selectedChip: 10,
+      bet: 0,
+      shoe: createShoe(6),
+      playerCards: [],
+      dealerCards: [],
+      phase: 'betting', // 'betting' | 'playing' | 'dealer' | 'over'
+      adminForce: null
+    };
+
+    function renderCard(card, isHole=false) {
+      if (isHole) return `<div class="bj-card back"></div>`;
+      return `
+        <div class="bj-card ${card.color}">
+          <div class="bj-top">${card.rank}<br>${card.suit}</div>
+          <div class="bj-mid">${card.suit}</div>
+          <div class="bj-bot">${card.rank}<br>${card.suit}</div>
+        </div>
+      `;
+    }
+
+    function updateUI() {
+      document.getElementById('betDisplay').textContent = '฿' + state.bet.toLocaleString();
+      const circle = document.getElementById('betCircle');
+      if (state.bet > 0) circle.classList.add('active');
+      else circle.classList.remove('active');
+
+      document.getElementById('btnDeal').disabled = state.bet <= 0 || state.phase !== 'betting';
+    }
+
+    // Chip click
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        state.selectedChip = Number(btn.dataset.val);
+        sfx.chip();
+      });
+    });
+
+    // Bet circle click
+    document.getElementById('betCircle').addEventListener('click', () => {
+      if (state.phase !== 'betting') return;
+      if (balance >= state.selectedChip) {
+        setBalance(balance - state.selectedChip);
+        state.bet += state.selectedChip;
+        sfx.chip();
+        updateUI();
+      } else {
+        alert('ยอดเงินคงเหลือไม่พอ');
+      }
+    });
+
+    // Clear Bet
+    document.getElementById('btnClear').addEventListener('click', () => {
+      if (state.phase !== 'betting') return;
+      if (state.bet > 0) {
+        setBalance(balance + state.bet);
+        state.bet = 0;
+        sfx.chip();
+        updateUI();
+      }
+    });
+
+    // Deal
+    document.getElementById('btnDeal').addEventListener('click', () => {
+      if (state.bet <= 0) return;
+      state.phase = 'playing';
+      if (state.shoe.length < 20) state.shoe = createShoe(6);
+
+      sfx.card();
+      if (state.adminForce === 'player_bj') {
+        state.playerCards = [{rank:'A', val:11, suit:'♠', color:'black'}, {rank:'K', val:10, suit:'♠', color:'black'}];
+        state.dealerCards = [{rank:'9', val:9, suit:'♦', color:'red'}, {rank:'8', val:8, suit:'♣', color:'black'}];
+      } else if (state.adminForce === 'dealer_bust') {
+        state.playerCards = [{rank:'10', val:10, suit:'♠', color:'black'}, {rank:'10', val:10, suit:'♥', color:'red'}];
+        state.dealerCards = [{rank:'6', val:6, suit:'♦', color:'red'}, {rank:'10', val:10, suit:'♣', color:'black'}];
+        state.shoe.push({rank:'K', val:10, suit:'♦', color:'red'});
+      } else if (state.adminForce === 'dealer_win') {
+        state.playerCards = [{rank:'10', val:10, suit:'♠', color:'black'}, {rank:'6', val:6, suit:'♦', color:'red'}];
+        state.dealerCards = [{rank:'A', val:11, suit:'♠', color:'black'}, {rank:'10', val:10, suit:'♥', color:'red'}];
+      } else {
+        state.playerCards = [state.shoe.pop(), state.shoe.pop()];
+        state.dealerCards = [state.shoe.pop(), state.shoe.pop()];
+      }
+
+      // Render cards
+      document.getElementById('playerCards').innerHTML = state.playerCards.map(c => renderCard(c)).join('');
+      document.getElementById('dealerCards').innerHTML = renderCard(state.dealerCards[0]) + renderCard(null, true);
+
+      const pScore = calculateScore(state.playerCards);
+      document.getElementById('playerScore').textContent = pScore;
+      document.getElementById('dealerScore').textContent = state.dealerCards[0].val;
+
+      // Show in-game action buttons
+      document.getElementById('btnDeal').style.display = 'none';
+      document.getElementById('btnClear').style.display = 'none';
+      document.getElementById('btnHit').style.display = 'inline-flex';
+      document.getElementById('btnStand').style.display = 'inline-flex';
+      document.getElementById('btnDouble').style.display = (balance >= state.bet) ? 'inline-flex' : 'none';
+
+      // Check Natural Blackjack
+      if (pScore === 21) {
+        finishRound(true);
+      }
+    });
+
+    // Hit Action
+    document.getElementById('btnHit').addEventListener('click', () => {
+      if (state.phase !== 'playing') return;
+      sfx.card();
+      document.getElementById('btnDouble').style.display = 'none';
+      state.playerCards.push(state.shoe.pop());
+      document.getElementById('playerCards').innerHTML = state.playerCards.map(c => renderCard(c)).join('');
+
+      const pScore = calculateScore(state.playerCards);
+      document.getElementById('playerScore').textContent = pScore;
+
+      if (pScore > 21) {
+        // Player Busted!
+        finishRound(false, true);
+      } else if (pScore === 21) {
+        dealerTurn();
+      }
+    });
+
+    // Stand Action
+    document.getElementById('btnStand').addEventListener('click', () => {
+      if (state.phase !== 'playing') return;
+      dealerTurn();
+    });
+
+    // Double Down
+    document.getElementById('btnDouble').addEventListener('click', () => {
+      if (state.phase !== 'playing' || balance < state.bet) return;
+      setBalance(balance - state.bet);
+      state.bet *= 2;
+      updateUI();
+      sfx.chip();
+
+      // Hit exactly 1 card and stand
+      state.playerCards.push(state.shoe.pop());
+      document.getElementById('playerCards').innerHTML = state.playerCards.map(c => renderCard(c)).join('');
+      const pScore = calculateScore(state.playerCards);
+      document.getElementById('playerScore').textContent = pScore;
+
+      if (pScore > 21) {
+        finishRound(false, true);
+      } else {
+        dealerTurn();
+      }
+    });
+
+    // Dealer Turn
+    function dealerTurn() {
+      state.phase = 'dealer';
+      document.getElementById('btnHit').style.display = 'none';
+      document.getElementById('btnStand').style.display = 'none';
+      document.getElementById('btnDouble').style.display = 'none';
+
+      // Reveal Dealer Hole Card
+      document.getElementById('dealerCards').innerHTML = state.dealerCards.map(c => renderCard(c)).join('');
+      let dScore = calculateScore(state.dealerCards);
+      document.getElementById('dealerScore').textContent = dScore;
+
+      const drawLoop = () => {
+        if (dScore < 17) {
+          sfx.card();
+          state.dealerCards.push(state.shoe.pop());
+          document.getElementById('dealerCards').innerHTML = state.dealerCards.map(c => renderCard(c)).join('');
+          dScore = calculateScore(state.dealerCards);
+          document.getElementById('dealerScore').textContent = dScore;
+          setTimeout(drawLoop, 600);
+        } else {
+          finishRound(false, false);
+        }
+      };
+
+      setTimeout(drawLoop, 600);
+    }
+
+    // Finish Round & Payouts
+    function finishRound(naturalBJ=false, playerBust=false) {
+      state.phase = 'over';
+      const pScore = calculateScore(state.playerCards);
+      const dScore = calculateScore(state.dealerCards);
+
+      document.getElementById('dealerCards').innerHTML = state.dealerCards.map(c => renderCard(c)).join('');
+      document.getElementById('dealerScore').textContent = dScore;
+
+      let title = '';
+      let desc = '';
+      let winAmount = 0;
+
+      if (naturalBJ) {
+        const dealerBJ = calculateScore(state.dealerCards) === 21;
+        if (dealerBJ) {
+          title = 'เสมอ (PUSH)';
+          desc = 'ทั้งคู่ได้ Blackjack! คืนเงินเดิมพัน ฿' + state.bet.toLocaleString();
+          winAmount = state.bet;
+        } else {
+          title = '🔥 BLACKJACK!';
+          sfx.win();
+          winAmount = state.bet + (state.bet * 1.5);
+          desc = `แบล็กแจ็ก จ่าย 3:2! รับเงินรางวัล ฿${winAmount.toLocaleString()}`;
+        }
+      } else if (playerBust) {
+        title = '💥 BUST! (แต้มเกิน 21)';
+        sfx.lose();
+        desc = `แต้มของคุณคือ ${pScore} เสียเดิมพัน ฿${state.bet.toLocaleString()}`;
+      } else if (dScore > 21) {
+        title = '🎉 DEALER BUST!';
+        sfx.win();
+        winAmount = state.bet * 2;
+        desc = `เจ้ามือแต้มเกิน (${dScore})! คุณชนะรับ ฿${winAmount.toLocaleString()}`;
+      } else if (pScore > dScore) {
+        title = '🎉 YOU WIN!';
+        sfx.win();
+        winAmount = state.bet * 2;
+        desc = `คุณชนะเจ้ามือ (${pScore} ต่อ ${dScore})! รับ ฿${winAmount.toLocaleString()}`;
+      } else if (pScore === dScore) {
+        title = 'เสมอ (PUSH)';
+        winAmount = state.bet;
+        desc = `แต้มเท่ากัน (${pScore}) คืนเงินเดิมพัน ฿${state.bet.toLocaleString()}`;
+      } else {
+        title = 'DEALER WINS';
+        sfx.lose();
+        desc = `เจ้ามือชนะ (${dScore} ต่อ ${pScore}) เสียเดิมพัน`;
+      }
+
+      if (winAmount > 0) {
+        setBalance(balance + winAmount);
+      }
+
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastDesc').textContent = desc;
+      document.getElementById('toastBanner').classList.add('show');
+    }
+
+    // Next Round Reset
+    document.getElementById('btnNextRound').addEventListener('click', () => {
+      document.getElementById('toastBanner').classList.remove('show');
+      state.phase = 'betting';
+      state.bet = 0;
+      document.getElementById('playerCards').innerHTML = '';
+      document.getElementById('dealerCards').innerHTML = '';
+      document.getElementById('playerScore').textContent = '0';
+      document.getElementById('dealerScore').textContent = '0';
+
+      document.getElementById('btnHit').style.display = 'none';
+      document.getElementById('btnStand').style.display = 'none';
+      document.getElementById('btnDouble').style.display = 'none';
+      document.getElementById('btnDeal').style.display = 'inline-flex';
+      document.getElementById('btnClear').style.display = 'inline-flex';
+      updateUI();
+    });
+
+    // Navigation & Wallet Top-up
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    document.getElementById('walletPill').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'OPEN_WALLET' }, '*');
+          return;
+        }
+      } catch (e) {}
+      const add = prompt('ระบุจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (add && !isNaN(add) && Number(add) > 0) {
+        setBalance(balance + Number(add));
+      }
+    });
+
+    // ============================================================
+    // Admin Modal (PIN: 888) + God Mode — Blackjack
+    // ============================================================
+    let isAdminAuth = false;
+    const modalAdmin = document.createElement('div');
+    modalAdmin.id = 'modalAdmin';
+    modalAdmin.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;';
+    modalAdmin.innerHTML = `
+      <div style="background:#160507;border:2px solid #a67c2e;border-radius:16px;width:100%;max-width:440px;padding:20px;box-shadow:0 0 40px rgba(166,124,46,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:10px;margin-bottom:14px;">
+          <h3 style="color:#ffd700;font-size:16px;">🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+          <button id="btnCloseAdmin" style="background:transparent;border:none;color:#aaa;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="adminAuthSec">
+          <label style="font-size:13px;color:#ccc;display:block;margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+          <input type="password" id="adminPinInput" style="width:100%;background:#0d0203;border:1.5px solid #a67c2e;color:#fff;font-size:18px;padding:10px;border-radius:8px;text-align:center;letter-spacing:4px;margin-bottom:10px;" placeholder="ระบุรหัส (888)" maxlength="6">
+          <button id="btnAdminLogin" style="width:100%;background:linear-gradient(180deg,#f7b731,#c58610);border:none;color:#000;font-weight:800;padding:10px;border-radius:8px;cursor:pointer;font-size:15px;">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" style="color:#e74c3c;font-size:13px;text-align:center;margin-top:8px;"></div>
+        </div>
+        <div id="adminPanelSec" style="display:none;">
+          <div style="font-size:13px;color:#ffd700;font-weight:800;margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+            <button class="badm-btn" data-add="1000">+1,000</button>
+            <button class="badm-btn" data-add="5000">+5,000</button>
+            <button class="badm-btn" data-add="10000">+10,000</button>
+            <button class="badm-btn" data-add="50000">+50,000</button>
+            <button class="badm-btn" data-add="100000">+100,000</button>
+            <button class="badm-btn" data-add="500000">+500,000</button>
+          </div>
+          <button class="badm-btn" id="btnResetBal" style="width:100%;border-color:#e74c3c;color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+          <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;">
+            <div style="font-size:13px;font-weight:800;color:#ffd700;">🎯 ล็อคผลไพ่แบล็กแจ็ก (God Mode):</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px;">
+              <button class="bgod-btn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+              <button class="bgod-btn" data-force="player_bj" style="border-color:#f1c40f;color:#ffd700;">👑 ผู้เล่นได้ Blackjack 21 (จ่าย 3:2)</button>
+              <button class="bgod-btn" data-force="dealer_bust" style="border-color:#27ae60;color:#2ecc71;">🚀 บังคับ เจ้ามือ BUST (แต้มเกิน 21)</button>
+              <button class="bgod-btn" data-force="dealer_win" style="border-color:#e74c3c;color:#ff7675;">💀 บังคับ เจ้ามือได้ 21 (Dealer Win)</button>
+            </div>
+            <div id="godStatusBJ" style="font-size:12px;color:#00ffcc;margin-top:6px;text-align:center;font-weight:700;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modalAdmin);
+
+    const badmStyle = document.createElement('style');
+    badmStyle.textContent = `.badm-btn{background:#23070a;border:1px solid #a67c2e;color:#ffd7a0;padding:8px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}.badm-btn:hover{background:#a67c2e;color:#000;} .bgod-btn{background:#180406;border:1.5px solid #555;color:#bbb;padding:7px 4px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:inherit;} .bgod-btn:hover{filter:brightness(1.2);} .bgod-btn.active{background:#451016;border-color:#ffd700;color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.4);}`;
+    document.head.appendChild(badmStyle);
+
+    function openAdminModal() {
+      modalAdmin.style.display = 'flex';
+      document.getElementById('adminErrorMsg').textContent = '';
+      if (isAdminAuth) {
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminAuthSec').style.display = 'block';
+        document.getElementById('adminPanelSec').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
+      }
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => { modalAdmin.style.display = 'none'; });
+
+    document.getElementById('btnAdminLogin').addEventListener('click', () => {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin === '888') {
+        isAdminAuth = true;
+        sfx.win();
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminErrorMsg').textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        document.getElementById('adminPinInput').value = '';
+      }
+    });
+    document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnAdminLogin').click();
+    });
+
+    document.querySelectorAll('.badm-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const add = Number(btn.dataset.add);
+        setBalance(balance + add);
+        sfx.chip();
+      });
+    });
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      setBalance(50000);
+      sfx.chip();
+    });
+
+    document.querySelectorAll('.bgod-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.bgod-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.force;
+        const stat = document.getElementById('godStatusBJ');
+        if (val === 'none') {
+          state.adminForce = null;
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else if (val === 'player_bj') {
+          state.adminForce = 'player_bj';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ผู้เล่นได้ Blackjack 21 (3:2) ]';
+        } else if (val === 'dealer_bust') {
+          state.adminForce = 'dealer_bust';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ เจ้ามือ BUST แต้มเกิน 21 ]';
+        } else if (val === 'dealer_win') {
+          state.adminForce = 'dealer_win';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ เจ้ามือชนะ (21 แต้ม) ]';
+        }
+        sfx.chip();
+      });
+    });
+
+    // Init
+    renderWallet();
+    updateUI();
+  </script>
+</body>
+</html>

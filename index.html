@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ROYAL VIP CLUB - ศูนย์รวมเกมคาสิโนและสล็อตอันดับ 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Kanit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --surface-1: #12141d;
+      --surface-2: #1a1e2b;
+      --border-color: rgba(243, 156, 18, 0.3);
+      --gold-grad: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+      --accent-gold: #f39c12;
+      --accent-red: #e74c3c;
+      --accent-blue: #3498db;
+      --text-white: #f4f5f9;
+      --text-muted: #8e94a5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Master Layout */
+    .app-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Top Navigation Header */
+    .navbar {
+      height: 64px;
+      background: rgba(18, 20, 29, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1.5px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .brand-crown {
+      font-size: 26px;
+      color: #ffd700;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+    }
+
+    .brand-name {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Wallet Pill */
+    .wallet-pill {
+      background: linear-gradient(180deg, #1f2536 0%, #11141e 100%);
+      border: 1.5px solid #a67c2e;
+      border-radius: 20px;
+      padding: 5px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      transition: all 0.2s;
+    }
+
+    .wallet-pill:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+    }
+
+    .wallet-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .wallet-amount {
+      color: #ffd54f;
+      font-weight: 800;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-icon {
+      background: #1a1e2b;
+      border: 1px solid #333a4f;
+      color: #f4f5f9;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      border-color: #ffd700;
+      background: #252c3f;
+    }
+
+    .btn-icon.admin-key {
+      background: linear-gradient(135deg, #f39c12, #d35400);
+      border-color: #ffd54f;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      margin: 16px;
+      border-radius: 18px;
+      padding: 26px;
+      background: radial-gradient(circle at 80% 50%, rgba(243, 156, 18, 0.25) 0%, transparent 60%), linear-gradient(135deg, #1c1430 0%, #0d061a 100%);
+      border: 1.5px solid rgba(243, 156, 18, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      max-width: 580px;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      background: rgba(243, 156, 18, 0.2);
+      border: 1px solid #f39c12;
+      color: #ffd54f;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      background: linear-gradient(180deg, #fff 0%, #ffe082 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      color: #bbb;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-hero {
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-hero:active { transform: scale(0.95); }
+    .btn-hero.gold {
+      background: linear-gradient(180deg, #f1c40f 0%, #d35400 100%);
+      color: #1a0b04;
+      border: 1.5px solid #fff3a8;
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+    }
+    .btn-hero.blue {
+      background: linear-gradient(180deg, #3498db 0%, #1f618d 100%);
+      color: #fff;
+      border: 1.5px solid #a9cce3;
+    }
+
+    /* Category Filter Tabs */
+    .tabs-bar {
+      display: flex;
+      gap: 10px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: #141722;
+      border: 1.5px solid #282f44;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: linear-gradient(180deg, #252d42 0%, #161a26 100%);
+      color: #ffd700;
+      border-color: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Games Grid Section */
+    .section-title {
+      padding: 0 16px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffd54f;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      padding: 0 16px;
+      margin-bottom: 30px;
+    }
+
+    /* Game Card */
+    .game-card {
+      background: #141722;
+      border: 1.5px solid #2a3147;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: #ffd700;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 215, 0, 0.35);
+    }
+
+    .card-banner {
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #090c12;
+    }
+
+    .card-banner.aztec-bg {
+      background: radial-gradient(circle, #3d1b09 0%, #120803 80%);
+    }
+
+    .card-banner.baccarat-bg {
+      background: radial-gradient(circle, #0e3d2f 0%, #061913 80%);
+    }
+
+    .card-banner.poker-bg { background: radial-gradient(circle, #0f2c4a 0%, #05101c 80%); }
+    .card-banner.blackjack-bg { background: radial-gradient(circle, #541115 0%, #170406 80%); }
+    .card-banner.roulette-bg { background: radial-gradient(circle, #0d4432 0%, #03140e 80%); }
+    .card-banner.sicbo-bg { background: radial-gradient(circle, #4a1510 0%, #150302 80%); }
+
+    .card-banner.mahjong-bg {
+      background: radial-gradient(circle, #301934 0%, #130a15 80%);
+    }
+
+    .card-icon-big {
+      font-size: 64px;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.8));
+      transition: transform 0.25s ease;
+    }
+
+    .game-card:hover .card-icon-big {
+      transform: scale(1.12);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .card-badge.hot { background: #e74c3c; color: #fff; }
+    .card-badge.vip { background: #f39c12; color: #1a0b04; }
+    .card-badge.new { background: #27ae60; color: #fff; }
+
+    .card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .card-game-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .card-game-en {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .card-game-desc {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .card-features-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .tag-chip {
+      background: #1e2436;
+      color: #ffd54f;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .btn-play-game {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-play-game:active { transform: scale(0.96); }
+    .btn-play-game.btn-aztec {
+      background: linear-gradient(180deg, #f39c12 0%, #d35400 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+    }
+    .btn-play-game.btn-baccarat {
+      background: linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    }
+    .btn-play-game.btn-poker {
+      background: linear-gradient(180deg, #2980b9 0%, #1c5980 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(41, 128, 185, 0.4);
+    }
+    .btn-play-game.btn-blackjack {
+      background: linear-gradient(180deg, #c0392b 0%, #851e13 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(192, 57, 43, 0.4);
+    }
+    .btn-play-game.btn-roulette {
+      background: linear-gradient(180deg, #16a085 0%, #0e6655 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(22, 160, 133, 0.4);
+    }
+    .btn-play-game.btn-sicbo {
+      background: linear-gradient(180deg, #d35400 0%, #873600 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(211, 84, 0, 0.4);
+    }
+    .btn-play-game.btn-secondary {
+      background: #232a3e;
+      color: #ddd;
+      border: 1px solid #3d496b;
+    }
+
+    /* Embedded Game Viewer Modal / Stage */
+    .game-viewer-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      background: #000;
+      z-index: 500;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .game-viewer-overlay.active {
+      display: flex;
+    }
+
+    .viewer-top-bar {
+      height: 48px;
+      background: #141724;
+      border-bottom: 1.5px solid #a67c2e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      z-index: 10;
+    }
+
+    .btn-exit-game {
+      background: #2b1414;
+      border: 1px solid #c0392b;
+      color: #e74c3c;
+      padding: 5px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-exit-game:hover { background: #c0392b; color: #fff; }
+
+    .viewer-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffd54f;
+    }
+
+    .viewer-iframe {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      border: none;
+      background: #08090f;
+    }
+
+    /* Admin Top-Up & God Mode Modal (PIN: 888) */
+    .modal-admin {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+      z-index: 600;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-admin.open { display: flex; }
+
+    .admin-card {
+      background: linear-gradient(180deg, #1b202e 0%, #0d1017 100%);
+      border: 2px solid #f39c12;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 22px;
+      box-shadow: 0 0 35px rgba(243, 156, 18, 0.4), 0 10px 40px rgba(0,0,0,0.9);
+      position: relative;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid rgba(243, 156, 18, 0.3);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+
+    .admin-header h3 {
+      color: #ffd54f;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-close-admin {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .admin-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: #07090f;
+      border: 1.5px solid #a67c2e;
+      border-radius: 8px;
+      color: #ffd54f;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 10px 0;
+      outline: none;
+    }
+
+    .admin-input:focus { border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+
+    .admin-btn-submit {
+      width: 100%;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(180deg, #f39c12, #d35400);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.15s;
+    }
+
+    .admin-btn-submit:active { transform: scale(0.96); }
+
+    .admin-error {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .admin-success {
+      color: #2ecc71;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .quick-topup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .quick-btn {
+      background: #141a28;
+      border: 1px solid #3498db;
+      color: #a9cce3;
+      padding: 8px 0;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .quick-btn:hover { background: #3498db; color: #fff; }
+
+    .admin-balance-display {
+      background: #080a10;
+      border: 1px solid #a67c2e;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .admin-balance-display strong {
+      color: #ffd54f;
+      font-size: 18px;
+    }
+
+    .admin-btn-reset {
+      background: #4a2810;
+      border: 1px solid #c0392b;
+      color: #e74c3c;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      display: block;
+      margin: 10px auto 0;
+    }
+
+    /* Footer */
+    .footer {
+      background: #080a0f;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: auto;
+    }
+
+    /* Mobile & Touch Device Optimization */
+    @media (max-width: 768px) {
+      .navbar {
+        height: 52px;
+        padding: 0 10px;
+      }
+      .brand-crown { font-size: 20px; }
+      .brand-name { font-size: 15px; letter-spacing: 1px; }
+      .wallet-label { display: none; }
+      .wallet-pill { padding: 4px 10px; gap: 4px; }
+      .wallet-amount { font-size: 13px; }
+      .btn-icon { width: 34px; height: 34px; font-size: 14px; }
+
+      .hero-banner {
+        margin: 10px;
+        padding: 16px;
+        border-radius: 14px;
+      }
+      .hero-title { font-size: 19px; }
+      .hero-desc { font-size: 12px; margin-bottom: 12px; }
+      .hero-actions { flex-direction: column; width: 100%; gap: 8px; }
+      .btn-hero { width: 100%; justify-content: center; padding: 10px; font-size: 13px; }
+
+      .tabs-bar { padding: 0 10px; margin-bottom: 12px; gap: 6px; }
+      .tab-btn { padding: 6px 12px; font-size: 12px; }
+
+      .section-title { padding: 0 10px; font-size: 16px; margin-bottom: 10px; }
+
+      .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0 10px;
+        margin-bottom: 20px;
+      }
+
+      .card-banner { height: 100px; }
+      .card-icon-big { font-size: 42px; }
+      .card-body { padding: 10px; }
+      .card-game-title { font-size: 13px; }
+      .card-game-sub { font-size: 10px; margin-bottom: 6px; }
+      .card-meta { font-size: 10px; flex-wrap: wrap; gap: 4px; }
+      .card-footer { padding: 0 10px 10px; flex-direction: column; gap: 6px; }
+      .btn-play-game { width: 100%; padding: 7px 0; font-size: 12px; justify-content: center; }
+
+      .game-viewer-overlay {
+        height: 100dvh;
+      }
+      .viewer-top-bar {
+        height: 44px;
+        padding: 0 10px;
+      }
+      .viewer-title {
+        font-size: 12px;
+        max-width: 170px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .btn-exit-game {
+        padding: 4px 10px;
+        font-size: 11px;
+      }
+
+      .admin-card {
+        padding: 16px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+      .brand-name { font-size: 13px; }
+      .wallet-amount { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Top Navigation Header -->
+    <header class="navbar">
+      <div class="brand-logo" onclick="location.reload()">
+        <span class="brand-crown">👑</span>
+        <span class="brand-name">ROYAL VIP CLUB</span>
+      </div>
+
+      <div class="nav-tools">
+        <!-- Main Wallet Pill -->
+        <div class="wallet-pill" id="btnWallet" title="คลิกเพื่อเติมเงิน / เข้าหลังบ้าน (PIN: 888)">
+          <span class="wallet-label">กระเป๋าหลัก:</span>
+          <span class="wallet-amount" id="mainWalletAmount">100,000.00 THB</span>
+          <span style="color:#ffd700; font-size:11px;">➕</span>
+        </div>
+
+        <!-- Secret Admin Backoffice Button (PIN: 888) -->
+        <button class="btn-icon admin-key" id="btnAdminAccess" title="ระบบหลังบ้าน / เติมเงิน / God Mode (รหัส: 888)">
+          🔑
+        </button>
+
+        <button class="btn-icon" id="btnToggleSound" title="เปิด/ปิดเสียง">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Promotional Banner -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <span class="hero-tag">⭐ คาสิโน & สล็อตจำลองมาตรฐานสากล</span>
+        <h1 class="hero-title">รวมสุดยอดเกมยอดนิยมแห่งปี 2026</h1>
+        <p class="hero-desc">
+          สัมผัสประสบการณ์เกมสล็อตสาวถ้ำ 32,400 Ways พร้อมระบบ Wilds-on-the-Way และเกมบาคาร่าสดลุ้นบีบไพ่ ระบบเสียงสมจริง รองรับระบบหลังบ้านเต็มรูปแบบ
+        </p>
+        <div class="hero-actions">
+          <button class="btn-hero gold" onclick="launchGame('aztec.html', 'Treasures of Aztec (สาวถ้ำ) - PG SOFT™')">
+            <span>🎰 เล่นสาวถ้ำ</span>
+          </button>
+          <button class="btn-hero blue" onclick="launchGame('baccarat.html', 'VIP Baccarat Live')">
+            <span>🃏 เล่นบาคาร่าสด</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-filter="all">🔥 ทั้งหมด (All)</button>
+      <button class="tab-btn" data-filter="slot">🎰 สล็อตยอดนิยม (Slots)</button>
+      <button class="tab-btn" data-filter="baccarat">🃏 บาคาร่า (Baccarat)</button>
+      <button class="tab-btn" data-filter="casino">🎰 คาสิโนสด (Live Casino)</button>
+      <button class="tab-btn" data-filter="wheel">🎡 วงล้อ / แข่งม้า / บิงโก</button>
+    </div>
+
+    <!-- Main Games Catalog Grid -->
+    <div class="section-title">
+      <span>🎮 คลังเกมทั้งหมด</span>
+    </div>
+
+    <div class="games-grid" id="gamesContainer">
+
+      <!-- Game Card 1: Treasures of Aztec (สาวถ้ำ) -->
+      <div class="game-card" data-category="slot">
+        <div class="card-banner aztec-bg">
+          <span class="card-badge hot">🔥 ยอดนิยมอันดับ 1</span>
+          <div class="card-icon-big">🗿</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Treasures of Aztec</div>
+            <div class="card-game-en">ขุมทรัพย์แห่งแอซเท็ค (สาวถ้ำ) - PG SOFT</div>
+            <div class="card-game-desc">
+              สล็อต 6 เพลา + 1 เพลาบน ชนะสูงสุด 32,400 วิธี ฟีเจอร์ Wilds-on-the-Way กรอบเงินกรอบทอง และฟรีสปินตัวคูณสะสมไม่รีเซ็ต
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">32,400 WAYS</span>
+              <span class="tag-chip">ฟรีสปิน x2 +2</span>
+              <span class="tag-chip">ซื้อฟรีสปิน</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-aztec" onclick="launchGame('aztec.html', 'Treasures of Aztec (สาวถ้ำ) - PG SOFT™')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card 2: VIP Baccarat -->
+      <div class="game-card" data-category="casino">
+        <div class="card-banner baccarat-bg">
+          <span class="card-badge vip">👑 VIP LIVE</span>
+          <div class="card-icon-big">♠️</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">VIP Baccarat Live</div>
+            <div class="card-game-en">บาคาร่าสดคาสิโนสากล - VIP CLUB</div>
+            <div class="card-game-desc">
+              โต๊ะบาคาร่าสักหลาดเขียวระดับไฮเอนด์ กติกาจั่วไพ่ใบที่ 3 สากล กระดานเค้าไพ่ Bead Plate พร้อมระบบถาม P / ถาม B ล่วงหน้า
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">จ่าย 1:0.95</span>
+              <span class="tag-chip">เสมอ 8:1</span>
+              <span class="tag-chip">ถามเค้าไพ่ P/B</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-baccarat" onclick="launchGame('baccarat.html', 'VIP Baccarat Live')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: Texas Hold'em Poker -->
+      <div class="game-card" data-category="casino">
+        <div class="card-banner poker-bg">
+          <span class="card-badge hot">🔥 ยอดนิยม</span>
+          <div class="card-icon-big">🃏</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Texas Hold'em Poker</div>
+            <div class="card-game-en">โป๊กเกอร์คาสิโนสด - สู้กับเจ้ามือ</div>
+            <div class="card-game-desc">
+              โป๊กเกอร์โฮลเอ็มสุดคลาสสิก วางเดิมพัน Ante พร้อม AA Bonus สู้ Flop, Turn, River วัดแต้มกับเจ้ามือ กฎเกณฑ์สากล
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">AA Bonus สูงสุด 100:1</span>
+              <span class="tag-chip">Call / Fold</span>
+              <span class="tag-chip">เจ้ามือต้องมีคู่ 4</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-poker" onclick="launchGame('poker.html', 'Texas Hold\'em Poker Live')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: VIP Blackjack 21 -->
+      <div class="game-card" data-category="casino">
+        <div class="card-banner blackjack-bg">
+          <span class="card-badge vip">👑 VIP 21</span>
+          <div class="card-icon-big">🂡</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">VIP Blackjack 21</div>
+            <div class="card-game-en">แบล็กแจ็ก 21 แต้มสากล - VIP CLUB</div>
+            <div class="card-game-desc">
+              โต๊ะแบล็กแจ็กหรูหรา จั่ว Hit, หมอบ Stand, เพิ่มเดิมพัน Double Down ชนะรับ 1:1 และ Natural Blackjack จ่ายสูงสุด 3:2
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">แบล็กแจ็ก จ่าย 3:2</span>
+              <span class="tag-chip">Double Down</span>
+              <span class="tag-chip">เจ้ามือหยุด 17</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-blackjack" onclick="launchGame('blackjack.html', 'VIP Blackjack 21 Live')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: European Roulette 3D -->
+      <div class="game-card" data-category="casino">
+        <div class="card-banner roulette-bg">
+          <span class="card-badge new">ใหม่</span>
+          <div class="card-icon-big">🎡</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">European Roulette 3D</div>
+            <div class="card-game-en">รูเล็ตยุโรป 3D - วงล้อสด</div>
+            <div class="card-game-desc">
+              วงล้อรูเล็ต 3D หมุนสมจริง กระดานเดิมพันเต็มรูปแบบ เต็งเลขจ่าย 35:1 แทงแดง/ดำ คู่/คี่ สูง/ต่ำ โหล และแถว 2:1
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">เต็งเลข 35:1</span>
+              <span class="tag-chip">แดง/ดำ 1:1</span>
+              <span class="tag-chip">สถิติ Billboard</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-roulette" onclick="launchGame('roulette.html', 'European Roulette 3D Live')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: Live Sic Bo (ไฮโล) -->
+      <div class="game-card" data-category="casino">
+        <div class="card-banner sicbo-bg">
+          <span class="card-badge hot">🎲 ยอดฮิต</span>
+          <div class="card-icon-big">🎲</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">ไฮโลพื้นบ้าน & Live Sic Bo</div>
+            <div class="card-game-en">ไฮโลเขย่าสด - ฝาครอบแก้ว 3 มิติ</div>
+            <div class="card-game-desc">
+              ไฮโลไทยและสากล ฝาครอบแก้วเขย่าสดพร้อมระบบฟิสิกส์ แทงสูง-ต่ำ 11 ไฮโล เต็งแต้ม 1-6 ตองรวม และผลรวมแต้ม
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">สูง-ต่ำ 1:1</span>
+              <span class="tag-chip">11 ไฮโล 6:1</span>
+              <span class="tag-chip">ตองรวม 24:1</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-sicbo" onclick="launchGame('sicbo.html', 'ไฮโลพื้นบ้าน & Live Sic Bo')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card 3: Mahjong Ways -->
+      <div class="game-card" data-category="slot">
+        <div class="card-banner mahjong-bg">
+          <span class="card-badge new">ฮิต</span>
+          <div class="card-icon-big">🀄</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Mahjong Ways</div>
+            <div class="card-game-en">เส้นทางมาจอง - PG SOFT</div>
+            <div class="card-game-desc">
+              สล็อตธีมไพ่นกกระจอกจีนโบราณ สัญลักษณ์ทองคำเปลี่ยนเป็น WILD และตัวคูณเพิ่มขึ้นในฟรีสปินสูงสุด x10
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">1,024 WAYS</span>
+              <span class="tag-chip">ตัวคูณ x10</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-secondary" onclick="launchGame('https://public.pg-demo.com/demo/?gi=65&lang=th', 'Mahjong Ways (เส้นทางมาจอง)')">
+            <span>เข้าเล่น PG Demo</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card 4: Lucky Neko -->
+      <div class="game-card" data-category="slot">
+        <div class="card-banner" style="background: radial-gradient(circle, #2e1a47 0%, #0d0614 80%);">
+          <span class="card-badge new">ฮิต</span>
+          <div class="card-icon-big">🐱</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Lucky Neko</div>
+            <div class="card-game-en">เนโกะนำโชค แมวกวัก - PG SOFT</div>
+            <div class="card-game-desc">
+              แมวกวักนำโชคแห่งความมั่งคั่ง ชนะต่อเนื่องพร้อมสัญลักษณ์แมวทองเพิ่มตัวคูณ +2 ต่อตัว
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">32,400 WAYS</span>
+              <span class="tag-chip">แมวตัวคูณ +2</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-secondary" onclick="launchGame('https://public.pg-demo.com/demo/?gi=89&lang=th', 'Lucky Neko (เนโกะนำโชค)')">
+            <span>เข้าเล่น PG Demo</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card 5: Fortune Rabbit -->
+      <div class="game-card" data-category="slot">
+        <div class="card-banner" style="background: radial-gradient(circle, #3d2b09 0%, #150f03 80%);">
+          <span class="card-badge hot">ยอดนิยม</span>
+          <div class="card-icon-big">🐰</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Fortune Rabbit</div>
+            <div class="card-game-en">กระต่ายแห่งโชคลาภ - PG SOFT</div>
+            <div class="card-game-desc">
+              ฟีเจอร์กระต่ายโชคดี หมุนรับรางวัลซองอั่งเปาสูงสุด 500x ของเงินเดิมพัน
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">จ่ายสูงสุด 500x</span>
+              <span class="tag-chip">กระต่ายฟีเจอร์</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-secondary" onclick="launchGame('https://public.pg-demo.com/demo/?gi=1543462&lang=th', 'Fortune Rabbit (กระต่ายโชคลาภ)')">
+            <span>เข้าเล่น PG Demo</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card 6: Wild Bandito -->
+      <div class="game-card" data-category="slot">
+        <div class="card-banner" style="background: radial-gradient(circle, #4a1f0a 0%, #150802 80%);">
+          <span class="card-badge vip">แตกหนัก</span>
+          <div class="card-icon-big">💀</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">Wild Bandito</div>
+            <div class="card-game-en">ไวลด์แบนดิโต โจรเม็กซิกัน - PG SOFT</div>
+            <div class="card-game-desc">
+              จอมโจรโครงกระดูกเม็กซิกัน ตัวคูณเพิ่มขึ้นทุกการชนะ และกรอบทองเปลี่ยนเป็น WILD
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">ตัวคูณไร้ขีดจำกัด</span>
+              <span class="tag-chip">กรอบทอง WILD</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-secondary" onclick="launchGame('https://public.pg-demo.com/demo/?gi=104&lang=th', 'Wild Bandito (ไวลด์แบนดิโต)')">
+            <span>เข้าเล่น PG Demo</span> ➜
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Game Card: Lucky Wheel (วงล้อนำโชค) -->
+      <div class="game-card" data-category="wheel">
+        <div class="card-banner" style="background: radial-gradient(circle, #2d0e55 0%, #120523 80%);">
+          <span class="card-badge hot">🎡 นำโชค</span>
+          <div class="card-icon-big">🎡</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">วงล้อนำโชค VIP</div>
+            <div class="card-game-en">Fortune Lucky Wheel - Custom</div>
+            <div class="card-game-desc">
+              หมุนวงล้อ 12 ช่องรับตัวคูณสูงสุด x100 👑 JACKPOT วางชิปบนตัวคูณที่ต้องการลุ้น พร้อมระบบ Admin God Mode ล็อคผล
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">จ่ายสูงสุด x100</span>
+              <span class="tag-chip">Admin God Mode</span>
+              <span class="tag-chip">Real-Time Sync</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-roulette" onclick="launchGame('wheel.html', '🎡 วงล้อนำโชค VIP Fortune Wheel')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: Horse Racing (แข่งม้า) -->
+      <div class="game-card" data-category="wheel">
+        <div class="card-banner" style="background: radial-gradient(circle, #0d2b14 0%, #030f07 80%);">
+          <span class="card-badge new">🏇 ม้าแข่ง</span>
+          <div class="card-icon-big">🏇</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">แข่งม้าชิงแชมป์ VIP Derby</div>
+            <div class="card-game-en">VIP Horse Racing Derby - Custom</div>
+            <div class="card-game-desc">
+              แข่งม้า 6 ตัว ม้ามืดจ่ายสูงสุด 25.0x! เลือกม้าที่มั่นใจ ระบบ Admin God Mode ล็อคม้าที่ชนะได้ทันที
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">ม้ามืด 25.0x</span>
+              <span class="tag-chip">6 ม้าแข่ง</span>
+              <span class="tag-chip">Admin God Mode</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-sicbo" onclick="launchGame('horse.html', '🏇 แข่งม้าชิงแชมป์ VIP Derby Racing')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- Game Card: Bingo (บิงโก) -->
+      <div class="game-card" data-category="wheel">
+        <div class="card-banner" style="background: radial-gradient(circle, #1f0d3a 0%, #0c0518 80%);">
+          <span class="card-badge vip">🎱 BINGO</span>
+          <div class="card-icon-big">🎱</div>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-game-title">บิงโกนำโชค VIP Live</div>
+            <div class="card-game-en">VIP Live Bingo B-I-N-G-O - Custom</div>
+            <div class="card-game-desc">
+              บิงโก 5×5 ลูกบอล 1-75 จ่าย FULL HOUSE 100x! Auto-daub อัตโนมัติ พร้อม Admin God Mode ล็อคผลบิงโกสำเร็จทันที
+            </div>
+            <div class="card-features-tags">
+              <span class="tag-chip">FULL HOUSE 100x</span>
+              <span class="tag-chip">Admin God Mode</span>
+              <span class="tag-chip">Auto Daub</span>
+            </div>
+          </div>
+          <button class="btn-play-game btn-poker" onclick="launchGame('bingo.html', '🎱 บิงโกนำโชค VIP Live Bingo')">
+            <span>เข้าเล่นเกม (PLAY)</span> ➜
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Embedded In-App Game Viewer Modal -->
+    <div class="game-viewer-overlay" id="gameViewerOverlay">
+      <div class="viewer-top-bar">
+        <button class="btn-exit-game" id="btnExitGame">
+          <span>🏠 กลับหน้าล็อบบี้ (Lobby)</span>
+        </button>
+        <span class="viewer-title" id="viewerGameTitle">กำลังเล่นเกม</span>
+        <button class="btn-icon" onclick="toggleViewerFullscreen()" title="เต็มจอ">⛶</button>
+      </div>
+      <iframe id="activeGameIframe" class="viewer-iframe" src="" allow="autoplay; fullscreen"></iframe>
+    </div>
+
+    <!-- Admin Backoffice Top-Up & God Mode Modal (PIN: 888) -->
+    <div class="modal-admin" id="modalAdmin">
+      <div class="admin-card">
+        <div class="admin-header">
+          <h3>🔐 ระบบหลังบ้าน (Admin Passcode: 888)</h3>
+          <button class="btn-close-admin" id="btnCloseAdmin">✕</button>
+        </div>
+
+        <!-- Section 1: Auth Screen -->
+        <div id="adminAuth">
+          <label for="adminPinInput" style="font-size: 13px; color: #ccc; margin-bottom: 8px; display: block;">กรุณากรอกรหัสผ่านหลังบ้านเพื่อจัดการระบบ:</label>
+          <input type="password" id="adminPinInput" class="admin-input" placeholder="ระบุรหัสผ่าน (888)" maxlength="6" autocomplete="off" aria-label="รหัสผ่านหลังบ้าน" />
+          <button class="admin-btn-submit" id="btnAdminLogin">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" class="admin-error"></div>
+        </div>
+
+        <!-- Section 2: Management Panel -->
+        <div id="adminPanel" style="display: none;">
+          <div class="admin-balance-display">
+            ยอดกระเป๋าหลัก: <strong id="adminCurrentBal">100,000.00</strong> THB
+          </div>
+
+          <div style="margin-top: 12px; font-size: 12px; color: #bbb;">เติมเงินด่วนเข้ากระเป๋าหลัก:</div>
+          <div class="quick-topup-grid">
+            <button class="quick-btn" data-add="50000">+50,000</button>
+            <button class="quick-btn" data-add="100000">+100,000</button>
+            <button class="quick-btn" data-add="500000">+500,000</button>
+            <button class="quick-btn" data-add="1000000">+1,000,000</button>
+            <button class="quick-btn" data-add="5000000">+5,000,000</button>
+            <button class="quick-btn" data-add="10000000">+10,000,000</button>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <label for="customAmountInput" style="font-size: 12px; color: #bbb; display: block;">หรือระบุจำนวนเอง (THB):</label>
+            <input type="number" id="customAmountInput" class="admin-input" placeholder="เช่น 250000" min="1" aria-label="ระบุจำนวนเงินเอง" />
+            <button class="admin-btn-submit" id="btnCustomTopup">เติมเงินตามระบุ</button>
+          </div>
+
+          <button class="admin-btn-reset" id="btnResetBal">รีเซ็ตยอดเป็น 100,000 THB</button>
+          <div id="adminSuccessMsg" class="admin-success"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>ROYAL VIP CASINO & SLOTS © 2026 - ระบบเกมจำลองเพื่อความบันเทิง (Simulation Only)</div>
+      <div style="margin-top: 4px; font-size: 11px; color: #666;">รองรับเกม HTML5 / CSS3 / JavaScript ทุกอุปกรณ์</div>
+    </footer>
+
+  </div>
+
+  <script>
+    // --- Master Casino Lobby Logic ---
+    const BALANCE_KEY = 'balance';
+    if (!localStorage.getItem(BALANCE_KEY)) {
+      localStorage.setItem(BALANCE_KEY, '50000');
+    }
+    let globalBalance = Number(localStorage.getItem(BALANCE_KEY)) || 50000.0;
+    let isSoundOn = true;
+    let isAdminAuth = false;
+
+    const elMainWallet = document.getElementById('mainWalletAmount');
+    const elAdminBal = document.getElementById('adminCurrentBal');
+    const elModalAdmin = document.getElementById('modalAdmin');
+    const elBtnAdmin = document.getElementById('btnAdminAccess');
+    const elBtnWallet = document.getElementById('btnWallet');
+    const elCloseAdmin = document.getElementById('btnCloseAdmin');
+    const elAdminAuth = document.getElementById('adminAuth');
+    const elAdminPanel = document.getElementById('adminPanel');
+    const elPinInput = document.getElementById('adminPinInput');
+    const elBtnLogin = document.getElementById('btnAdminLogin');
+    const elAdminErr = document.getElementById('adminErrorMsg');
+    const elAdminSucc = document.getElementById('adminSuccessMsg');
+    const elCustomInput = document.getElementById('customAmountInput');
+    const elBtnCustom = document.getElementById('btnCustomTopup');
+    const elBtnReset = document.getElementById('btnResetBal');
+
+    const elViewer = document.getElementById('gameViewerOverlay');
+    const elViewerIframe = document.getElementById('activeGameIframe');
+    const elViewerTitle = document.getElementById('viewerGameTitle');
+    const elBtnExit = document.getElementById('btnExitGame');
+
+    function updateWalletUI() {
+      elMainWallet.textContent = globalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' THB';
+      if (elAdminBal) {
+        elAdminBal.textContent = globalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      try {
+        if (elViewerIframe && elViewerIframe.contentWindow) {
+          elViewerIframe.contentWindow.postMessage({ type: 'UPDATE_BALANCE', balance: globalBalance }, '*');
+        }
+      } catch (err) {}
+    }
+
+    // Bi-directional balance synchronization
+    window.updateLobbyBalance = function (newBal) {
+      globalBalance = Number(newBal);
+      localStorage.setItem(BALANCE_KEY, globalBalance);
+      updateWalletUI();
+    };
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === BALANCE_KEY && e.newValue !== null) {
+        globalBalance = Number(e.newValue);
+        updateWalletUI();
+      }
+    });
+
+    // Fail-safe balance polling for instantaneous sync across all iframes
+    setInterval(() => {
+      const val = Number(localStorage.getItem(BALANCE_KEY));
+      if (!isNaN(val) && val > 0 && val !== globalBalance) {
+        globalBalance = val;
+        updateWalletUI();
+      }
+    }, 400);
+
+    // Cross-origin safe postMessage listener from iframe games
+    window.addEventListener('message', (event) => {
+      if (!event.data || typeof event.data !== 'object') return;
+      if (event.data.type === 'UPDATE_BALANCE' && typeof event.data.balance === 'number') {
+        globalBalance = Number(event.data.balance);
+        localStorage.setItem(BALANCE_KEY, globalBalance);
+        updateWalletUI();
+      } else if (event.data.type === 'EXIT_GAME') {
+        if (elBtnExit) elBtnExit.click();
+      } else if (event.data.type === 'OPEN_WALLET') {
+        openAdmin();
+      }
+    });
+
+    // Launch Game in In-App Stage
+    window.launchGame = function (gameUrl, gameTitle) {
+      elViewerTitle.textContent = gameTitle;
+      elViewerIframe.src = gameUrl;
+      elViewer.classList.add('active');
+    };
+
+    // Exit Game back to Lobby
+    elBtnExit.addEventListener('click', () => {
+      elViewer.classList.remove('active');
+      elViewerIframe.src = 'about:blank';
+      const savedBal = Number(localStorage.getItem(BALANCE_KEY)) || 0;
+      if (savedBal > 0) { globalBalance = savedBal; }
+      updateWalletUI();
+    });
+
+    // Toggle Fullscreen
+    window.toggleViewerFullscreen = function () {
+      if (!document.fullscreenElement) {
+        elViewer.requestFullscreen().catch(err => {});
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    // Category Tabs Filtering
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.game-card').forEach(card => {
+          const cat = card.dataset.category;
+          const title = card.querySelector('.card-game-title')?.textContent || '';
+          const match = filter === 'all' || 
+                        cat === filter || 
+                        (filter === 'baccarat' && title.includes('Baccarat')) || 
+                        (filter === 'casino' && (cat === 'casino' || cat === 'table'));
+          if (match) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Admin Backoffice Modal Controls (PIN: 888)
+    function openAdmin() {
+      elModalAdmin.classList.add('open');
+      elAdminErr.textContent = '';
+      elAdminSucc.textContent = '';
+      if (isAdminAuth) {
+        elAdminAuth.style.display = 'none';
+        elAdminPanel.style.display = 'block';
+        updateWalletUI();
+      } else {
+        elAdminAuth.style.display = 'block';
+        elAdminPanel.style.display = 'none';
+        elPinInput.value = '';
+        setTimeout(() => elPinInput.focus(), 150);
+      }
+    }
+
+    function closeAdmin() {
+      elModalAdmin.classList.remove('open');
+    }
+
+    elBtnAdmin.addEventListener('click', openAdmin);
+    elBtnWallet.addEventListener('click', openAdmin);
+    elCloseAdmin.addEventListener('click', closeAdmin);
+
+    // Verify Admin PIN (888)
+    function checkAdminPin() {
+      if (elPinInput.value.trim() === '888') {
+        isAdminAuth = true;
+        elAdminErr.textContent = '';
+        elAdminAuth.style.display = 'none';
+        elAdminPanel.style.display = 'block';
+        updateWalletUI();
+      } else {
+        elAdminErr.textContent = '❌ รหัสผ่านไม่ถูกต้อง! (เฉพาะแอดมินเท่านั้น)';
+        elPinInput.value = '';
+        elPinInput.focus();
+      }
+    }
+
+    elBtnLogin.addEventListener('click', checkAdminPin);
+    elPinInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkAdminPin();
+    });
+
+    // Quick Top-Up
+    document.querySelectorAll('.quick-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        const add = parseInt(b.dataset.add, 10);
+        globalBalance += add;
+        localStorage.setItem(BALANCE_KEY, globalBalance);
+        updateWalletUI();
+        elAdminSucc.textContent = `✅ เติมเงินสำเร็จ +${add.toLocaleString()} THB`;
+      });
+    });
+
+    // Custom Top-Up
+    elBtnCustom.addEventListener('click', () => {
+      const val = parseInt(elCustomInput.value, 10);
+      if (isNaN(val) || val <= 0) {
+        elAdminSucc.textContent = 'กรุณาระบุจำนวนเงินที่มากกว่า 0';
+        return;
+      }
+      globalBalance += val;
+      localStorage.setItem(BALANCE_KEY, globalBalance);
+      updateWalletUI();
+      elAdminSucc.textContent = `✅ เติมเงินสำเร็จ +${val.toLocaleString()} THB`;
+      elCustomInput.value = '';
+    });
+
+    // Reset Balance
+    elBtnReset.addEventListener('click', () => {
+      globalBalance = 100000.0;
+      localStorage.setItem(BALANCE_KEY, globalBalance);
+      updateWalletUI();
+      elAdminSucc.textContent = '🔄 รีเซ็ตยอดเงินเป็น 100,000 THB เรียบร้อย';
+    });
+
+    // Sound Toggle
+    document.getElementById('btnToggleSound').addEventListener('click', function () {
+      isSoundOn = !isSoundOn;
+      this.textContent = isSoundOn ? '🔊' : '🔇';
+    });
+
+    // Initial Render
+    updateWalletUI();
+  </script>
+</body>
+</html>

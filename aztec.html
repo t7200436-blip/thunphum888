@@ -1,0 +1,505 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <title>Treasures of Aztec (สาวถ้ำ) | PG SOFT™ Official & Simulated Server</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Kanit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090503;
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+      --gold-solid: #ffd700;
+      --panel-bg: rgba(20, 10, 4, 0.98);
+      --border-gold: rgba(243, 156, 18, 0.4);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .play-layout {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      height: 100dvh;
+      width: 100vw;
+    }
+
+    /* Top HUD Navigation & Synced Wallet */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      height: 52px;
+      padding: 0 12px;
+      background: var(--panel-bg);
+      border-bottom: 1.5px solid var(--border-gold);
+      z-index: 100;
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    }
+
+    .bar-left, .bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffd700;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .hud-btn:hover {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: #ffd700;
+    }
+    .hud-btn:active { transform: scale(0.96); }
+    .hud-btn.btn-back {
+      background: #2b1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+
+    /* Live Synchronized Wallet Pill */
+    .wallet-pill {
+      background: linear-gradient(180deg, #2b1509 0%, #150904 100%);
+      border: 1.5px solid #a67c2e;
+      border-radius: 20px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      transition: all 0.2s;
+    }
+    .wallet-pill:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+    .wallet-pill .amount {
+      color: #ffd700;
+      font-weight: 800;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Engine Mode Toggle (PG Official vs PG Simulated) */
+    .mode-toggle-group {
+      display: flex;
+      background: #110703;
+      border: 1px solid #553017;
+      border-radius: 20px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .mode-tab {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      color: #aaa;
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .mode-tab.active {
+      background: linear-gradient(180deg, #f39c12, #d35400);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(243, 156, 18, 0.6);
+    }
+
+    /* Game Stage (Iframe Container) */
+    .game-stage {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #000;
+      overflow: hidden;
+    }
+    .game-stage iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+      display: block;
+    }
+
+    /* Server Sync Info Floating Pill */
+    .sync-info-pill {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(14, 7, 3, 0.9);
+      border: 1px solid rgba(245, 176, 39, 0.4);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #ffd700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+    .sync-info-pill .dot {
+      width: 8px;
+      height: 8px;
+      background: #2ecc71;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 6px #2ecc71;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        height: 46px;
+        padding: 0 8px;
+        gap: 4px;
+      }
+      .hud-btn {
+        height: 32px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+      .bar-left span:last-child {
+        font-size: 12px;
+      }
+      .bar-left span:last-child small {
+        display: none;
+      }
+      .wallet-pill {
+        padding: 3px 8px;
+        gap: 4px;
+      }
+      .wallet-pill .amount {
+        font-size: 12px;
+      }
+      .mode-toggle-group {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="play-layout">
+    <!-- Top HUD Navigation & Synced Wallet -->
+    <div class="top-bar">
+      <div class="bar-left">
+        <button type="button" class="hud-btn btn-back" id="btnBack">
+          <span>◀</span> กลับล็อบบี้
+        </button>
+
+        <span style="font-weight:900; font-size:14px; color:#ffd700; display:flex; align-items:center; gap:5px;">
+          <span>🏛️ Treasures of Aztec</span>
+          <small style="background:rgba(243,156,18,0.25); border:1px solid #ffd700; padding:1px 6px; border-radius:6px; font-size:10px;">PG SOFT™</small>
+        </span>
+      </div>
+
+      <div class="bar-right">
+        <!-- Engine Mode Badge -->
+        <div class="mode-toggle-group">
+          <button class="mode-tab active" id="btnModePg" title="เล่นตัวเกมของแท้จาก PG Soft">🎮 PG Official</button>
+        </div>
+
+        <!-- Real-Time Synchronized Wallet Pill -->
+        <div class="wallet-pill" id="walletPill" title="ยอดเงินหลัก (คลิกเพื่อเติมเงิน)">
+          <span>💰</span>
+          <span class="amount" id="balanceVal">50,000.00 THB</span>
+          <span style="color:#ffd700; font-size:10px;">➕</span>
+        </div>
+
+        <!-- Admin God Mode PIN: 888 -->
+        <button type="button" class="hud-btn" id="btnAdminModal" style="background:rgba(255,215,0,0.12); border-color:#ffd700;">
+          🔑 หลังบ้าน
+        </button>
+      </div>
+    </div>
+
+    <!-- Official PG SOFT Game Container -->
+    <div class="game-stage">
+      <!-- Genuine PG SOFT Game Client (Connected via REA Server Bridge) -->
+      <iframe id="pgGameFrame" src="./aztec_game/index.html?btt=2&ot=ca7094186b309ee149c55c8822e7ecf2&ops=demo&l=th" title="Treasures of Aztec - PG SOFT" allow="autoplay; fullscreen"></iframe>
+
+      <!-- Sync Status Indicator -->
+      <div class="sync-info-pill">
+        <span class="dot"></span>
+        <span id="syncText">PG SOFT™ OFFICIAL CLIENT (REA SERVER BRIDGED) • ซิงก์เงินและผลรางวัล 100%</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // Real-Time Bi-Directional Balance Sync
+    // ============================================================
+    const BALANCE_KEY = 'balance';
+    let currentBalance = Number(localStorage.getItem(BALANCE_KEY)) || 50000;
+
+    function renderBalance() {
+      const el = document.getElementById('balanceVal');
+      if (el) {
+        el.textContent = currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' THB';
+      }
+    }
+
+    window.updateAztecBalance = function(newBal) {
+      currentBalance = Number(newBal);
+      localStorage.setItem(BALANCE_KEY, currentBalance);
+      renderBalance();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance: currentBalance }, '*');
+        }
+      } catch (err) {}
+      const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:8000' : '';
+      if (apiBase) {
+        fetch(apiBase + '/api/pg/balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ balance: currentBalance })
+        }).catch(() => {});
+      }
+    };
+
+    // Listen for storage changes from other tabs / lobby
+    window.addEventListener('storage', (e) => {
+      if (e.key === BALANCE_KEY && e.newValue !== null) {
+        currentBalance = Number(e.newValue);
+        renderBalance();
+      }
+    });
+
+    // Listen for postMessage from Lobby (index.html)
+    window.addEventListener('message', (event) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === 'object') {
+          if (typeof data.balance === 'number') {
+            currentBalance = Number(data.balance);
+            renderBalance();
+          } else if (data.type === 'UPDATE_BALANCE' && typeof data.balance === 'number') {
+            currentBalance = Number(data.balance);
+            renderBalance();
+          }
+        }
+      } catch (err) {}
+    });
+
+    // Fail-safe Polling to ensure 100% sync
+    setInterval(() => {
+      const val = Number(localStorage.getItem(BALANCE_KEY));
+      if (!isNaN(val) && val > 0 && Math.abs(val - currentBalance) > 0.01) {
+        currentBalance = val;
+        renderBalance();
+      }
+    }, 400);
+
+    const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:8000' : '';
+    if (apiBase) {
+      fetch(apiBase + '/api/pg/balance')
+        .then(res => res.json())
+        .then(data => {
+          if (data && typeof data.balance === 'number') {
+            currentBalance = data.balance;
+            renderBalance();
+          }
+        }).catch(() => {});
+    }
+
+    // ============================================================
+    // Engine Mode: PG Official
+    // ============================================================
+    const btnModePg = document.getElementById('btnModePg');
+    const pgFrame = document.getElementById('pgGameFrame');
+    const syncText = document.getElementById('syncText');
+
+    if (btnModePg) {
+      btnModePg.addEventListener('click', () => {
+        pgFrame.src = './aztec_game/index.html?btt=2&ot=ca7094186b309ee149c55c8822e7ecf2&ops=demo&l=th';
+        if (syncText) syncText.textContent = 'PG SOFT™ OFFICIAL CLIENT (REA SERVER BRIDGED) • ซิงก์เงินและผลรางวัล 100%';
+      });
+    }
+
+    // Back to Lobby button
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    // Wallet pill click opens Admin Top-Up modal
+    document.getElementById('walletPill').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'OPEN_WALLET' }, '*');
+          return;
+        }
+      } catch (e) {}
+      openAdminModal();
+    });
+
+    // ============================================================
+    // Admin Modal (PIN: 888) + God Mode — PG Soft Simulated Server
+    // ============================================================
+    let isAdminAuth = false;
+    const modalAdmin = document.createElement('div');
+    modalAdmin.id = 'modalAdmin';
+    modalAdmin.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:200;padding:16px;';
+    modalAdmin.innerHTML = `
+      <div style="background:#160904;border:2px solid #a67c2e;border-radius:16px;width:100%;max-width:440px;padding:20px;box-shadow:0 0 40px rgba(166,124,46,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:10px;margin-bottom:14px;">
+          <h3 style="color:#ffd700;font-size:16px;">🔐 ควบคุม PG Simulated Server (PIN: 888)</h3>
+          <button id="btnCloseAdmin" style="background:transparent;border:none;color:#aaa;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="adminAuthSec">
+          <label style="font-size:13px;color:#ccc;display:block;margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+          <input type="password" id="adminPinInput" style="width:100%;background:#090402;border:1.5px solid #a67c2e;color:#fff;font-size:18px;padding:10px;border-radius:8px;text-align:center;letter-spacing:4px;margin-bottom:10px;" placeholder="ระบุรหัส (888)" maxlength="6">
+          <button id="btnAdminLogin" style="width:100%;background:linear-gradient(180deg,#f7b731,#c58610);border:none;color:#000;font-weight:800;padding:10px;border-radius:8px;cursor:pointer;font-size:15px;">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" style="color:#e74c3c;font-size:13px;text-align:center;margin-top:8px;"></div>
+        </div>
+        <div id="adminPanelSec" style="display:none;">
+          <div style="font-size:13px;color:#ffd700;font-weight:800;margin-bottom:6px;">💰 เติมเครดิตเซิร์ฟเวอร์ PG:</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+            <button class="aadm-btn" data-add="1000">+1,000</button>
+            <button class="aadm-btn" data-add="5000">+5,000</button>
+            <button class="aadm-btn" data-add="10000">+10,000</button>
+            <button class="aadm-btn" data-add="50000">+50,000</button>
+            <button class="aadm-btn" data-add="100000">+100,000</button>
+            <button class="aadm-btn" data-add="500000">+500,000</button>
+          </div>
+          <button class="aadm-btn" id="btnResetBal" style="width:100%;border-color:#e74c3c;color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+          <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;">
+            <div style="font-size:13px;font-weight:800;color:#ffd700;">🎯 ล็อคผลเซิร์ฟเวอร์ PG Soft (God Mode):</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px;">
+              <button class="agod-btn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+              <button class="agod-btn" data-force="big_win" style="border-color:#f1c40f;color:#ffd700;">👑 บังคับ Big Win (หน้ากากทอง 5 ตัว)</button>
+              <button class="agod-btn" data-force="scatter" style="border-color:#e67e22;color:#f39c12;">💎 บังคับ SCATTER (เข้าฟรีสปิน 10 ครั้ง)</button>
+              <button class="agod-btn" data-force="wild" style="border-color:#2ecc71;color:#27ae60;">🗿 บังคับ WILD เต็มรีล</button>
+              <button class="agod-btn" data-force="lose" style="border-color:#e74c3c;color:#ff7675;grid-column:span 2;">💀 บังคับ หมุนไม่ถูกรางวัล (Lose)</button>
+            </div>
+            <div id="godStatusAztec" style="font-size:12px;color:#00ffcc;margin-top:6px;text-align:center;font-weight:700;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modalAdmin);
+
+    const aadmStyle = document.createElement('style');
+    aadmStyle.textContent = `.aadm-btn{background:#1e0c04;border:1px solid #a67c2e;color:#ffd7a0;padding:8px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}.aadm-btn:hover{background:#a67c2e;color:#000;} .agod-btn{background:#130602;border:1.5px solid #555;color:#bbb;padding:7px 4px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:inherit;} .agod-btn:hover{filter:brightness(1.2);} .agod-btn.active{background:#3d1a08;border-color:#ffd700;color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.4);}`;
+    document.head.appendChild(aadmStyle);
+
+    function openAdminModal() {
+      modalAdmin.style.display = 'flex';
+      document.getElementById('adminErrorMsg').textContent = '';
+      if (isAdminAuth) {
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminAuthSec').style.display = 'block';
+        document.getElementById('adminPanelSec').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
+      }
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => { modalAdmin.style.display = 'none'; });
+
+    document.getElementById('btnAdminLogin').addEventListener('click', () => {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin === '888') {
+        isAdminAuth = true;
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminErrorMsg').textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        document.getElementById('adminPinInput').value = '';
+      }
+    });
+    document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnAdminLogin').click();
+    });
+
+    document.querySelectorAll('.aadm-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const add = Number(btn.dataset.add);
+        window.updateAztecBalance(currentBalance + add);
+      });
+    });
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      window.updateAztecBalance(50000);
+    });
+
+    document.querySelectorAll('.agod-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.agod-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.force;
+        const stat = document.getElementById('godStatusAztec');
+        if (val === 'none') {
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else if (val === 'big_win') {
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ Big Win หน้ากากทอง 5 ตัว ]';
+        } else if (val === 'scatter') {
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ SCATTER ฟรีสปิน 10 ครั้ง x8 ]';
+        } else if (val === 'wild') {
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ WILD เต็มรีล ]';
+        } else if (val === 'lose') {
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ หมุนไม่ถูกรางวัล ]';
+        }
+        if (apiBase) {
+          fetch(apiBase + '/api/pg/god', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: val })
+          }).catch(() => {});
+        }
+      });
+    });
+
+    // Initial render
+    renderBalance();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Texas Hold'em Poker Live - VIP Casino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --felt: radial-gradient(circle at 50% 35%, #0f2c4a 0%, #08182b 70%, #030a13 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+      --gold-solid: #ffd700;
+      --card-bg: #fff;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      background: #02060c;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+    .poker-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 980px;
+      max-height: 960px;
+      background: var(--felt);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #846522;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(3, 10, 19, 0.95);
+      border-bottom: 2px solid #a67c2e;
+      z-index: 20;
+    }
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: #ffd700;
+    }
+    .btn-top.btn-exit {
+      background: #3a1111;
+      border-color: #c0392b;
+      color: #ff7675;
+    }
+    .btn-top.btn-exit:hover {
+      background: #c0392b;
+      color: #fff;
+    }
+    .game-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: var(--gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      background: linear-gradient(180deg, #162436 0%, #0a1018 100%);
+      border: 1.5px solid #a67c2e;
+      border-radius: 20px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .wallet-badge .val {
+      color: #ffd700;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    /* Main Poker Table Area */
+    .table-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 16px;
+      position: relative;
+    }
+    /* Dealer Hand Box */
+    .dealer-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-label {
+      font-size: 12px;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      text-shadow: 0 1px 3px #000;
+    }
+    .cards-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      min-height: 94px;
+      align-items: center;
+    }
+    /* Community Board */
+    .board-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+    .community-cards {
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: 1px dashed rgba(245, 176, 39, 0.4);
+      min-height: 104px;
+      align-items: center;
+    }
+    .pot-pill {
+      background: linear-gradient(180deg, #2c1a0e, #120a05);
+      border: 1px solid #d48806;
+      border-radius: 16px;
+      padding: 3px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffd54f;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+    /* Player Hand Box */
+    .player-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .hand-rank-pill {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #ffd700;
+      border-radius: 14px;
+      padding: 2px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #74b9ff;
+    }
+    /* Playing Cards */
+    .poker-card {
+      width: 64px;
+      height: 90px;
+      background: #fff;
+      border-radius: 7px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 5px;
+      color: #111;
+      font-weight: 900;
+      font-family: 'Cinzel', serif;
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+      animation: cardSlide 0.25s ease-out;
+    }
+    .poker-card.red { color: #d63031; }
+    .poker-card.black { color: #2d3436; }
+    .poker-card.back {
+      background: repeating-linear-gradient(45deg, #192a56, #192a56 8px, #273c75 8px, #273c75 16px);
+      border: 2px solid #dcdde1;
+    }
+    .poker-card.highlight {
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+      transform: translateY(-4px);
+    }
+    .card-top { font-size: 14px; line-height: 1; }
+    .card-center { font-size: 26px; text-align: center; }
+    .card-bottom { font-size: 14px; line-height: 1; transform: rotate(180deg); }
+    @keyframes cardSlide {
+      from { transform: translateY(-20px) scale(0.9); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    /* Betting Spots Area */
+    .bet-spots-area {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 8px 0;
+    }
+    .bet-spot {
+      width: 130px;
+      height: 70px;
+      border: 2px dashed rgba(255, 215, 0, 0.4);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .bet-spot:hover {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+    }
+    .bet-spot.active {
+      border-style: solid;
+      border-color: #ffd700;
+      background: rgba(243, 156, 18, 0.2);
+    }
+    .spot-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffd700;
+    }
+    .spot-payout {
+      font-size: 10px;
+      color: #b2bec3;
+    }
+    .spot-chip-val {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+      margin-top: 2px;
+    }
+    /* Control Console & Chips */
+    .console-bar {
+      background: rgba(4, 10, 18, 0.96);
+      border-top: 2px solid #a67c2e;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 20;
+    }
+    .chips-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+    }
+    .chip-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    .chip-btn:hover, .chip-btn.selected {
+      transform: scale(1.15) translateY(-3px);
+      border-style: solid;
+      border-color: #fff;
+      box-shadow: 0 0 14px rgba(255,215,0,0.8);
+    }
+    .chip-10   { background: #3498db; color: #fff; }
+    .chip-50   { background: #e67e22; color: #fff; }
+    .chip-100  { background: #c0392b; color: #fff; }
+    .chip-500  { background: #27ae60; color: #fff; }
+    .chip-1000 { background: #8e44ad; color: #fff; }
+    .chip-5000 { background: radial-gradient(circle, #f1c40f, #d35400); color: #000; }
+    /* Action Buttons Row */
+    .actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 24px;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: all 0.15s;
+    }
+    .action-btn:active { transform: scale(0.95); }
+    .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-deal {
+      background: linear-gradient(180deg, #f39c12 0%, #d35400 100%);
+      color: #fff;
+      border: 1.5px solid #ffd54f;
+    }
+    .btn-call {
+      background: linear-gradient(180deg, #27ae60 0%, #1e824c 100%);
+      color: #fff;
+      border: 1.5px solid #a8e6cf;
+    }
+    .btn-fold {
+      background: linear-gradient(180deg, #e74c3c 0%, #962d22 100%);
+      color: #fff;
+      border: 1.5px solid #ff7675;
+    }
+    .btn-clear {
+      background: #2c3e50;
+      color: #bdc3c7;
+      border: 1px solid #7f8c8d;
+    }
+    /* Toast Banner */
+    .toast-banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(10, 20, 35, 0.96);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 16px 28px;
+      text-align: center;
+      z-index: 50;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast-banner.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+    .toast-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #ffd700;
+    }
+    .toast-desc {
+      font-size: 15px;
+      color: #fff;
+      margin: 8px 0;
+    }
+
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .poker-app {
+        width: 100vw;
+        height: 100dvh;
+        max-width: 100vw;
+        max-height: 100dvh;
+        border-radius: 0;
+        border: none;
+      }
+      .top-bar { padding: 6px 10px; }
+      .brand-title { font-size: 15px; }
+      .table-stage { padding: 6px 8px; overflow-y: auto; }
+      .playing-card { width: 54px; height: 80px; padding: 4px; }
+      .card-val { font-size: 12px; }
+      .card-suit { font-size: 10px; }
+      .card-center-suit { font-size: 20px; }
+      .chips-row { gap: 6px; }
+      .casino-chip { width: 38px; height: 38px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="poker-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">
+          <span>◀</span> กลับล็อบบี้
+        </button>
+        <span class="game-logo">TEXAS HOLD'EM POKER</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal" style="background:rgba(255,215,0,0.1); border-color:rgba(255,215,0,0.4);">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill" title="คลิกเพื่อเติมเงิน">
+          <span>💰 กระเป๋า:</span>
+          <span class="val" id="balanceVal">50,000.00</span>
+          <span style="color:#ffd700;">THB ➕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Canvas Area -->
+    <div class="table-area">
+      <!-- Dealer Hand -->
+      <div class="dealer-section">
+        <span class="section-label">👑 ไพ่ของเจ้ามือ (DEALER)</span>
+        <div class="cards-row" id="dealerCards"></div>
+        <div class="hand-rank-pill" id="dealerRankPill" style="display:none;"></div>
+      </div>
+
+      <!-- Community Board & Pot -->
+      <div class="board-section">
+        <div class="pot-pill" id="potDisplay">POT: ฿0.00</div>
+        <div class="community-cards" id="communityCards">
+          <div style="color:#718093; font-size:12px; margin:auto;">กองกลาง (FLOP / TURN / RIVER)</div>
+        </div>
+      </div>
+
+      <!-- Player Hand -->
+      <div class="player-section">
+        <div class="hand-rank-pill" id="playerRankPill" style="display:none;"></div>
+        <div class="cards-row" id="playerCards"></div>
+        <span class="section-label">🃏 ไพ่ของคุณ (PLAYER)</span>
+      </div>
+
+      <!-- Betting Spots -->
+      <div class="bet-spots-area">
+        <div class="bet-spot" id="spotAnte" data-bet="ante">
+          <span class="spot-title">ANTE</span>
+          <span class="spot-payout">เดิมพันหลัก</span>
+          <span class="spot-chip-val" id="valAnte">฿0</span>
+        </div>
+        <div class="bet-spot" id="spotCall" data-bet="call" style="cursor:default;">
+          <span class="spot-title">CALL</span>
+          <span class="spot-payout">2x Ante (อัตโนมัติ)</span>
+          <span class="spot-chip-val" id="valCall">฿0</span>
+        </div>
+        <div class="bet-spot" id="spotBonus" data-bet="bonus">
+          <span class="spot-title">AA BONUS</span>
+          <span class="spot-payout">คู่ A หรือสูงกว่า</span>
+          <span class="spot-chip-val" id="valBonus">฿0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="console-bar">
+      <!-- Chips Selection -->
+      <div class="chips-row">
+        <div class="chip-btn chip-10 selected" data-val="10">10</div>
+        <div class="chip-btn chip-50" data-val="50">50</div>
+        <div class="chip-btn chip-100" data-val="100">100</div>
+        <div class="chip-btn chip-500" data-val="500">500</div>
+        <div class="chip-btn chip-1000" data-val="1000">1K</div>
+        <div class="chip-btn chip-5000" data-val="5000">5K</div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-row">
+        <button class="action-btn btn-clear" id="btnClear">ล้างชิป</button>
+        <button class="action-btn btn-deal" id="btnDeal" disabled>แจกไพ่ (DEAL)</button>
+        <button class="action-btn btn-call" id="btnCallAction" style="display:none;">CALL (สู้ต่อ)</button>
+        <button class="action-btn btn-fold" id="btnFoldAction" style="display:none;">FOLD (หมอบ)</button>
+      </div>
+    </div>
+
+    <!-- Toast Modal -->
+    <div class="toast-banner" id="toastBanner">
+      <div class="toast-title" id="toastTitle">YOU WIN!</div>
+      <div class="toast-desc" id="toastDesc">Full House Pays ฿3,000.00</div>
+      <button class="action-btn btn-deal" id="toastBtnNext" style="margin-top:10px;">เล่นรอบใหม่</button>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // Real-Time Wallet Synchronization
+    // ============================================================
+    const BALANCE_KEY = 'balance';
+    let balance = Number(localStorage.getItem(BALANCE_KEY)) || 50000;
+
+    function renderWallet() {
+      const el = document.getElementById('balanceVal');
+      if (el) el.textContent = balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function setBalance(newBal) {
+      balance = Number(newBal);
+      localStorage.setItem(BALANCE_KEY, balance);
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance: balance }, '*');
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === BALANCE_KEY && e.newValue !== null) {
+        balance = Number(e.newValue);
+        renderWallet();
+      }
+    });
+
+    window.addEventListener('message', (event) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && typeof data === 'object') {
+          if (typeof data.balance === 'number') {
+            balance = Number(data.balance);
+            renderWallet();
+          }
+        }
+      } catch (e) {}
+    });
+
+    setInterval(() => {
+      const val = Number(localStorage.getItem(BALANCE_KEY));
+      if (!isNaN(val) && val > 0 && val !== balance) {
+        balance = val;
+        renderWallet();
+      }
+    }, 400);
+
+    // ============================================================
+    // Audio Synthesizer
+    // ============================================================
+    class SoundFX {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const Cls = window.AudioContext || window.webkitAudioContext;
+          if (Cls) this.ctx = new Cls();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(()=>{});
+      }
+      playTone(freq, type='sine', dur=0.1, gainVal=0.1) {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + dur);
+        } catch (e) {}
+      }
+      chip() { this.playTone(850, 'triangle', 0.05, 0.15); }
+      card() { this.playTone(320, 'sine', 0.06, 0.2); }
+      win()  { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.15, 0.15), i * 50)); }
+      lose() { [320, 260, 200].forEach((f, i) => setTimeout(() => this.playTone(f, 'sawtooth', 0.12, 0.1), i * 70)); }
+    }
+    const sfx = new SoundFX();
+
+    // ============================================================
+    // Poker Game Engine (Casino Hold'em)
+    // ============================================================
+    const SUITS = [
+      { sym: '♠', name: 'spades', color: 'black' },
+      { sym: '♥', name: 'hearts', color: 'red' },
+      { sym: '♦', name: 'diamonds', color: 'red' },
+      { sym: '♣', name: 'clubs', color: 'black' }
+    ];
+    const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+    function createDeck() {
+      const d = [];
+      for (const s of SUITS) {
+        for (let i = 0; i < RANKS.length; i++) {
+          d.push({ rank: RANKS[i], val: i + 2, suit: s.sym, color: s.color });
+        }
+      }
+      // Shuffle
+      for (let i = d.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [d[i], d[j]] = [d[j], d[i]];
+      }
+      return d;
+    }
+
+    // Hand Evaluator (7 Cards -> Best 5-Card Hand)
+    function evaluate7Cards(cards) {
+      // Sort by val descending
+      const sorted = [...cards].sort((a, b) => b.val - a.val);
+
+      // Group by rank
+      const valCounts = {};
+      sorted.forEach(c => { valCounts[c.val] = (valCounts[c.val] || 0) + 1; });
+      const countPairs = Object.entries(valCounts).map(([v, count]) => ({ val: Number(v), count }))
+        .sort((a, b) => b.count - a.count || b.val - a.val);
+
+      // Check Flush
+      const suitCounts = {};
+      sorted.forEach(c => { suitCounts[c.suit] = (suitCounts[c.suit] || 0) + 1; });
+      let flushSuit = null;
+      for (const s in suitCounts) { if (suitCounts[s] >= 5) flushSuit = s; }
+
+      // Check Straight
+      const uniqueVals = [...new Set(sorted.map(c => c.val))];
+      if (uniqueVals.includes(14)) uniqueVals.push(1); // Ace low for A-2-3-4-5
+      let straightHigh = 0;
+      for (let i = 0; i <= uniqueVals.length - 5; i++) {
+        if (uniqueVals[i] - uniqueVals[i + 4] === 4) {
+          straightHigh = uniqueVals[i];
+          break;
+        }
+      }
+
+      // Check Straight Flush / Royal Flush
+      if (flushSuit) {
+        const flushCards = sorted.filter(c => c.suit === flushSuit);
+        const fVals = [...new Set(flushCards.map(c => c.val))];
+        if (fVals.includes(14)) fVals.push(1);
+        for (let i = 0; i <= fVals.length - 5; i++) {
+          if (fVals[i] - fVals[i + 4] === 4) {
+            if (fVals[i] === 14) return { score: 900, name: 'Royal Flush', tie: [14] };
+            return { score: 800 + fVals[i], name: 'Straight Flush', tie: [fVals[i]] };
+          }
+        }
+      }
+
+      // 4 of a Kind
+      if (countPairs[0].count === 4) {
+        const kicker = sorted.find(c => c.val !== countPairs[0].val).val;
+        return { score: 700 + countPairs[0].val, name: 'Four of a Kind', tie: [countPairs[0].val, kicker] };
+      }
+
+      // Full House
+      if (countPairs[0].count === 3 && countPairs[1].count >= 2) {
+        return { score: 600 + countPairs[0].val, name: 'Full House', tie: [countPairs[0].val, countPairs[1].val] };
+      }
+
+      // Flush
+      if (flushSuit) {
+        const fHigh = sorted.filter(c => c.suit === flushSuit).slice(0, 5).map(c => c.val);
+        return { score: 500 + fHigh[0], name: 'Flush', tie: fHigh };
+      }
+
+      // Straight
+      if (straightHigh > 0) {
+        return { score: 400 + straightHigh, name: 'Straight', tie: [straightHigh] };
+      }
+
+      // Three of a Kind
+      if (countPairs[0].count === 3) {
+        const kickers = sorted.filter(c => c.val !== countPairs[0].val).slice(0, 2).map(c => c.val);
+        return { score: 300 + countPairs[0].val, name: 'Three of a Kind', tie: [countPairs[0].val, ...kickers] };
+      }
+
+      // Two Pair
+      if (countPairs[0].count === 2 && countPairs[1].count === 2) {
+        const kicker = sorted.find(c => c.val !== countPairs[0].val && c.val !== countPairs[1].val).val;
+        return { score: 200 + countPairs[0].val, name: 'Two Pair', tie: [countPairs[0].val, countPairs[1].val, kicker] };
+      }
+
+      // One Pair
+      if (countPairs[0].count === 2) {
+        const kickers = sorted.filter(c => c.val !== countPairs[0].val).slice(0, 3).map(c => c.val);
+        return { score: 100 + countPairs[0].val, name: 'One Pair', tie: [countPairs[0].val, ...kickers] };
+      }
+
+      // High Card
+      return { score: sorted[0].val, name: 'High Card ' + sorted[0].rank, tie: sorted.slice(0, 5).map(c => c.val) };
+    }
+
+    // State
+    const state = {
+      selectedChip: 10,
+      bets: { ante: 0, call: 0, bonus: 0 },
+      deck: [],
+      playerCards: [],
+      dealerCards: [],
+      communityCards: [],
+      phase: 'betting', // 'betting' | 'flop' | 'showdown'
+      adminForce: null
+    };
+
+    function renderCard(card, isBack=false) {
+      if (isBack) return `<div class="poker-card back"></div>`;
+      return `
+        <div class="poker-card ${card.color}">
+          <div class="card-top">${card.rank}<br>${card.suit}</div>
+          <div class="card-center">${card.suit}</div>
+          <div class="card-bottom">${card.rank}<br>${card.suit}</div>
+        </div>
+      `;
+    }
+
+    function updateMeters() {
+      document.getElementById('valAnte').textContent = '฿' + state.bets.ante.toLocaleString();
+      document.getElementById('valCall').textContent = '฿' + state.bets.call.toLocaleString();
+      document.getElementById('valBonus').textContent = '฿' + state.bets.bonus.toLocaleString();
+      const totalPot = state.bets.ante + state.bets.call + state.bets.bonus;
+      document.getElementById('potDisplay').textContent = 'POT: ฿' + totalPot.toLocaleString();
+
+      const btnDeal = document.getElementById('btnDeal');
+      btnDeal.disabled = state.bets.ante <= 0 || state.phase !== 'betting';
+    }
+
+    // Setup chip buttons
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        state.selectedChip = Number(btn.dataset.val);
+        sfx.chip();
+      });
+    });
+
+    // Betting spots click
+    document.getElementById('spotAnte').addEventListener('click', () => {
+      if (state.phase !== 'betting') return;
+      if (balance >= state.selectedChip) {
+        setBalance(balance - state.selectedChip);
+        state.bets.ante += state.selectedChip;
+        sfx.chip();
+        updateMeters();
+      } else {
+        alert('ยอดเงินคงเหลือไม่พอ');
+      }
+    });
+
+    document.getElementById('spotBonus').addEventListener('click', () => {
+      if (state.phase !== 'betting') return;
+      if (balance >= state.selectedChip) {
+        setBalance(balance - state.selectedChip);
+        state.bets.bonus += state.selectedChip;
+        sfx.chip();
+        updateMeters();
+      } else {
+        alert('ยอดเงินคงเหลือไม่พอ');
+      }
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      if (state.phase !== 'betting') return;
+      const refund = state.bets.ante + state.bets.bonus;
+      if (refund > 0) {
+        setBalance(balance + refund);
+        state.bets.ante = 0;
+        state.bets.bonus = 0;
+        sfx.chip();
+        updateMeters();
+      }
+    });
+
+    // Deal Action
+    document.getElementById('btnDeal').addEventListener('click', () => {
+      if (state.bets.ante <= 0) return;
+      state.phase = 'flop';
+      state.deck = createDeck();
+      sfx.card();
+
+      // Deal Cards (with God Mode override)
+      if (state.adminForce === 'royal_flush') {
+        state.playerCards = [{rank:'A', val:14, suit:'♠', color:'black'}, {rank:'K', val:13, suit:'♠', color:'black'}];
+        state.dealerCards = [{rank:'9', val:9, suit:'♦', color:'red'}, {rank:'8', val:8, suit:'♣', color:'black'}];
+        state.communityCards = [{rank:'Q', val:12, suit:'♠', color:'black'}, {rank:'J', val:11, suit:'♠', color:'black'}, {rank:'10', val:10, suit:'♠', color:'black'}];
+        state.deck = [{rank:'2', val:2, suit:'♦', color:'red'}, {rank:'3', val:3, suit:'♣', color:'black'}];
+      } else if (state.adminForce === 'player_win') {
+        state.playerCards = [{rank:'A', val:14, suit:'♠', color:'black'}, {rank:'A', val:14, suit:'♥', color:'red'}];
+        state.dealerCards = [{rank:'4', val:4, suit:'♦', color:'red'}, {rank:'5', val:5, suit:'♣', color:'black'}];
+        state.communityCards = [{rank:'A', val:14, suit:'♦', color:'red'}, {rank:'K', val:13, suit:'♣', color:'black'}, {rank:'9', val:9, suit:'♥', color:'red'}];
+        state.deck = [{rank:'8', val:8, suit:'♦', color:'red'}, {rank:'2', val:2, suit:'♣', color:'black'}];
+      } else if (state.adminForce === 'dealer_win') {
+        state.playerCards = [{rank:'7', val:7, suit:'♠', color:'black'}, {rank:'2', val:2, suit:'♥', color:'red'}];
+        state.dealerCards = [{rank:'A', val:14, suit:'♦', color:'red'}, {rank:'A', val:14, suit:'♣', color:'black'}];
+        state.communityCards = [{rank:'A', val:14, suit:'♥', color:'red'}, {rank:'K', val:13, suit:'♦', color:'red'}, {rank:'Q', val:12, suit:'♣', color:'black'}];
+        state.deck = [{rank:'8', val:8, suit:'♦', color:'red'}, {rank:'2', val:2, suit:'♣', color:'black'}];
+      } else {
+        // Deal 2 to Player, 2 to Dealer (hidden), 3 to Flop
+        state.playerCards = [state.deck.pop(), state.deck.pop()];
+        state.dealerCards = [state.deck.pop(), state.deck.pop()];
+        state.communityCards = [state.deck.pop(), state.deck.pop(), state.deck.pop()];
+      }
+
+      // Render Player Cards
+      document.getElementById('playerCards').innerHTML = state.playerCards.map(c => renderCard(c)).join('');
+      // Render Dealer Cards Back
+      document.getElementById('dealerCards').innerHTML = renderCard(null, true) + renderCard(null, true);
+      // Render Flop
+      document.getElementById('communityCards').innerHTML = state.communityCards.map(c => renderCard(c)).join('');
+
+      // Evaluate Player Flop Hand
+      const currentRank = evaluate7Cards([...state.playerCards, ...state.communityCards]);
+      const playerPill = document.getElementById('playerRankPill');
+      playerPill.style.display = 'block';
+      playerPill.textContent = currentRank.name;
+
+      // Show Call / Fold controls
+      document.getElementById('btnDeal').style.display = 'none';
+      document.getElementById('btnClear').style.display = 'none';
+      document.getElementById('btnCallAction').style.display = 'inline-flex';
+      document.getElementById('btnFoldAction').style.display = 'inline-flex';
+      document.getElementById('btnCallAction').textContent = `CALL (฿${(state.bets.ante * 2).toLocaleString()})`;
+    });
+
+    // Call Action (Bet 2x Ante)
+    document.getElementById('btnCallAction').addEventListener('click', () => {
+      const callAmount = state.bets.ante * 2;
+      if (balance < callAmount) {
+        alert('ยอดเงินคงเหลือไม่พอสำหรับวางเดิมพัน CALL');
+        return;
+      }
+      setBalance(balance - callAmount);
+      state.bets.call = callAmount;
+      updateMeters();
+      sfx.chip();
+
+      // Deal Turn and River
+      state.communityCards.push(state.deck.pop(), state.deck.pop());
+      document.getElementById('communityCards').innerHTML = state.communityCards.map(c => renderCard(c)).join('');
+
+      // Reveal Dealer Hole Cards
+      document.getElementById('dealerCards').innerHTML = state.dealerCards.map(c => renderCard(c)).join('');
+
+      // Final Evaluation
+      const playerFinal = evaluate7Cards([...state.playerCards, ...state.communityCards]);
+      const dealerFinal = evaluate7Cards([...state.dealerCards, ...state.communityCards]);
+
+      document.getElementById('playerRankPill').textContent = playerFinal.name;
+      const dealerPill = document.getElementById('dealerRankPill');
+      dealerPill.style.display = 'block';
+      dealerPill.textContent = dealerFinal.name;
+
+      // Dealer Qualification check (Pair of 4s or higher)
+      const dealerQualified = dealerFinal.score >= 104; // Pair of 4s = 100 + 4
+
+      let totalWin = 0;
+      let title = '';
+      let desc = '';
+
+      // Compare
+      let playerWon = false;
+      let tie = false;
+      if (playerFinal.score > dealerFinal.score) {
+        playerWon = true;
+      } else if (playerFinal.score < dealerFinal.score) {
+        playerWon = false;
+      } else {
+        // Compare tie kickers
+        let winner = 0;
+        for (let i = 0; i < playerFinal.tie.length; i++) {
+          if (playerFinal.tie[i] > dealerFinal.tie[i]) { winner = 1; break; }
+          if (playerFinal.tie[i] < dealerFinal.tie[i]) { winner = -1; break; }
+        }
+        if (winner === 1) playerWon = true;
+        else if (winner === 0) tie = true;
+      }
+
+      if (tie) {
+        title = 'เสมอ (PUSH)';
+        totalWin += state.bets.ante + state.bets.call;
+        desc = `แต้มเท่ากัน! คืนเงินเดิมพัน ฿${totalWin.toLocaleString()}`;
+      } else if (playerWon) {
+        title = '🎉 คุณชนะ (YOU WIN!)';
+        sfx.win();
+        // Ante pays 1:1, Call pays 1:1
+        if (dealerQualified) {
+          totalWin += (state.bets.ante * 2) + (state.bets.call * 2);
+          desc = `เจ้ามือมีแต้มและแพ้คุณ! รวมรับรางวัล ฿${totalWin.toLocaleString()}`;
+        } else {
+          // Dealer not qualified: Ante pays 1:1, Call pushes (returned)
+          totalWin += (state.bets.ante * 2) + state.bets.call;
+          desc = `เจ้ามือไม่ผ่านเกณฑ์ (ไม่ได้คู่ 4)! ชนะ Ante รวมรับ ฿${totalWin.toLocaleString()}`;
+        }
+      } else {
+        title = 'เจ้ามือชนะ (DEALER WINS)';
+        sfx.lose();
+        desc = `เจ้ามือชนะด้วย ${dealerFinal.name}`;
+      }
+
+      // Evaluate AA Bonus (Player hole + 3 Flop cards)
+      if (state.bets.bonus > 0) {
+        const bonusHand = evaluate7Cards([...state.playerCards, state.communityCards[0], state.communityCards[1], state.communityCards[2]]);
+        if (bonusHand.score >= 114) { // Pair of Aces or better
+          let bonusRate = 7;
+          if (bonusHand.score >= 900) bonusRate = 100;
+          else if (bonusHand.score >= 800) bonusRate = 50;
+          else if (bonusHand.score >= 700) bonusRate = 40;
+          else if (bonusHand.score >= 600) bonusRate = 30;
+          else if (bonusHand.score >= 500) bonusRate = 20;
+          else if (bonusHand.score >= 400) bonusRate = 10;
+          const bonusWin = state.bets.bonus * bonusRate;
+          totalWin += bonusWin;
+          desc += `<br>⭐ ชนะ AA Bonus (${bonusHand.name}) +฿${bonusWin.toLocaleString()}`;
+        }
+      }
+
+      if (totalWin > 0) {
+        setBalance(balance + totalWin);
+      }
+
+      showToast(title, desc);
+    });
+
+    // Fold Action
+    document.getElementById('btnFoldAction').addEventListener('click', () => {
+      sfx.lose();
+      showToast('หมอบไพ่ (FOLD)', 'คุณสละสิทธิ์ในรอบนี้ เสียเงินเดิมพัน Ante');
+    });
+
+    function showToast(title, desc) {
+      document.getElementById('toastTitle').innerHTML = title;
+      document.getElementById('toastDesc').innerHTML = desc;
+      document.getElementById('toastBanner').classList.add('show');
+    }
+
+    document.getElementById('toastBtnNext').addEventListener('click', () => {
+      document.getElementById('toastBanner').classList.remove('show');
+      state.phase = 'betting';
+      state.bets.ante = 0;
+      state.bets.call = 0;
+      state.bets.bonus = 0;
+      document.getElementById('playerCards').innerHTML = '';
+      document.getElementById('dealerCards').innerHTML = '';
+      document.getElementById('communityCards').innerHTML = '<div style="color:#718093; font-size:12px; margin:auto;">กองกลาง (FLOP / TURN / RIVER)</div>';
+      document.getElementById('playerRankPill').style.display = 'none';
+      document.getElementById('dealerRankPill').style.display = 'none';
+      document.getElementById('btnCallAction').style.display = 'none';
+      document.getElementById('btnFoldAction').style.display = 'none';
+      document.getElementById('btnDeal').style.display = 'inline-flex';
+      document.getElementById('btnClear').style.display = 'inline-flex';
+      updateMeters();
+    });
+
+    // Navigation & Wallet Top-up
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*');
+          return;
+        }
+      } catch (e) {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    document.getElementById('walletPill').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'OPEN_WALLET' }, '*');
+          return;
+        }
+      } catch (e) {}
+      const add = prompt('ระบุจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (add && !isNaN(add) && Number(add) > 0) {
+        setBalance(balance + Number(add));
+      }
+    });
+
+    // ============================================================
+    // Admin Modal (PIN: 888) + God Mode — Poker
+    // ============================================================
+    let isAdminAuth = false;
+    const modalAdmin = document.createElement('div');
+    modalAdmin.id = 'modalAdmin';
+    modalAdmin.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;';
+    modalAdmin.innerHTML = `
+      <div style="background:#081320;border:2px solid #a67c2e;border-radius:16px;width:100%;max-width:440px;padding:20px;box-shadow:0 0 40px rgba(166,124,46,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:10px;margin-bottom:14px;">
+          <h3 style="color:#ffd700;font-size:16px;">🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+          <button id="btnCloseAdmin" style="background:transparent;border:none;color:#aaa;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div id="adminAuthSec">
+          <label style="font-size:13px;color:#ccc;display:block;margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+          <input type="password" id="adminPinInput" style="width:100%;background:#030910;border:1.5px solid #a67c2e;color:#fff;font-size:18px;padding:10px;border-radius:8px;text-align:center;letter-spacing:4px;margin-bottom:10px;" placeholder="ระบุรหัส (888)" maxlength="6">
+          <button id="btnAdminLogin" style="width:100%;background:linear-gradient(180deg,#f7b731,#c58610);border:none;color:#000;font-weight:800;padding:10px;border-radius:8px;cursor:pointer;font-size:15px;">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" style="color:#e74c3c;font-size:13px;text-align:center;margin-top:8px;"></div>
+        </div>
+        <div id="adminPanelSec" style="display:none;">
+          <div style="font-size:13px;color:#ffd700;font-weight:800;margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+            <button class="padm-btn" data-add="1000">+1,000</button>
+            <button class="padm-btn" data-add="5000">+5,000</button>
+            <button class="padm-btn" data-add="10000">+10,000</button>
+            <button class="padm-btn" data-add="50000">+50,000</button>
+            <button class="padm-btn" data-add="100000">+100,000</button>
+            <button class="padm-btn" data-add="500000">+500,000</button>
+          </div>
+          <button class="padm-btn" id="btnResetBal" style="width:100%;border-color:#e74c3c;color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+          <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;">
+            <div style="font-size:13px;font-weight:800;color:#ffd700;">🎯 ล็อคผลไพ่โป๊กเกอร์ (God Mode):</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px;">
+              <button class="pgod-btn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+              <button class="pgod-btn" data-force="royal_flush" style="border-color:#f1c40f;color:#ffd700;">👑 บังคับ Royal Flush (x100)</button>
+              <button class="pgod-btn" data-force="player_win" style="border-color:#27ae60;color:#2ecc71;">🚀 บังคับ ผู้เล่นชนะ (AA / Trips)</button>
+              <button class="pgod-btn" data-force="dealer_win" style="border-color:#e74c3c;color:#ff7675;">💀 บังคับ เจ้ามือชนะ (Dealer Win)</button>
+            </div>
+            <div id="godStatusPoker" style="font-size:12px;color:#00ffcc;margin-top:6px;text-align:center;font-weight:700;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(modalAdmin);
+
+    const padmStyle = document.createElement('style');
+    padmStyle.textContent = `.padm-btn{background:#0c1d30;border:1px solid #a67c2e;color:#ffd7a0;padding:8px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;}.padm-btn:hover{background:#a67c2e;color:#000;} .pgod-btn{background:#07121e;border:1.5px solid #555;color:#bbb;padding:7px 4px;border-radius:8px;font-weight:700;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:inherit;} .pgod-btn:hover{filter:brightness(1.2);} .pgod-btn.active{background:#133355;border-color:#ffd700;color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.4);}`;
+    document.head.appendChild(padmStyle);
+
+    function openAdminModal() {
+      modalAdmin.style.display = 'flex';
+      document.getElementById('adminErrorMsg').textContent = '';
+      if (isAdminAuth) {
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminAuthSec').style.display = 'block';
+        document.getElementById('adminPanelSec').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
+      }
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => { modalAdmin.style.display = 'none'; });
+
+    document.getElementById('btnAdminLogin').addEventListener('click', () => {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin === '888') {
+        isAdminAuth = true;
+        sfx.win();
+        document.getElementById('adminAuthSec').style.display = 'none';
+        document.getElementById('adminPanelSec').style.display = 'block';
+      } else {
+        document.getElementById('adminErrorMsg').textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        document.getElementById('adminPinInput').value = '';
+      }
+    });
+    document.getElementById('adminPinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnAdminLogin').click();
+    });
+
+    document.querySelectorAll('.padm-btn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const add = Number(btn.dataset.add);
+        setBalance(balance + add);
+        sfx.chip();
+      });
+    });
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      setBalance(50000);
+      sfx.chip();
+    });
+
+    document.querySelectorAll('.pgod-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pgod-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.force;
+        const stat = document.getElementById('godStatusPoker');
+        if (val === 'none') {
+          state.adminForce = null;
+          stat.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+        } else if (val === 'royal_flush') {
+          state.adminForce = 'royal_flush';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ Royal Flush x100 ]';
+        } else if (val === 'player_win') {
+          state.adminForce = 'player_win';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ผู้เล่นชนะชัวร์ AA / Trips ]';
+        } else if (val === 'dealer_win') {
+          state.adminForce = 'dealer_win';
+          stat.textContent = '🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ เจ้ามือชนะชัวร์ ]';
+        }
+        sfx.chip();
+      });
+    });
+
+    // Initial
+    renderWallet();
+    updateMeters();
+  </script>
+</body>
+</html>

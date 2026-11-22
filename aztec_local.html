@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Treasures of Aztec™ Local VIP Slot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --felt: radial-gradient(circle at 50% 20%, #1e3a08 0%, #0d2203 55%, #060f02 100%);
+      --gold: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; font-family: 'Kanit', system-ui, sans-serif; }
+    body { background: #030a02; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; overflow-x: hidden; }
+
+    .slot-app {
+      width: 100vw; height: 100vh;
+      max-width: 980px; max-height: 980px;
+      background: var(--felt);
+      display: flex; flex-direction: column;
+      position: relative;
+      border: 3px solid #3d6b1a;
+      box-shadow: 0 0 60px rgba(60,100,20,0.5), inset 0 0 100px rgba(0,0,0,0.9);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px;
+      background: rgba(5,20,3,0.96);
+      border-bottom: 2px solid #4a8a1a;
+      flex-shrink: 0; z-index: 20;
+    }
+    .top-left, .top-right { display: flex; align-items: center; gap: 10px; }
+    .btn-top {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.3);
+      color: #ffd700; border-radius: 8px; padding: 6px 12px;
+      font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.15s;
+    }
+    .btn-top:hover { background: rgba(255,215,0,0.2); }
+    .btn-top.btn-exit { background: #3a1111; border-color: #c0392b; color: #ff7675; }
+    .game-logo {
+      font-family: 'Cinzel', serif; font-weight: 900; font-size: 16px; letter-spacing: 1px;
+      background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .wallet-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(0,0,0,0.6); border: 1.5px solid #f1c40f;
+      padding: 5px 12px; border-radius: 20px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .wallet-badge .val { color: #ffd700; font-weight: 800; }
+
+    /* ===== GAME BANNER ===== */
+    .game-banner {
+      background: linear-gradient(180deg, #1a3a05 0%, #0d2203 100%);
+      border-bottom: 2px solid #2d5a0a;
+      padding: 8px 16px;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      flex-shrink: 0;
+    }
+    .banner-title {
+      font-family: 'Cinzel', serif; font-weight: 900; font-size: 22px;
+      background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+    .free-spin-badge {
+      background: radial-gradient(circle, #f39c12, #c0392b);
+      color: #fff; font-weight: 900; font-size: 14px;
+      padding: 4px 14px; border-radius: 20px;
+      border: 2px solid #ffd700; box-shadow: 0 0 12px rgba(243,156,18,0.8);
+      display: none;
+    }
+    .free-spin-badge.show { display: block; animation: fsPulse 0.5s infinite alternate; }
+    @keyframes fsPulse { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+
+    /* ===== REEL AREA ===== */
+    .reel-frame-area {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      position: relative; padding: 10px;
+    }
+    .reel-machine {
+      background: radial-gradient(circle at 50% 50%, #142808 0%, #0a1904 100%);
+      border: 3px solid #5a9020; border-radius: 16px; padding: 10px 12px;
+      box-shadow: 0 0 30px rgba(90,144,32,0.4), inset 0 0 40px rgba(0,0,0,0.8);
+      position: relative;
+    }
+    .reels-row { display: flex; gap: 6px; }
+
+    /* Single Reel */
+    .reel { display: flex; flex-direction: column; gap: 4px; }
+    .sym-cell {
+      width: 100px; height: 90px;
+      background: rgba(10,25,5,0.9);
+      border: 2px solid rgba(90,144,32,0.35);
+      border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    .sym-cell .sym-emoji { font-size: 40px; line-height: 1; transition: filter 0.08s; }
+    .sym-cell .sym-name { font-size: 9px; font-weight: 800; color: rgba(255,215,0,0.6); letter-spacing: 1px; margin-top: 2px; }
+    .sym-cell.spinning .sym-emoji { filter: blur(2px) brightness(1.4); }
+    .sym-cell.spinning { background: rgba(20,50,10,0.5); border-color: rgba(90,144,32,0.15); }
+    .sym-cell.win {
+      border-color: #ffd700 !important;
+      box-shadow: 0 0 18px rgba(255,215,0,0.9), inset 0 0 10px rgba(255,215,0,0.15);
+      animation: cellWin 0.35s infinite alternate;
+    }
+    .sym-cell.scatter-win {
+      border-color: #00ffcc !important;
+      box-shadow: 0 0 22px rgba(0,255,204,0.9);
+      animation: cellScatter 0.3s infinite alternate;
+    }
+    @keyframes cellWin { 0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,215,0,0.6); } 100% { transform: scale(1.04); box-shadow: 0 0 25px rgba(255,215,0,1); } }
+    @keyframes cellScatter { 0% { box-shadow: 0 0 12px rgba(0,255,204,0.5); } 100% { box-shadow: 0 0 32px rgba(0,255,204,1); } }
+
+    /* Reel edge gradients */
+    .reel-machine::before, .reel-machine::after {
+      content: ''; position: absolute; left: 12px; right: 12px; height: 55px; z-index: 5; pointer-events: none;
+    }
+    .reel-machine::before { top: 10px; background: linear-gradient(to bottom, rgba(10,25,4,0.95), transparent); border-radius: 14px 14px 0 0; }
+    .reel-machine::after  { bottom: 10px; background: linear-gradient(to top, rgba(10,25,4,0.95), transparent); border-radius: 0 0 14px 14px; }
+
+    /* Reel numbers indicator on the side */
+    .reel-labels {
+      position: absolute; left: -24px; top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .reel-lbl {
+      width: 20px; height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: rgba(255,215,0,0.4); font-weight: 800;
+    }
+
+    /* Win Display Overlay */
+    .win-display {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      background: rgba(5,20,3,0.96); border: 3px solid #ffd700; border-radius: 16px;
+      padding: 16px 30px; text-align: center; z-index: 50;
+      box-shadow: 0 0 40px rgba(255,215,0,0.7);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      min-width: 220px;
+    }
+    .win-display.show { transform: translate(-50%,-50%) scale(1); }
+    .win-amount { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.8); }
+    .win-label { font-size: 14px; color: #ccc; margin-bottom: 4px; }
+
+    /* ===== BOTTOM CONTROLS ===== */
+    .bottom-bar {
+      background: rgba(5,20,3,0.96); border-top: 2px solid #3a7010;
+      padding: 10px 16px 14px; flex-shrink: 0; z-index: 10;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+    .stat-box {
+      background: rgba(0,0,0,0.5); border: 1px solid rgba(90,144,32,0.3);
+      border-radius: 8px; padding: 6px 8px; text-align: center;
+    }
+    .stat-label { font-size: 10px; color: #777; font-weight: 700; }
+    .stat-val { font-size: 15px; color: #ffd700; font-weight: 800; }
+
+    .action-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .bet-selector { display: flex; align-items: center; gap: 8px; }
+    .bet-btn {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.3);
+      color: #ffd700; border-radius: 8px; font-size: 18px; font-weight: 900;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .bet-btn:hover { background: rgba(255,215,0,0.2); }
+    .bet-display {
+      background: rgba(0,0,0,0.6); border: 1.5px solid #a67c2e;
+      border-radius: 8px; padding: 6px 16px;
+      font-weight: 800; font-size: 15px; color: #ffd700; min-width: 90px; text-align: center;
+    }
+    .btn-spin {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: radial-gradient(circle, #f7b731 0%, #c58610 60%, #684102 100%);
+      border: 3px solid #fff3a8;
+      color: #000; font-weight: 900; font-size: 14px; cursor: pointer;
+      box-shadow: 0 0 25px rgba(247,183,49,0.6), 0 6px 15px rgba(0,0,0,0.6);
+      transition: all 0.15s;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    }
+    .btn-spin:hover { filter: brightness(1.15); transform: scale(1.05); }
+    .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: grayscale(0.6); }
+    .btn-spin .spin-icon { font-size: 22px; }
+    .side-btns { display: flex; flex-direction: column; gap: 6px; }
+    .btn-side {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.25);
+      color: #ccc; border-radius: 8px; padding: 6px 12px;
+      font-weight: 700; font-size: 12px; cursor: pointer; transition: all 0.15s;
+    }
+    .btn-side:hover { background: rgba(255,255,255,0.15); color: #ffd700; }
+    .btn-side.active { background: rgba(255,80,0,0.3); border-color: #e67e22; color: #e67e22; }
+
+    /* Paytable Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+      display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #0a1a05; border: 2px solid #5a9020; border-radius: 16px;
+      width: 100%; max-width: 480px; padding: 20px;
+      box-shadow: 0 0 40px rgba(90,144,32,0.5);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px; margin-bottom: 14px;
+    }
+    .modal-header h3 { color: #ffd700; font-size: 16px; }
+    .btn-close-modal { background: transparent; border: none; color: #aaa; font-size: 20px; cursor: pointer; }
+
+    /* Paytable Grid */
+    .paytable-grid { display: flex; flex-direction: column; gap: 6px; }
+    .pt-row {
+      display: grid; grid-template-columns: 60px 1fr 60px 60px 60px;
+      align-items: center; gap: 8px;
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(90,144,32,0.2);
+      border-radius: 8px; padding: 8px 10px;
+    }
+    .pt-row:hover { background: rgba(90,144,32,0.1); }
+    .pt-emoji { font-size: 26px; text-align: center; }
+    .pt-name { font-weight: 800; font-size: 13px; }
+    .pt-pay { text-align: center; font-weight: 800; font-size: 13px; color: #ffd700; }
+
+    /* Admin Modal */
+    .admin-input {
+      width: 100%; background: #030a02; border: 1.5px solid #5a9020;
+      color: #fff; font-size: 18px; padding: 10px; border-radius: 8px;
+      text-align: center; letter-spacing: 4px; margin-bottom: 10px;
+    }
+    .admin-btn-submit {
+      width: 100%; background: linear-gradient(180deg, #7abd22, #5a9020); border: none;
+      color: #000; font-weight: 800; padding: 10px; border-radius: 8px; cursor: pointer;
+      font-size: 15px; font-family: inherit;
+    }
+    .admin-error { color: #e74c3c; font-size: 13px; text-align: center; margin-top: 8px; }
+    .qbtn {
+      background: #102208; border: 1px solid #5a9020; color: #a8e6a0;
+      padding: 8px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; font-family: inherit;
+    }
+    .qbtn:hover { background: #5a9020; color: #000; }
+    .gbtn {
+      background: #071505; border: 1.5px solid #444; color: #bbb;
+      padding: 7px 4px; border-radius: 8px; font-weight: 700; font-size: 11px;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .gbtn:hover { filter: brightness(1.2); }
+    .gbtn.active { background: #1a3a08; border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.4); }
+
+    @media (max-width: 600px) {
+      .sym-cell { width: 60px; height: 56px; }
+      .sym-cell .sym-emoji { font-size: 24px; }
+      .sym-cell .sym-name { font-size: 7px; }
+      .banner-title { font-size: 16px; }
+      .btn-spin { width: 66px; height: 66px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="slot-app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-left">
+        <button class="btn-top btn-exit" id="btnBack">✕ ล็อบบี้</button>
+        <span class="game-logo">🗿 TREASURES OF AZTEC</span>
+      </div>
+      <div class="top-right">
+        <button class="btn-top" id="btnAdminModal">🔑 หลังบ้าน</button>
+        <div class="wallet-badge" id="walletPill">
+          <span>💰</span>
+          <span class="val" id="walletBal">50,000</span>
+          <span>THB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Banner -->
+    <div class="game-banner">
+      <span style="font-size:22px;">🗿</span>
+      <span class="banner-title">TREASURES OF AZTEC</span>
+      <span class="free-spin-badge" id="freeSpinBadge">🌟 FREE SPINS: <span id="freeSpinCount">0</span></span>
+      <span style="font-size:22px;">💎</span>
+    </div>
+
+    <!-- Reel Area -->
+    <div class="reel-frame-area">
+      <div class="reel-machine">
+        <div class="reels-row" id="reelsRow"></div>
+      </div>
+
+      <!-- Win Overlay -->
+      <div class="win-display" id="winDisplay">
+        <div class="win-label" id="winLabel">🎉 YOU WIN!</div>
+        <div class="win-amount" id="winAmount">฿0</div>
+        <div id="winDetail" style="font-size:12px; color:#aaa; margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-bar">
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">ยอดเงิน</div>
+          <div class="stat-val" id="statBal">50,000</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">เดิมพัน/สปิน</div>
+          <div class="stat-val" id="statBet">100</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">ชนะล่าสุด</div>
+          <div class="stat-val" id="statWin" style="color:#2ecc71;">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">เส้นการชนะ</div>
+          <div class="stat-val" style="color:#74b9ff;">20 Lines</div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <!-- Bet Selector -->
+        <div class="bet-selector">
+          <button class="bet-btn" id="btnBetDown">−</button>
+          <div class="bet-display" id="betDisplay">฿100</div>
+          <button class="bet-btn" id="btnBetUp">+</button>
+        </div>
+
+        <!-- Left side buttons -->
+        <div class="side-btns">
+          <button class="btn-side" id="btnMaxBet">MAX BET</button>
+          <button class="btn-side" id="btnPaytable">📊 Paytable</button>
+        </div>
+
+        <!-- SPIN button -->
+        <button class="btn-spin" id="btnSpin">
+          <span class="spin-icon">🎰</span>
+          <span>SPIN</span>
+        </button>
+
+        <!-- Right side buttons -->
+        <div class="side-btns">
+          <button class="btn-side" id="btnAutoSpin">AUTO SPIN</button>
+          <button class="btn-side" id="btnTurbo">⚡ TURBO</button>
+        </div>
+
+        <!-- RTP -->
+        <div style="text-align:center;">
+          <div style="font-size:10px; color:rgba(255,215,0,0.6); font-weight:700;">RTP</div>
+          <div style="font-size:14px; color:#ffd700; font-weight:800;">96.71%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paytable Modal -->
+  <div class="modal-overlay" id="modalPaytable">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📊 Paytable - อัตราการจ่าย (× เดิมพัน)</h3>
+        <button class="btn-close-modal" id="btnClosePaytable">✕</button>
+      </div>
+      <div class="paytable-grid" id="paytableGrid"></div>
+    </div>
+  </div>
+
+  <!-- Admin Modal (PIN: 888) -->
+  <div class="modal-overlay" id="modalAdmin">
+    <div class="modal-card" style="border-color:#5a9020;">
+      <div class="modal-header">
+        <h3>🔐 ระบบควบคุมหลังบ้าน (Admin PIN: 888)</h3>
+        <button class="btn-close-modal" id="btnCloseAdmin">✕</button>
+      </div>
+      <div id="adminAuth">
+        <label style="font-size:13px;color:#ccc;display:block;margin-bottom:8px;">กรุณากรอกรหัสผ่านหลังบ้าน (PIN: 888):</label>
+        <input type="password" id="adminPinInput" class="admin-input" placeholder="ระบุรหัส (888)" maxlength="6">
+        <button class="admin-btn-submit" id="btnAdminLogin">ยืนยันรหัสผ่าน</button>
+        <div class="admin-error" id="adminError"></div>
+      </div>
+      <div id="adminPanel" style="display:none;">
+        <div style="font-size:13px;color:#ffd700;font-weight:800;margin-bottom:6px;">💰 เติมเครดิตด่วน:</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <button class="qbtn" data-add="1000">+1,000</button>
+          <button class="qbtn" data-add="5000">+5,000</button>
+          <button class="qbtn" data-add="10000">+10,000</button>
+          <button class="qbtn" data-add="50000">+50,000</button>
+          <button class="qbtn" data-add="100000">+100,000</button>
+          <button class="qbtn" id="btnCustomAdd">กำหนดเอง...</button>
+        </div>
+        <button class="qbtn" id="btnResetBal" style="width:100%;margin-top:8px;border-color:#e74c3c;color:#ff7675;">รีเซ็ตเป็น 50,000 THB</button>
+
+        <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;">
+          <div style="font-size:13px;font-weight:800;color:#ffd700;margin-bottom:8px;">🎯 ล็อคผลสปินรอบถัดไป (God Mode):</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
+            <button class="gbtn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+            <button class="gbtn" data-force="bigwin" style="border-color:#ffd700;color:#ffd700;">👑 บังคับ BIG WIN 5of Kind</button>
+            <button class="gbtn" data-force="scatter" style="border-color:#00ffcc;color:#00ffcc;">💎 บังคับ 3 Scatter (Free Spin)</button>
+            <button class="gbtn" data-force="wild" style="border-color:#ff9ff3;color:#ff9ff3;">🗿 บังคับ Wild หลายช่อง</button>
+            <button class="gbtn" data-force="medwin" style="border-color:#3498db;color:#74b9ff;">⭐ บังคับ Medium Win (3 of Kind)</button>
+            <button class="gbtn" data-force="lose" style="border-color:#7f8c8d;color:#b2bec3;">💀 บังคับ ไม่ถูกรางวัล</button>
+          </div>
+          <div id="godStatusSlot" style="font-size:12px;color:#00ffcc;margin-top:6px;text-align:center;font-weight:700;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // SYMBOL DEFINITIONS
+    // ============================================================
+    const SYMS = [
+      { id: 'wild',   emoji: '🗿', name: 'WILD',    color: '#ffd700', bg: '#2d2200' },
+      { id: 'scatter',emoji: '💎', name: 'SCATTER', color: '#00ffcc', bg: '#003d35' },
+      { id: 'girl',   emoji: '👸', name: 'GIRL',    color: '#ff9ff3', bg: '#3d003a' },
+      { id: 'eagle',  emoji: '🦅', name: 'EAGLE',   color: '#ffa502', bg: '#2d1a00' },
+      { id: 'snake',  emoji: '🐍', name: 'SNAKE',   color: '#a8e63d', bg: '#1a2d00' },
+      { id: 'mask',   emoji: '🎭', name: 'MASK',    color: '#a29bfe', bg: '#1a0a3d' },
+      { id: 'ace',    emoji: '🅰️', name: 'ACE',     color: '#74b9ff', bg: '#001a3d' },
+      { id: 'king',   emoji: '🃏', name: 'KING',    color: '#55efc4', bg: '#003d2d' },
+    ];
+    const SYM_MAP = {};
+    SYMS.forEach((s, i) => SYM_MAP[s.id] = i);
+
+    // Paytable: multiplier × total bet per win
+    const PAYTABLE = {
+      wild:   { 3: 1.5,  4: 8,    5: 25  },
+      scatter:{ 3: 2,    4: 10,   5: 50  },
+      girl:   { 3: 0.8,  4: 3,    5: 12  },
+      eagle:  { 3: 0.5,  4: 2,    5: 8   },
+      snake:  { 3: 0.3,  4: 1.2,  5: 5   },
+      mask:   { 3: 0.3,  4: 1.2,  5: 5   },
+      ace:    { 3: 0.15, 4: 0.5,  5: 2.5 },
+      king:   { 3: 0.15, 4: 0.5,  5: 2.5 },
+    };
+    const SCATTER_FREE = { 3: 10, 4: 15, 5: 20 };
+
+    // 20 Paylines on 5×3 (reel index → row 0-top 1-mid 2-bot)
+    const PAYLINES = [
+      [1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],
+      [0,1,2,1,0],[2,1,0,1,2],[0,0,1,2,2],
+      [2,2,1,0,0],[1,0,0,0,1],[1,2,2,2,1],
+      [1,0,1,2,1],[1,2,1,0,1],[0,1,1,1,0],
+      [2,1,1,1,2],[0,1,2,2,2],[2,1,0,0,0],
+      [1,1,0,1,1],[1,1,2,1,1],[0,0,1,0,0],
+      [2,2,1,2,2],[1,0,2,0,1],
+    ];
+
+    // Symbol weights for random generation
+    const WEIGHTS = { wild:2, scatter:3, girl:5, eagle:7, snake:10, mask:10, ace:18, king:17 };
+    function wRandom() {
+      const total = Object.values(WEIGHTS).reduce((a, b) => a + b, 0);
+      let rand = Math.random() * total;
+      for (const [id, w] of Object.entries(WEIGHTS)) { rand -= w; if (rand <= 0) return id; }
+      return 'king';
+    }
+
+    // Pre-generate reel strips (50 symbols each)
+    const STRIPS = Array.from({length: 5}, () => Array.from({length: 50}, () => wRandom()));
+
+    // ============================================================
+    // GAME STATE
+    // ============================================================
+    const BET_OPTIONS = [10, 20, 50, 100, 200, 500, 1000];
+    let betIdx = 3; // 100
+    let currentBet = BET_OPTIONS[betIdx];
+    let isSpinning = false;
+    let isAutoSpin = false;
+    let isTurbo = false;
+    let freeSpinsLeft = 0;
+    let adminForce = null;
+    let isAdminAuth = false;
+    let grid = Array(5).fill(null).map(() => ['king','king','king']); // 5 reels × 3 rows
+
+    // ============================================================
+    // BALANCE SYNC (localStorage + postMessage + 400ms poll)
+    // ============================================================
+    let balance = parseFloat(localStorage.getItem('balance')) || 50000;
+
+    function renderWallet() {
+      document.getElementById('walletBal').textContent = Math.floor(balance).toLocaleString();
+      document.getElementById('statBal').textContent = Math.floor(balance).toLocaleString();
+    }
+    function setBalance(n) {
+      balance = Math.max(0, Math.round(n * 100) / 100);
+      localStorage.setItem('balance', balance.toString());
+      renderWallet();
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'UPDATE_BALANCE', balance }, '*');
+        }
+      } catch (e) {}
+    }
+    window.addEventListener('storage', e => {
+      if (e.key === 'balance' && e.newValue) {
+        const v = parseFloat(e.newValue);
+        if (!isNaN(v) && v !== balance) { balance = v; renderWallet(); }
+      }
+    });
+    setInterval(() => {
+      const v = parseFloat(localStorage.getItem('balance'));
+      if (!isNaN(v) && v !== balance) { balance = v; renderWallet(); }
+    }, 400);
+    window.addEventListener('message', e => {
+      try {
+        const d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (d && typeof d.balance === 'number') { balance = d.balance; renderWallet(); }
+      } catch {}
+    });
+
+    // ============================================================
+    // WEB AUDIO SFX
+    // ============================================================
+    let actx = null;
+    function getCtx() {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    }
+    const sfx = {
+      reel() {
+        try {
+          const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sawtooth'; o.frequency.setValueAtTime(70, ctx.currentTime);
+          o.frequency.linearRampToValueAtTime(35, ctx.currentTime + 0.5);
+          g.gain.setValueAtTime(0.07, ctx.currentTime); g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+          o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.5);
+        } catch {}
+      },
+      stop() {
+        try {
+          const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'triangle'; o.frequency.setValueAtTime(350, ctx.currentTime);
+          o.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.1);
+          g.gain.setValueAtTime(0.18, ctx.currentTime); g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+          o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.12);
+        } catch {}
+      },
+      win(big) {
+        try {
+          const ctx = getCtx();
+          const freqs = big ? [523,659,784,1046,1318] : [523,659,784,1046];
+          freqs.forEach((f, i) => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = big ? 'sawtooth' : 'triangle';
+            o.frequency.setValueAtTime(f, ctx.currentTime + i * 0.09);
+            g.gain.setValueAtTime(big ? 0.22 : 0.18, ctx.currentTime + i * 0.09);
+            g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + i * 0.09 + 0.35);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(ctx.currentTime + i * 0.09); o.stop(ctx.currentTime + i * 0.09 + 0.4);
+          });
+        } catch {}
+      },
+      scatter() {
+        try {
+          const ctx = getCtx();
+          [800, 1200, 1600, 2000].forEach((f, i) => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = 'sine'; o.frequency.setValueAtTime(f, ctx.currentTime + i * 0.1);
+            g.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.1);
+            g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.2);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(ctx.currentTime + i * 0.1); o.stop(ctx.currentTime + i * 0.1 + 0.25);
+          });
+        } catch {}
+      },
+      chip() {
+        try {
+          const ctx = getCtx(); const o = ctx.createOscillator(); const g = ctx.createGain();
+          o.type = 'sine'; o.frequency.setValueAtTime(1000, ctx.currentTime);
+          o.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.05);
+          g.gain.setValueAtTime(0.15, ctx.currentTime); g.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+          o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.06);
+        } catch {}
+      }
+    };
+
+    // ============================================================
+    // BUILD REEL DOM (5 reels × 3 rows)
+    // ============================================================
+    const reelsRow = document.getElementById('reelsRow');
+    for (let r = 0; r < 5; r++) {
+      const reelDiv = document.createElement('div');
+      reelDiv.className = 'reel';
+      for (let row = 0; row < 3; row++) {
+        const cell = document.createElement('div');
+        cell.className = 'sym-cell';
+        cell.dataset.reel = r;
+        cell.dataset.row = row;
+        const emo = document.createElement('div'); emo.className = 'sym-emoji';
+        const nm  = document.createElement('div'); nm.className  = 'sym-name';
+        cell.appendChild(emo); cell.appendChild(nm);
+        reelDiv.appendChild(cell);
+      }
+      reelsRow.appendChild(reelDiv);
+    }
+
+    function updateCell(r, row, symId) {
+      const cell = document.querySelector(`.sym-cell[data-reel="${r}"][data-row="${row}"]`);
+      if (!cell) return;
+      const sym = SYMS[SYM_MAP[symId]];
+      cell.querySelector('.sym-emoji').textContent = sym.emoji;
+      cell.querySelector('.sym-name').textContent = sym.name;
+      cell.style.background = sym.bg;
+      cell.style.borderColor = sym.color + '50';
+      cell.classList.remove('win', 'scatter-win', 'spinning');
+      grid[r][row] = symId;
+    }
+
+    // Init display
+    for (let r = 0; r < 5; r++) {
+      for (let row = 0; row < 3; row++) updateCell(r, row, STRIPS[r][(r * 3 + row) % 50]);
+    }
+
+    // ============================================================
+    // SPIN RESULT GENERATION (with God Mode)
+    // ============================================================
+    function generateResult() {
+      const res = Array(5).fill(null).map(() => Array(3).fill(null));
+
+      if (adminForce === 'bigwin') {
+        const bigSym = ['girl','eagle','wild'][Math.floor(Math.random() * 3)];
+        for (let r = 0; r < 5; r++) {
+          res[r][1] = bigSym;
+          res[r][0] = wRandom();
+          res[r][2] = wRandom();
+        }
+      } else if (adminForce === 'scatter') {
+        for (let r = 0; r < 5; r++) for (let row = 0; row < 3; row++) res[r][row] = wRandom();
+        [[0,1],[2,1],[4,1]].forEach(([ri,ro]) => res[ri][ro] = 'scatter');
+      } else if (adminForce === 'wild') {
+        for (let r = 0; r < 4; r++) for (let row = 0; row < 3; row++) res[r][row] = 'wild';
+        for (let row = 0; row < 3; row++) res[4][row] = wRandom();
+      } else if (adminForce === 'medwin') {
+        const sym = ['snake','mask','eagle'][Math.floor(Math.random() * 3)];
+        for (let r = 0; r < 5; r++) {
+          res[r][1] = r < 3 ? sym : wRandom();
+          res[r][0] = wRandom(); res[r][2] = wRandom();
+        }
+      } else if (adminForce === 'lose') {
+        const losePat = ['ace','king','snake','mask','eagle'];
+        for (let r = 0; r < 5; r++) for (let row = 0; row < 3; row++) res[r][row] = losePat[(r + row + 1) % losePat.length];
+      } else {
+        for (let r = 0; r < 5; r++) {
+          const stop = Math.floor(Math.random() * STRIPS[r].length);
+          for (let row = 0; row < 3; row++) res[r][row] = STRIPS[r][(stop + row) % STRIPS[r].length];
+        }
+      }
+      return res;
+    }
+
+    // ============================================================
+    // WIN EVALUATION
+    // ============================================================
+    function evaluateWins(result) {
+      let totalWin = 0;
+      const winCells = new Set();
+      const winLines = [];
+      let scatterCount = 0;
+      const scatterCells = [];
+
+      // Count scatters anywhere on grid
+      for (let r = 0; r < 5; r++) {
+        for (let row = 0; row < 3; row++) {
+          if (result[r][row] === 'scatter') { scatterCount++; scatterCells.push(`${r}-${row}`); }
+        }
+      }
+
+      // Check each payline (left to right, wilds substitute)
+      PAYLINES.forEach(line => {
+        const lineSyms = line.map((row, r) => result[r][row]);
+
+        // Find base symbol (first non-wild)
+        let baseSym = lineSyms[0] === 'wild' ? (lineSyms.find(s => s !== 'wild') || 'wild') : lineSyms[0];
+        if (baseSym === 'scatter') return; // scatter pays separately
+
+        // Count consecutive matches from left
+        let count = 0;
+        for (let i = 0; i < 5; i++) {
+          if (lineSyms[i] === baseSym || lineSyms[i] === 'wild') count++;
+          else break;
+        }
+
+        const payout = PAYTABLE[baseSym]?.[count];
+        if (payout) {
+          const win = Math.floor(currentBet * payout);
+          totalWin += win;
+          winLines.push({ baseSym, count, win });
+          line.slice(0, count).forEach((row, r) => winCells.add(`${r}-${row}`));
+        }
+      });
+
+      return { totalWin, winCells, winLines, scatterCount, scatterCells };
+    }
+
+    // ============================================================
+    // SPIN ANIMATION
+    // ============================================================
+    async function doSpin() {
+      if (isSpinning) return;
+
+      const cost = freeSpinsLeft > 0 ? 0 : currentBet;
+      if (cost > balance) {
+        alert('ยอดเงินคงเหลือไม่เพียงพอ!\nเติมเงินผ่านปุ่ม 🔑 หลังบ้าน (PIN: 888)');
+        return;
+      }
+
+      isSpinning = true;
+      document.getElementById('btnSpin').disabled = true;
+      document.getElementById('winDisplay').classList.remove('show');
+      document.getElementById('statWin').textContent = '0';
+      document.getElementById('statWin').style.color = '#ccc';
+
+      if (cost > 0) setBalance(balance - cost);
+
+      const result = generateResult();
+      sfx.reel();
+
+      const spinDur = isTurbo ? 500 : 1800;
+      const reelDelay = isTurbo ? 80 : 250;
+
+      // Animate all 5 reels
+      const promises = [];
+      for (let r = 0; r < 5; r++) {
+        promises.push(new Promise(resolve => {
+          const delay = r * reelDelay;
+          const cells = document.querySelectorAll(`.sym-cell[data-reel="${r}"]`);
+          let shuffInt = null;
+          setTimeout(() => {
+            shuffInt = setInterval(() => {
+              cells.forEach(cell => {
+                const sym = SYMS[SYM_MAP[wRandom()]];
+                cell.querySelector('.sym-emoji').textContent = sym.emoji;
+                cell.classList.add('spinning');
+                cell.style.background = '';
+                cell.style.borderColor = '';
+              });
+            }, 80);
+          }, delay);
+
+          setTimeout(() => {
+            clearInterval(shuffInt);
+            sfx.stop();
+            for (let row = 0; row < 3; row++) updateCell(r, row, result[r][row]);
+            resolve();
+          }, spinDur + delay);
+        }));
+      }
+
+      await Promise.all(promises);
+
+      // Evaluate outcome
+      const { totalWin, winCells, winLines, scatterCount, scatterCells } = evaluateWins(result);
+
+      // Highlight winning cells
+      winCells.forEach(key => {
+        const [r, row] = key.split('-').map(Number);
+        const cell = document.querySelector(`.sym-cell[data-reel="${r}"][data-row="${row}"]`);
+        if (cell) cell.classList.add('win');
+      });
+
+      // Highlight scatters
+      if (scatterCount >= 2) {
+        scatterCells.forEach(key => {
+          const [r, row] = key.split('-').map(Number);
+          const cell = document.querySelector(`.sym-cell[data-reel="${r}"][data-row="${row}"]`);
+          if (cell) cell.classList.add('scatter-win');
+        });
+      }
+
+      // Free spins trigger
+      let fsTriggered = 0;
+      if (scatterCount >= 3) {
+        fsTriggered = SCATTER_FREE[Math.min(scatterCount, 5)] || 10;
+        freeSpinsLeft += fsTriggered;
+        sfx.scatter();
+        updateFSBadge();
+      }
+
+      // Payout
+      if (totalWin > 0) {
+        setBalance(balance + totalWin);
+        const isBig = totalWin >= currentBet * 8;
+        document.getElementById('statWin').textContent = '+฿' + totalWin.toLocaleString();
+        document.getElementById('statWin').style.color = isBig ? '#ffd700' : '#2ecc71';
+        document.getElementById('winLabel').textContent = isBig ? '👑 BIG WIN!' : '🎉 YOU WIN!';
+        document.getElementById('winAmount').textContent = '฿' + totalWin.toLocaleString();
+        document.getElementById('winDetail').textContent = winLines.length > 0 ? `${winLines.length} เส้นชนะ` : '';
+        document.getElementById('winDisplay').classList.add('show');
+        sfx.win(isBig);
+        setTimeout(() => document.getElementById('winDisplay').classList.remove('show'), isTurbo ? 1000 : 2500);
+      } else if (fsTriggered > 0) {
+        document.getElementById('winLabel').textContent = '🌟 FREE SPINS BONUS!';
+        document.getElementById('winAmount').textContent = `${fsTriggered} ฟรีสปิน!`;
+        document.getElementById('winDetail').textContent = 'ไม่หักเงินเดิมพัน';
+        document.getElementById('winDisplay').classList.add('show');
+        setTimeout(() => document.getElementById('winDisplay').classList.remove('show'), isTurbo ? 1000 : 2500);
+      }
+
+      // Decrement free spins
+      if (freeSpinsLeft > 0) { freeSpinsLeft--; updateFSBadge(); }
+
+      isSpinning = false;
+      document.getElementById('btnSpin').disabled = false;
+
+      // Auto spin
+      if (isAutoSpin) setTimeout(() => { if (isAutoSpin) doSpin(); }, isTurbo ? 300 : 700);
+    }
+
+    function updateFSBadge() {
+      const badge = document.getElementById('freeSpinBadge');
+      document.getElementById('freeSpinCount').textContent = freeSpinsLeft;
+      badge.classList.toggle('show', freeSpinsLeft > 0);
+    }
+
+    // ============================================================
+    // CONTROLS
+    // ============================================================
+    document.getElementById('btnSpin').addEventListener('click', doSpin);
+
+    document.getElementById('btnBetDown').addEventListener('click', () => {
+      if (isSpinning) return;
+      betIdx = Math.max(0, betIdx - 1);
+      currentBet = BET_OPTIONS[betIdx];
+      document.getElementById('betDisplay').textContent = '฿' + currentBet.toLocaleString();
+      document.getElementById('statBet').textContent = currentBet.toLocaleString();
+      sfx.chip();
+    });
+    document.getElementById('btnBetUp').addEventListener('click', () => {
+      if (isSpinning) return;
+      betIdx = Math.min(BET_OPTIONS.length - 1, betIdx + 1);
+      currentBet = BET_OPTIONS[betIdx];
+      document.getElementById('betDisplay').textContent = '฿' + currentBet.toLocaleString();
+      document.getElementById('statBet').textContent = currentBet.toLocaleString();
+      sfx.chip();
+    });
+    document.getElementById('btnMaxBet').addEventListener('click', () => {
+      if (isSpinning) return;
+      betIdx = BET_OPTIONS.length - 1;
+      currentBet = BET_OPTIONS[betIdx];
+      document.getElementById('betDisplay').textContent = '฿' + currentBet.toLocaleString();
+      document.getElementById('statBet').textContent = currentBet.toLocaleString();
+      sfx.chip();
+    });
+    document.getElementById('btnAutoSpin').addEventListener('click', () => {
+      isAutoSpin = !isAutoSpin;
+      const btn = document.getElementById('btnAutoSpin');
+      btn.classList.toggle('active', isAutoSpin);
+      btn.textContent = isAutoSpin ? '⏹ STOP AUTO' : 'AUTO SPIN';
+      sfx.chip();
+      if (isAutoSpin && !isSpinning) doSpin();
+    });
+    document.getElementById('btnTurbo').addEventListener('click', () => {
+      isTurbo = !isTurbo;
+      document.getElementById('btnTurbo').classList.toggle('active', isTurbo);
+      sfx.chip();
+    });
+
+    // Build Paytable
+    const ptGrid = document.getElementById('paytableGrid');
+    const headerRow = document.createElement('div');
+    headerRow.className = 'pt-row';
+    headerRow.style.background = 'rgba(90,144,32,0.2)';
+    headerRow.innerHTML = '<div class="pt-emoji" style="font-size:12px;color:#ffd700;">สัญลักษณ์</div><div class="pt-name" style="color:#ffd700;">ชื่อ</div><div class="pt-pay" style="color:#ffd700;">×3</div><div class="pt-pay" style="color:#ffd700;">×4</div><div class="pt-pay" style="color:#ffd700;">×5</div>';
+    ptGrid.appendChild(headerRow);
+
+    SYMS.forEach(sym => {
+      const pt = PAYTABLE[sym.id];
+      if (!pt) return;
+      const row = document.createElement('div'); row.className = 'pt-row';
+      row.innerHTML = `<div class="pt-emoji">${sym.emoji}</div><div class="pt-name" style="color:${sym.color};">${sym.name}</div><div class="pt-pay">${pt[3] !== undefined ? pt[3] + 'x' : '-'}</div><div class="pt-pay">${pt[4] !== undefined ? pt[4] + 'x' : '-'}</div><div class="pt-pay">${pt[5] !== undefined ? pt[5] + 'x' : '-'}</div>`;
+      ptGrid.appendChild(row);
+    });
+    // Extra info
+    const infoRow = document.createElement('div');
+    infoRow.style.cssText = 'margin-top:10px;padding:10px;background:rgba(0,255,204,0.08);border:1px solid rgba(0,255,204,0.3);border-radius:8px;font-size:12px;color:#ccc;';
+    infoRow.innerHTML = '<b style="color:#00ffcc;">💎 SCATTER (Crystal Gem):</b> 3+ ใดๆ บนวงล้อ → ฟรีสปิน 10/15/20 รอบ<br><b style="color:#ffd700;">🗿 WILD (Aztec Idol):</b> แทนสัญลักษณ์ทุกตัว ยกเว้น Scatter<br><b style="color:#74b9ff;">📊 20 Paylines</b> | วิธีชนะ: จ่ายจากซ้ายไปขวา 3+ ต่อเนื่อง';
+    ptGrid.appendChild(infoRow);
+
+    document.getElementById('btnPaytable').addEventListener('click', () => {
+      document.getElementById('modalPaytable').classList.add('open');
+    });
+    document.getElementById('btnClosePaytable').addEventListener('click', () => {
+      document.getElementById('modalPaytable').classList.remove('open');
+    });
+
+    // Exit
+    document.getElementById('btnBack').addEventListener('click', () => {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'EXIT_GAME' }, '*'); return;
+        }
+      } catch {}
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = 'index.html';
+    });
+
+    // ============================================================
+    // ADMIN MODAL (PIN: 888)
+    // ============================================================
+    function openAdmin() {
+      document.getElementById('modalAdmin').classList.add('open');
+      document.getElementById('adminError').textContent = '';
+      if (isAdminAuth) {
+        document.getElementById('adminAuth').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+      } else {
+        document.getElementById('adminAuth').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
+      }
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdmin);
+    document.getElementById('walletPill').addEventListener('click', openAdmin);
+    document.getElementById('btnCloseAdmin').addEventListener('click', () => document.getElementById('modalAdmin').classList.remove('open'));
+
+    document.getElementById('btnAdminLogin').addEventListener('click', () => {
+      if (document.getElementById('adminPinInput').value.trim() === '888') {
+        isAdminAuth = true; sfx.win(false);
+        document.getElementById('adminAuth').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+      } else {
+        document.getElementById('adminError').textContent = '❌ รหัสผ่านไม่ถูกต้อง! (รหัสคือ 888)';
+        document.getElementById('adminPinInput').value = '';
+      }
+    });
+    document.getElementById('adminPinInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btnAdminLogin').click();
+    });
+
+    document.querySelectorAll('.qbtn[data-add]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setBalance(balance + parseInt(btn.dataset.add));
+        sfx.chip();
+        alert(`เติมเงิน +฿${parseInt(btn.dataset.add).toLocaleString()} เรียบร้อยแล้ว!`);
+      });
+    });
+    document.getElementById('btnCustomAdd').addEventListener('click', () => {
+      const amt = prompt('กรอกจำนวนเงินที่ต้องการเติม (THB):', '50000');
+      if (amt && !isNaN(amt) && Number(amt) > 0) { setBalance(balance + Number(amt)); sfx.chip(); }
+    });
+    document.getElementById('btnResetBal').addEventListener('click', () => {
+      setBalance(50000); sfx.chip(); alert('รีเซ็ตยอดเงินเป็น ฿50,000 เรียบร้อยแล้ว!');
+    });
+
+    document.querySelectorAll('.gbtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gbtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        adminForce = btn.dataset.force === 'none' ? null : btn.dataset.force;
+        sfx.chip();
+        document.getElementById('godStatusSlot').textContent = adminForce
+          ? `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ${btn.textContent.trim()} ]`
+          : 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+      });
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    renderWallet();
+  </script>
+</body>
+</html>

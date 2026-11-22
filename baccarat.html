@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VIP Baccarat Casino - เกมบาคาร่าสดเสมือนจริง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Kanit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0e14;
+      --table-felt: radial-gradient(circle at 50% 30%, #0d382d 0%, #061c16 70%, #030d0a 100%);
+      --gold-grad: linear-gradient(180deg, #fff3a8 0%, #f7b731 40%, #c58610 80%, #684102 100%);
+      --player-blue: #2980b9;
+      --player-blue-glow: rgba(41, 128, 185, 0.6);
+      --banker-red: #c0392b;
+      --banker-red-glow: rgba(192, 57, 43, 0.6);
+      --tie-green: #27ae60;
+      --tie-green-glow: rgba(39, 174, 96, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      font-family: 'Kanit', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #04070a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    .baccarat-app {
+      width: 100vw;
+      height: 100vh;
+      max-width: 960px;
+      max-height: 980px;
+      background: var(--table-felt);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 3px solid #846522;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), inset 0 0 100px rgba(0,0,0,0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      background: rgba(4, 15, 12, 0.9);
+      border-bottom: 2px solid #a67c2e;
+      z-index: 10;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: var(--gold-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .top-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-badge {
+      background: #091a15;
+      border: 1px solid #7c6225;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-badge .val {
+      color: #ffd54f;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-top {
+      background: #142e25;
+      border: 1px solid #a67c2e;
+      color: #ffd54f;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+    .btn-top:active { transform: scale(0.9); }
+
+    /* Table Stage */
+    .table-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 10px 16px;
+      gap: 10px;
+    }
+
+    /* Cards Playing Field */
+    .cards-arena {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
+      border-radius: 16px;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
+    }
+
+    .side-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      border-radius: 12px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .side-box.player-side {
+      background: linear-gradient(180deg, rgba(41, 128, 185, 0.15), rgba(15, 30, 45, 0.4));
+      border: 1.5px solid rgba(41, 128, 185, 0.5);
+    }
+    .side-box.player-side.winner {
+      border-color: #3498db;
+      box-shadow: 0 0 25px var(--player-blue-glow);
+    }
+
+    .side-box.banker-side {
+      background: linear-gradient(180deg, rgba(192, 57, 43, 0.15), rgba(45, 15, 15, 0.4));
+      border: 1.5px solid rgba(192, 57, 43, 0.5);
+    }
+    .side-box.banker-side.winner {
+      border-color: #e74c3c;
+      box-shadow: 0 0 25px var(--banker-red-glow);
+    }
+
+    .side-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 0 8px;
+    }
+
+    .side-title {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+    .player-side .side-title { color: #5dade2; }
+    .banker-side .side-title { color: #f1948a; }
+
+    .score-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .score-circle.bump { transform: scale(1.35); }
+    .player-side .score-circle { background: #2980b9; border: 2px solid #a9cce3; }
+    .banker-side .score-circle { background: #c0392b; border: 2px solid #f5b7b1; }
+
+    /* Hand Cards Layout */
+    .cards-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 120px;
+      width: 100%;
+    }
+
+    /* Playing Card Design */
+    .playing-card {
+      width: 78px;
+      height: 112px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px;
+      position: relative;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      color: #111;
+    }
+
+    .playing-card.red { color: #d63031; }
+    .playing-card.black { color: #2d3436; }
+
+    .playing-card.third-card {
+      transform: rotate(90deg);
+      margin-left: 12px;
+    }
+
+    .card-corner-top, .card-corner-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+    }
+    .card-corner-bottom { transform: rotate(180deg); }
+    .card-val { font-size: 15px; font-weight: 900; }
+    .card-suit { font-size: 12px; margin-top: 1px; }
+
+    .card-center-suit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px;
+    }
+
+    .playing-card.face-down {
+      background: repeating-linear-gradient(45deg, #1b3a4b, #1b3a4b 8px, #0e202b 8px, #0e202b 16px);
+      border: 2px solid #ffd54f;
+    }
+    .playing-card.face-down * { display: none; }
+
+    /* Betting Board Areas */
+    .betting-board {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+      grid-template-rows: auto auto;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .bet-spot {
+      background: rgba(10, 30, 22, 0.7);
+      border: 2px solid #99793d;
+      border-radius: 12px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .bet-spot:hover {
+      background: rgba(18, 50, 38, 0.85);
+      border-color: #ffd54f;
+      transform: translateY(-2px);
+    }
+
+    .bet-spot.active {
+      border-color: #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .bet-spot.winning-spot {
+      animation: pulseWinSpot 0.8s infinite alternate;
+      border-color: #fff !important;
+    }
+
+    @keyframes pulseWinSpot {
+      0% { filter: brightness(1); transform: scale(1); }
+      100% { filter: brightness(1.35); transform: scale(1.02); }
+    }
+
+    .bet-spot-title {
+      font-family: 'Cinzel', 'Kanit', serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .bet-spot-payout {
+      font-size: 12px;
+      color: #e0d0a0;
+      margin-top: 2px;
+    }
+
+    .spot-player { grid-column: 1 / 2; grid-row: 1 / 3; border-color: #2980b9; }
+    .spot-player .bet-spot-title { color: #3498db; }
+
+    .spot-banker { grid-column: 4 / 5; grid-row: 1 / 3; border-color: #c0392b; }
+    .spot-banker .bet-spot-title { color: #e74c3c; }
+
+    .spot-tie { grid-column: 2 / 4; grid-row: 1 / 2; border-color: #27ae60; }
+    .spot-tie .bet-spot-title { color: #2ecc71; }
+
+    .spot-p-pair { grid-column: 2 / 3; grid-row: 2 / 3; }
+    .spot-p-pair .bet-spot-title { font-size: 14px; color: #5dade2; }
+
+    .spot-b-pair { grid-column: 3 / 4; grid-row: 2 / 3; }
+    .spot-b-pair .bet-spot-title { font-size: 14px; color: #f1948a; }
+
+    /* Placed Chip Badge */
+    .placed-chip-badge {
+      position: absolute;
+      bottom: -6px;
+      background: radial-gradient(circle, #f5b027 0%, #a06806 100%);
+      color: #1a0b04;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1.5px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      display: none;
+    }
+    .placed-chip-badge.show { display: block; }
+
+    /* Roadmaps & History */
+    .history-container {
+      background: rgba(4, 15, 12, 0.9);
+      border: 1.5px solid #7c6225;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    .bead-road {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding: 4px 0;
+      min-height: 36px;
+      align-items: center;
+    }
+
+    .bead-ball {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+    .bead-ball.P { background: #2980b9; border: 1.5px solid #a9cce3; }
+    .bead-ball.B { background: #c0392b; border: 1.5px solid #f5b7b1; }
+    .bead-ball.T { background: #27ae60; border: 1.5px solid #abebc6; }
+
+    /* Control Deck & Chips */
+    .controls-deck {
+      background: linear-gradient(180deg, #10261f 0%, #06130f 100%);
+      border-top: 2px solid #99793d;
+      padding: 10px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Chips Row */
+    .chips-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 4px;
+    }
+
+    .casino-chip {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      position: relative;
+      border: 3px dashed #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .casino-chip:active { transform: scale(0.9); }
+    .casino-chip.selected {
+      transform: translateY(-8px) scale(1.12);
+      box-shadow: 0 0 16px #ffd700, 0 6px 12px rgba(0,0,0,0.8);
+    }
+
+    .chip-10 { background: #34495e; color: #fff; }
+    .chip-50 { background: #16a085; color: #fff; }
+    .chip-100 { background: #2980b9; color: #fff; }
+    .chip-500 { background: #8e44ad; color: #fff; }
+    .chip-1000 { background: #d35400; color: #fff; }
+    .chip-5000 { background: #c0392b; color: #fff; }
+
+    /* Action Buttons Row */
+    .actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .btn-act {
+      flex: 1;
+      height: 44px;
+      border-radius: 22px;
+      border: none;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+    .btn-act:active { transform: scale(0.95); }
+    .btn-act:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-clear { background: #34495e; color: #ecf0f1; border: 1.5px solid #7f8c8d; }
+    .btn-double { background: #2c3e50; color: #f1c40f; border: 1.5px solid #f39c12; }
+    .btn-deal {
+      background: linear-gradient(180deg, #f1c40f 0%, #d35400 100%);
+      color: #1a0b04;
+      font-size: 18px;
+      font-weight: 900;
+      border: 2px solid #fff3a8;
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
+    }
+
+    /* Modals & Announcements */
+    .winner-announcement {
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      background: rgba(10, 20, 16, 0.95);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 16px 32px;
+      color: #fff;
+      font-size: 26px;
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 10px 40px rgba(0,0,0,0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 50;
+      white-space: nowrap;
+    }
+    .winner-announcement.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .winner-announcement .sub-win {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffd54f;
+      margin-top: 4px;
+    }
+
+    /* Rules Modal */
+    .modal-rules {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-rules.open { display: flex; }
+
+    .mode-dropdown {
+      background: #0d1e18;
+      border: 1.5px solid #a67c2e;
+      color: #ffd700;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      margin-left: 10px;
+    }
+    .mode-dropdown:focus { border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+
+    /* Admin Top-Up Modal */
+    .modal-admin {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-admin.open { display: flex; }
+    .admin-card {
+      background: linear-gradient(180deg, #16241b 0%, #0a130f 100%);
+      border: 2px solid #f39c12;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 22px;
+      box-shadow: 0 0 30px rgba(243, 156, 18, 0.4), 0 10px 40px rgba(0,0,0,0.9);
+      position: relative;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid rgba(243, 156, 18, 0.3);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .admin-header h3 {
+      color: #ffd54f;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-close-admin {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .admin-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: #060e0a;
+      border: 1.5px solid #a67c2e;
+      border-radius: 8px;
+      color: #ffd54f;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 10px 0;
+      outline: none;
+    }
+    .admin-input:focus { border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+    .admin-btn-submit {
+      width: 100%;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(180deg, #f39c12, #d35400);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.15s;
+    }
+    .admin-btn-submit:active { transform: scale(0.96); }
+    .admin-error {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .admin-success {
+      color: #2ecc71;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .quick-topup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .quick-btn {
+      background: #0f241a;
+      border: 1px solid #27ae60;
+      color: #a8e6cf;
+      padding: 8px 0;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .quick-btn:hover { background: #27ae60; color: #fff; }
+    .admin-balance-display {
+      background: #060e0a;
+      border: 1px solid #a67c2e;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+    .admin-balance-display strong {
+      color: #ffd54f;
+      font-size: 18px;
+    }
+    .admin-btn-reset {
+      background: #4a2810;
+      border: 1px solid #c0392b;
+      color: #e74c3c;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      display: block;
+      margin: 10px auto 0;
+    }
+
+    /* God Mode & Ask Buttons */
+    .god-btn {
+      background: #091a13;
+      border: 1.5px solid #555;
+      color: #ccc;
+      padding: 7px 4px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .god-btn:hover { filter: brightness(1.2); }
+    .god-btn.active {
+      background: #1e382a;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      border-width: 2px;
+    }
+
+    .btn-ask {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: #0d1e18;
+      transition: all 0.15s;
+    }
+    .btn-ask.p-ask { color: #5dade2; border-color: #2980b9; }
+    .btn-ask.b-ask { color: #f1948a; border-color: #c0392b; }
+    .btn-ask:hover { filter: brightness(1.3); transform: scale(1.05); }
+    .bead-ball.ghost { opacity: 0.5; animation: pulseGhost 0.6s infinite alternate; }
+    @keyframes pulseGhost { from { opacity: 0.3; } to { opacity: 0.8; } }
+
+    .rules-card {
+      background: #0f241d;
+      border: 2px solid #a67c2e;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    }
+    .rules-card h2 { color: #ffd54f; margin-bottom: 12px; font-size: 20px; }
+    .rules-card p, .rules-card li { font-size: 13px; line-height: 1.6; color: #ddd; margin-bottom: 8px; }
+    .rules-card ul { padding-left: 18px; margin-bottom: 14px; }
+    .btn-close-rules {
+      background: linear-gradient(180deg, #f39c12, #d35400);
+      color: #fff;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      display: block;
+      margin: 14px auto 0;
+    }
+
+    /* Lightning & Squeeze Modes Styles */
+    .lightning-banner {
+      background: linear-gradient(90deg, rgba(243, 156, 18, 0.25), rgba(241, 196, 15, 0.45), rgba(243, 156, 18, 0.25));
+      border: 1.5px solid #ffd700;
+      border-radius: 10px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 4px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      animation: lightningPulse 1.2s infinite alternate;
+    }
+    @keyframes lightningPulse {
+      from { box-shadow: 0 0 8px rgba(255, 215, 0, 0.3); }
+      to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    }
+    .lightning-card-chip {
+      background: #081016;
+      border: 1px solid #ffd700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffd54f;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .lightning-card-chip .mult {
+      background: #e74c3c;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .playing-card.squeeze-mode {
+      animation: cardSqueeze 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    @keyframes cardSqueeze {
+      0% { transform: scale(0.8) rotateY(70deg); opacity: 0.6; }
+      50% { transform: scale(1.05) rotateY(30deg); opacity: 0.9; }
+      100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        display: block;
+        min-height: 100vh;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: #04070a;
+      }
+      .baccarat-app {
+        width: 100vw;
+        min-height: 100dvh;
+        height: auto;
+        max-width: 100vw;
+        max-height: none;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+      }
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 6px 8px;
+        flex-wrap: wrap;
+        gap: 6px;
+        background: rgba(4, 15, 12, 0.98);
+      }
+      .brand-logo {
+        font-size: 13px;
+        gap: 4px;
+      }
+      .mode-dropdown {
+        font-size: 11px;
+        padding: 2px 4px;
+        max-width: 125px;
+      }
+      .top-stats {
+        gap: 4px;
+      }
+      .stat-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        gap: 4px;
+      }
+      .btn-top {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+      }
+      .table-stage {
+        padding: 4px 6px;
+        gap: 6px;
+        flex: 1 0 auto;
+      }
+      .cards-arena {
+        gap: 6px;
+        padding: 6px;
+      }
+      .side-header {
+        padding: 2px 4px;
+      }
+      .side-title {
+        font-size: 12px;
+      }
+      .score-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+      .cards-row {
+        min-height: 75px;
+        gap: 4px;
+      }
+      .playing-card {
+        width: 48px;
+        height: 72px;
+        padding: 3px;
+        border-radius: 6px;
+      }
+      .card-val { font-size: 11px; }
+      .card-suit { font-size: 9px; }
+      .card-center-suit { font-size: 18px; }
+      .playing-card.third-card { margin-left: 4px; }
+      
+      .betting-board {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+        margin-top: 4px;
+      }
+      .bet-spot {
+        padding: 6px 2px;
+        min-height: 54px;
+      }
+      .spot-title {
+        font-size: 11px;
+        line-height: 1.15;
+      }
+      .spot-rate {
+        font-size: 9px;
+      }
+      .placed-chip-badge {
+        font-size: 9px;
+        padding: 1px 4px;
+      }
+
+      .history-container {
+        padding: 4px 6px;
+        gap: 4px;
+      }
+      .bead-ball {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+      }
+      .btn-ask {
+        padding: 2px 6px;
+        font-size: 10px;
+      }
+
+      .controls-deck {
+        position: sticky;
+        bottom: 0;
+        z-index: 90;
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+        gap: 6px;
+        background: rgba(6, 19, 15, 0.98);
+        border-top: 2px solid #846522;
+        backdrop-filter: blur(8px);
+      }
+      .chips-row {
+        gap: 6px;
+        padding: 2px;
+      }
+      .casino-chip {
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+      }
+      .actions-row {
+        gap: 6px;
+      }
+      .btn-act {
+        padding: 10px 8px;
+        font-size: 12px;
+        font-weight: 800;
+        border-radius: 8px;
+      }
+      .btn-deal {
+        flex: 1.5;
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="baccarat-app">
+
+    <!-- Top Status Bar -->
+    <div id="modeBanner" class="mode-banner" style="display:none;justify-content:center;align-items:center;padding:6px;margin:4px;background:#0a1a1a;color:#ffd54f;font-weight:800;">
+      <!-- Banner text set dynamically -->
+    </div>
+
+    <div class="top-bar">
+      <div class="brand-logo">
+        <span id="logoSuit1">♠</span> <span id="logoBrandTitle">VIP BACCARAT</span> <span id="logoSuit2">♦</span>
+        <select id="selectBaccaratMode" class="mode-dropdown" title="เลือกรูปแบบโต๊ะบาคาร่า">
+          <option value="classic">👑 VIP Classic (คอม 5%)</option>
+          <option value="speed">⚡ Speed Baccarat (สปีดเร็ว)</option>
+          <option value="nocommission">🌟 Super 6 (ไม่หักคอม 1:1)</option>
+          <option value="dragontiger">🐉 เสือมังกร (Dragon Tiger)</option>
+        </select>
+      </div>
+
+      <div class="top-stats">
+        <div class="stat-badge" id="badgeBalance" style="cursor: pointer;" title="คลิกเพื่อเปิดระบบเติมเงินหลังบ้าน">
+          <span>ยอดเงิน:</span>
+          <span class="val" id="balanceVal">50,000</span>
+        </div>
+        <button class="btn-top" id="btnAdminTopup" title="ระบบเติมเงินหลังบ้าน (รหัส 888)">🔑</button>
+        <div class="stat-badge">
+          <span>เดิมพันรวม:</span>
+          <span class="val" id="totalBetVal">0</span>
+        </div>
+        <button class="btn-top" id="btnSoundToggle" title="เปิด/ปิดเสียง">🔊</button>
+        <button class="btn-top" id="btnOpenRules" title="กติกาบาคาร่า">ℹ️</button>
+      </div>
+    </div>
+
+    <!-- Main Table Area -->
+    <div class="table-stage">
+
+      <!-- Cards Battlefield (Player vs Banker) -->
+      <div class="cards-arena">
+        <!-- Player Hand -->
+        <div class="side-box player-side" id="playerSideBox">
+          <div class="side-header">
+            <span class="side-title">🔵 PLAYER</span>
+            <div class="score-circle" id="playerScore">0</div>
+          </div>
+          <div class="cards-row" id="playerCards">
+            <div class="playing-card face-down"></div>
+            <div class="playing-card face-down"></div>
+          </div>
+        </div>
+
+        <!-- Banker Hand -->
+        <div class="side-box banker-side" id="bankerSideBox">
+          <div class="side-header">
+            <span class="side-title">🔴 BANKER</span>
+            <div class="score-circle" id="bankerScore">0</div>
+          </div>
+          <div class="cards-row" id="bankerCards">
+            <div class="playing-card face-down"></div>
+            <div class="playing-card face-down"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Winner Announcement Banner -->
+      <div class="winner-announcement" id="winAnnouncement">
+        <div id="winTitleText">PLAYER WINS!</div>
+        <div class="sub-win" id="winPayoutText">+1,000 THB</div>
+      </div>
+
+      <!-- Betting Board Spots -->
+      <div class="betting-board">
+        <!-- Player Main Bet (1:1) -->
+        <div class="bet-spot spot-player" data-bet="player">
+          <span class="bet-spot-title">PLAYER</span>
+          <span class="bet-spot-payout">จ่าย 1 : 1</span>
+          <div class="placed-chip-badge" id="badge_player">0</div>
+        </div>
+
+        <!-- Tie Bet (8:1) -->
+        <div class="bet-spot spot-tie" data-bet="tie">
+          <span class="bet-spot-title">TIE (เสมอ)</span>
+          <span class="bet-spot-payout">จ่าย 8 : 1</span>
+          <div class="placed-chip-badge" id="badge_tie">0</div>
+        </div>
+
+        <!-- Player Pair (11:1) -->
+        <div class="bet-spot spot-p-pair" data-bet="player_pair">
+          <span class="bet-spot-title">P.PAIR</span>
+          <span class="bet-spot-payout">11 : 1</span>
+          <div class="placed-chip-badge" id="badge_player_pair">0</div>
+        </div>
+
+        <!-- Banker Pair (11:1) -->
+        <div class="bet-spot spot-b-pair" data-bet="banker_pair">
+          <span class="bet-spot-title">B.PAIR</span>
+          <span class="bet-spot-payout">11 : 1</span>
+          <div class="placed-chip-badge" id="badge_banker_pair">0</div>
+        </div>
+
+        <!-- Banker Main Bet (0.95:1) -->
+        <div class="bet-spot spot-banker" data-bet="banker">
+          <span class="bet-spot-title">BANKER</span>
+          <span class="bet-spot-payout">จ่าย 1 : 0.95</span>
+          <div class="placed-chip-badge" id="badge_banker">0</div>
+        </div>
+      </div>
+
+      <!-- Bead Plate / Roadmaps Scoreboard -->
+      <div class="history-container">
+        <div class="history-header">
+          <span>📊 สถิติเค้าไพ่ (Bead Plate)</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button type="button" class="btn-ask p-ask" id="btnAskP" title="จำลองว่าถ้าตาต่อไปออก Player">🔵 ถาม P</button>
+            <button type="button" class="btn-ask b-ask" id="btnAskB" title="จำลองว่าถ้าตาต่อไปออก Banker">🔴 ถาม B</button>
+          </div>
+          <span>P: <strong id="statP" style="color:#5dade2">0</strong> | B: <strong id="statB" style="color:#f1948a">0</strong> | T: <strong id="statT" style="color:#2ecc71">0</strong></span>
+        </div>
+        <div class="bead-road" id="beadRoad"></div>
+      </div>
+
+    </div>
+
+    <!-- Control Center & Chips -->
+    <div class="controls-deck">
+      <!-- Chips Selection Row -->
+      <div class="chips-row">
+        <div class="casino-chip chip-10 selected" data-value="10">10</div>
+        <div class="casino-chip chip-50" data-value="50">50</div>
+        <div class="casino-chip chip-100" data-value="100">100</div>
+        <div class="casino-chip chip-500" data-value="500">500</div>
+        <div class="casino-chip chip-1000" data-value="1000">1K</div>
+        <div class="casino-chip chip-5000" data-value="5000">5K</div>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="actions-row">
+        <button class="btn-act btn-clear" id="btnClearBet">✕ ล้างเดิมพัน</button>
+        <button class="btn-act btn-double" id="btnDoubleBet">2X คูณสอง</button>
+        <button class="btn-act btn-deal" id="btnDeal">แจกไพ่ (DEAL)</button>
+      </div>
+    </div>
+
+    <!-- Rules Modal Dialog -->
+    <div class="modal-rules" id="modalRules">
+      <div class="rules-card">
+        <h2>📜 กติกาและวิธีเล่นบาคาร่าสากล</h2>
+        <p><strong>การนับแต้มไพ่:</strong></p>
+        <ul>
+          <li>ไพ่ 2 - 9: มีค่าตามตัวเลขบนหน้าไพ่</li>
+          <li>ไพ่ 10, J, Q, K: มีค่าเท่ากับ 0 แต้ม</li>
+          <li>ไพ่ A: มีค่าเท่ากับ 1 แต้ม</li>
+          <li>แต้มรวมสูงสุดคือ 9 แต้ม (หากเกิน 10 แต้มจะนับเฉพาะเลขหลักหน่วย)</li>
+        </ul>
+
+        <p><strong>กฎป๊อก 8 ป๊อก 9 (Natural Win):</strong></p>
+        <ul>
+          <li>หาก Player หรือ Banker ได้ 8 หรือ 9 แต้มจาก 2 ใบแรก จะชนะทันที ไม่มีการจั่วไพ่เพิ่ม</li>
+        </ul>
+
+        <p><strong>กฎการจั่วไพ่ใบที่ 3:</strong></p>
+        <ul>
+          <li><strong>Player:</strong> แต้ม 0-5 ต้องจั่วใบที่ 3 / แต้ม 6-7 อยู่ (Stand)</li>
+          <li><strong>Banker:</strong> ตัดสินใจจั่วตามแต้มของตนเองและไพ่ใบที่ 3 ของ Player ตามตารางสากลคาสิโนจริง</li>
+        </ul>
+
+        <p><strong>อัตราจ่าย:</strong></p>
+        <ul>
+          <li>Player ชนะ: จ่าย 1 : 1</li>
+          <li>Banker ชนะ: จ่าย 1 : 0.95 (หักค่าคอม 5%)</li>
+          <li>Tie (เสมอ): จ่าย 8 : 1 (คืนทุน Player/Banker)</li>
+          <li>Player/Banker Pair (ไพ่คู่): จ่าย 11 : 1</li>
+        </ul>
+
+        <button class="btn-close-rules" id="btnCloseRules">เข้าใจแล้ว</button>
+      </div>
+    </div>
+
+    <!-- Admin Top-Up Modal (PIN 888) -->
+    <div class="modal-admin" id="modalAdmin">
+      <div class="admin-card">
+        <div class="admin-header">
+          <h3>🔐 ระบบเติมเงินหลังบ้าน (Admin PIN: 888)</h3>
+          <button class="btn-close-admin" id="btnCloseAdmin">✕</button>
+        </div>
+
+        <!-- Section 1: Auth PIN Screen -->
+        <div id="adminAuthSection">
+          <label for="adminPinInput" style="font-size: 13px; color: #ccc; margin-bottom: 8px; display: block;">กรุณากรอกรหัสผ่านหลังบ้านเพื่อเติมเครดิต:</label>
+          <input type="password" id="adminPinInput" class="admin-input" placeholder="ระบุรหัสผ่าน (888)" maxlength="6" autocomplete="off" aria-label="รหัสผ่านหลังบ้าน" />
+          <button class="admin-btn-submit" id="btnAdminLogin">ยืนยันรหัสผ่าน</button>
+          <div id="adminErrorMsg" class="admin-error"></div>
+        </div>
+
+        <!-- Section 2: Credit Adjustment Panel -->
+        <div id="adminPanelSection" style="display: none;">
+          <div class="admin-balance-display">
+            ยอดเงินปัจจุบัน: <strong id="adminCurrentBal">50,000</strong> THB
+          </div>
+
+          <div style="margin-top: 12px; font-size: 12px; color: #bbb;">เลือกจำนวนเงินด่วน:</div>
+          <div class="quick-topup-grid">
+            <button class="quick-btn" data-add="10000">+10,000</button>
+            <button class="quick-btn" data-add="50000">+50,000</button>
+            <button class="quick-btn" data-add="100000">+100,000</button>
+            <button class="quick-btn" data-add="500000">+500,000</button>
+            <button class="quick-btn" data-add="1000000">+1,000,000</button>
+            <button class="quick-btn" data-add="5000000">+5,000,000</button>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <label for="customAmountInput" style="font-size: 12px; color: #bbb; display: block;">หรือระบุจำนวนเอง (THB):</label>
+            <input type="number" id="customAmountInput" class="admin-input" placeholder="เช่น 25000" min="1" aria-label="ระบุจำนวนเงินเอง" />
+            <button class="admin-btn-submit" id="btnCustomTopup">เติมเงินตามระบุ</button>
+          </div>
+
+          <button class="admin-btn-reset" id="btnResetBal">รีเซ็ตยอดเป็น 50,000 THB</button>
+
+          <!-- Section 3: God Mode / Outcome Manipulation -->
+          <div style="margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 10px;">
+            <div style="font-size: 13px; font-weight: 800; color: #ffd700; display: flex; align-items: center; gap: 5px;">
+              <span>🎯 ล็อคผลการออกไพ่รอบถัดไป (God Mode):</span>
+            </div>
+            <div class="god-mode-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 8px;">
+              <button type="button" class="god-btn active" data-force="none">🎲 สุ่มปกติ (RNG)</button>
+              <button type="button" class="god-btn" data-force="P" style="border-color:#3498db; color:#5dade2;">🔵 บังคับ PLAYER ชนะ</button>
+              <button type="button" class="god-btn" data-force="B" style="border-color:#e74c3c; color:#f1948a;">🔴 บังคับ BANKER ชนะ</button>
+              <button type="button" class="god-btn" data-force="T" style="border-color:#2ecc71; color:#2ecc71;">🟢 บังคับ เสมอ (TIE)</button>
+              <button type="button" class="god-btn" data-force="PAIR" style="grid-column: 1 / -1; border-color:#f1c40f; color:#ffd700;">🃏 บังคับออกไพ่คู่ (PAIR)</button>
+            </div>
+            <div id="godStatusText" style="font-size: 11px; color: #aaa; margin-top: 6px; text-align: center;">สถานะ: 🎲 สุ่มตามดวงปกติ</div>
+          </div>
+
+          <div id="adminSuccessMsg" class="admin-success"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // --- Web Audio Synthesizer ---
+      class SoundFX {
+        constructor() {
+          this.ctx = null;
+          this.isMuted = false;
+        }
+        init() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        }
+        tone(freq, type = 'sine', dur = 0.08, gainVal = 0.1) {
+          if (this.isMuted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + dur);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + dur);
+          } catch (e) {}
+        }
+        chip() { this.tone(900, 'triangle', 0.04, 0.12); }
+        card() { this.tone(300, 'sine', 0.06, 0.15); }
+        flip() { this.tone(550, 'triangle', 0.08, 0.1); }
+        win() {
+          [523, 659, 784, 1046].forEach((f, i) => {
+            setTimeout(() => this.tone(f, 'sine', 0.15, 0.14), i * 50);
+          });
+        }
+      }
+
+      const sfx = new SoundFX();
+
+      // --- Card Deck & Constants ---
+      const SUITS = [
+        { name: 'hearts', sym: '♥', color: 'red' },
+        { name: 'diamonds', sym: '♦', color: 'red' },
+        { name: 'clubs', sym: '♣', color: 'black' },
+        { name: 'spades', sym: '♠', color: 'black' }
+      ];
+
+      const VALUES = [
+        { rank: 'A', val: 1 }, { rank: '2', val: 2 }, { rank: '3', val: 3 },
+        { rank: '4', val: 4 }, { rank: '5', val: 5 }, { rank: '6', val: 6 },
+        { rank: '7', val: 7 }, { rank: '8', val: 8 }, { rank: '9', val: 9 },
+        { rank: '10', val: 0 }, { rank: 'J', val: 0 }, { rank: 'Q', val: 0 }, { rank: 'K', val: 0 }
+      ];
+
+      function createShoe(deckCount = 8) {
+        const shoe = [];
+        for (let d = 0; d < deckCount; d++) {
+          for (const s of SUITS) {
+            for (const v of VALUES) {
+              shoe.push({ rank: v.rank, val: v.val, suit: s.sym, color: s.color });
+            }
+          }
+        }
+        // Fisher-Yates Shuffle
+        for (let i = shoe.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shoe[i], shoe[j]] = [shoe[j], shoe[i]];
+        }
+        return shoe;
+      }
+
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const initMode = urlParams.get('mode') || 'classic';
+
+        const state = {
+          mode: initMode,
+          balance: Number(localStorage.getItem('balance')) || 50000,
+          selectedChip: 10,
+          bets: {
+            player: 0,
+            banker: 0,
+            tie: 0,
+            player_pair: 0,
+            banker_pair: 0
+          },
+          shoe: createShoe(8),
+          isPlaying: false,
+          stats: { P: 0, B: 0, T: 0 },
+          history: [],
+          adminForceResult: null // 'P' | 'B' | 'T' | 'PAIR' | null
+        };
+
+        // Deal delay based on mode
+        const dealDelay = state.mode === 'speed' ? 80 : 400;
+
+        const modeBanner = document.getElementById('modeBanner');
+        if (modeBanner) {
+          if (state.mode === 'lightning') {
+            modeBanner.style.display = 'flex';
+            modeBanner.textContent = '⚡ Lightning Baccarat Active';
+          } else if (state.mode === 'squeeze') {
+            modeBanner.style.display = 'flex';
+            modeBanner.textContent = '🤏 Squeeze Baccarat Active';
+          } else {
+            modeBanner.style.display = 'none';
+          }
+        }
+
+
+
+
+      // --- DOM Elements ---
+      const el = {
+        balanceVal: document.getElementById('balanceVal'),
+        totalBetVal: document.getElementById('totalBetVal'),
+        playerCards: document.getElementById('playerCards'),
+        bankerCards: document.getElementById('bankerCards'),
+        playerScore: document.getElementById('playerScore'),
+        bankerScore: document.getElementById('bankerScore'),
+        playerSideBox: document.getElementById('playerSideBox'),
+        bankerSideBox: document.getElementById('bankerSideBox'),
+        btnDeal: document.getElementById('btnDeal'),
+        btnClearBet: document.getElementById('btnClearBet'),
+        btnDoubleBet: document.getElementById('btnDoubleBet'),
+        winAnnouncement: document.getElementById('winAnnouncement'),
+        winTitleText: document.getElementById('winTitleText'),
+        winPayoutText: document.getElementById('winPayoutText'),
+        beadRoad: document.getElementById('beadRoad'),
+        statP: document.getElementById('statP'),
+        statB: document.getElementById('statB'),
+        statT: document.getElementById('statT'),
+        btnSoundToggle: document.getElementById('btnSoundToggle'),
+        btnOpenRules: document.getElementById('btnOpenRules'),
+        modalRules: document.getElementById('modalRules'),
+        btnCloseRules: document.getElementById('btnCloseRules')
+      };
+
+      // Sync mode dropdown with current mode
+      const modeSelect = document.getElementById('selectBaccaratMode');
+      if (modeSelect) {
+        modeSelect.value = state.mode;
+        modeSelect.addEventListener('change', (e) => {
+          const newMode = e.target.value;
+          const url = new URL(window.location);
+          url.searchParams.set('mode', newMode);
+          window.location.href = url.toString();
+        });
+      }
+
+      // Render Card HTML
+      function renderCard(card, isThird = false) {
+        return `
+          <div class="playing-card ${card.color} ${isThird ? 'third-card' : ''}">
+            <div class="card-corner-top">
+              <span class="card-val">${card.rank}</span>
+              <span class="card-suit">${card.suit}</span>
+            </div>
+            <div class="card-center-suit">${card.suit}</div>
+            <div class="card-corner-bottom">
+              <span class="card-val">${card.rank}</span>
+              <span class="card-suit">${card.suit}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      function calcHandScore(cards) {
+        const sum = cards.reduce((acc, c) => acc + c.val, 0);
+        return sum % 10;
+      }
+
+      function updateUI() {
+        el.balanceVal.textContent = state.balance.toLocaleString();
+        localStorage.setItem('balance', state.balance);
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'UPDATE_BALANCE', balance: state.balance }, '*');
+          }
+        } catch (e) {}
+        const totalBet = Object.values(state.bets).reduce((a, b) => a + b, 0);
+        el.totalBetVal.textContent = totalBet.toLocaleString();
+
+        // Update Bet Spot Badges
+        for (const [key, val] of Object.entries(state.bets)) {
+          const badge = document.getElementById(`badge_${key}`);
+          if (badge) {
+            if (val > 0) {
+              badge.textContent = val.toLocaleString();
+              badge.classList.add('show');
+            } else {
+              badge.classList.remove('show');
+            }
+          }
+        }
+
+        el.btnDeal.disabled = state.isPlaying || totalBet === 0;
+        el.btnClearBet.disabled = state.isPlaying || totalBet === 0;
+        el.btnDoubleBet.disabled = state.isPlaying || totalBet === 0 || state.balance < totalBet;
+      }
+
+      // Chip Selection
+      document.querySelectorAll('.casino-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          sfx.chip();
+          document.querySelectorAll('.casino-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          state.selectedChip = parseInt(chip.dataset.value, 10);
+        });
+      });
+
+      // Bet Spot Clicks
+      document.querySelectorAll('.bet-spot').forEach(spot => {
+        spot.addEventListener('click', () => {
+          if (state.isPlaying) return;
+          const betType = spot.dataset.bet;
+          if (state.balance >= state.selectedChip) {
+            state.balance -= state.selectedChip;
+            state.bets[betType] += state.selectedChip;
+            sfx.chip();
+            updateUI();
+          } else {
+            alert('ยอดเงินคงเหลือไม่เพียงพอ');
+          }
+        });
+      });
+
+      // Clear Bets
+      el.btnClearBet.addEventListener('click', () => {
+        if (state.isPlaying) return;
+        const total = Object.values(state.bets).reduce((a, b) => a + b, 0);
+        state.balance += total;
+        for (const key in state.bets) state.bets[key] = 0;
+        sfx.chip();
+        updateUI();
+      });
+
+      // Double Bets
+      el.btnDoubleBet.addEventListener('click', () => {
+        if (state.isPlaying) return;
+        const total = Object.values(state.bets).reduce((a, b) => a + b, 0);
+        if (state.balance >= total) {
+          state.balance -= total;
+          for (const key in state.bets) state.bets[key] *= 2;
+          sfx.chip();
+          updateUI();
+        } else {
+          alert('ยอดเงินคงเหลือไม่พอสำหรับคูณสอง');
+        }
+      });
+
+      // Draw Card from Shoe
+      function drawCard() {
+        if (state.shoe.length < 15) state.shoe = createShoe(8);
+        return state.shoe.pop();
+      }
+
+      // Deal Round
+      el.btnDeal.addEventListener('click', async () => {
+        if (state.isPlaying) return;
+        const totalBet = Object.values(state.bets).reduce((a, b) => a + b, 0);
+        if (totalBet === 0) return;
+
+        state.isPlaying = true;
+        updateUI();
+        el.winAnnouncement.classList.remove('show');
+        el.playerSideBox.classList.remove('winner');
+        el.bankerSideBox.classList.remove('winner');
+        document.querySelectorAll('.bet-spot').forEach(s => s.classList.remove('winning-spot'));
+
+        // Reset visual cards
+        el.playerCards.innerHTML = '<div class="playing-card face-down"></div><div class="playing-card face-down"></div>';
+        el.bankerCards.innerHTML = '<div class="playing-card face-down"></div><div class="playing-card face-down"></div>';
+        el.playerScore.textContent = '0';
+        el.bankerScore.textContent = '0';
+
+        // Deal Initial 2 Cards each
+        let pHand = [drawCard(), drawCard()];
+        let bHand = [drawCard(), drawCard()];
+
+        // If Admin God Mode is active, override cards to guarantee outcome
+        if (state.adminForceResult === 'P') {
+          pHand = [{ rank: '9', val: 9, suit: '♠', color: 'black' }, { rank: 'K', val: 0, suit: '♥', color: 'red' }];
+          bHand = [{ rank: '5', val: 5, suit: '♦', color: 'red' }, { rank: 'Q', val: 0, suit: '♣', color: 'black' }];
+        } else if (state.adminForceResult === 'B') {
+          pHand = [{ rank: '6', val: 6, suit: '♦', color: 'red' }, { rank: '10', val: 0, suit: '♠', color: 'black' }];
+          bHand = [{ rank: '9', val: 9, suit: '♥', color: 'red' }, { rank: 'J', val: 0, suit: '♣', color: 'black' }];
+        } else if (state.adminForceResult === 'T') {
+          pHand = [{ rank: '8', val: 8, suit: '♠', color: 'black' }, { rank: 'K', val: 0, suit: '♦', color: 'red' }];
+          bHand = [{ rank: '8', val: 8, suit: '♣', color: 'black' }, { rank: 'Q', val: 0, suit: '♥', color: 'red' }];
+        } else if (state.adminForceResult === 'PAIR') {
+          pHand = [{ rank: '8', val: 8, suit: '♠', color: 'black' }, { rank: '8', val: 8, suit: '♥', color: 'red' }];
+          bHand = [{ rank: '7', val: 7, suit: '♦', color: 'red' }, { rank: 'J', val: 0, suit: '♣', color: 'black' }];
+        }
+
+        // Deal Animation Sequence
+        await new Promise(r => setTimeout(r, dealDelay));
+        sfx.card();
+        el.playerCards.innerHTML = renderCard(pHand[0]) + '<div class="playing-card face-down"></div>';
+        el.playerScore.textContent = pHand[0].val % 10;
+
+        await new Promise(r => setTimeout(r, dealDelay));
+        sfx.card();
+        el.bankerCards.innerHTML = renderCard(bHand[0]) + '<div class="playing-card face-down"></div>';
+        el.bankerScore.textContent = bHand[0].val % 10;
+
+        await new Promise(r => setTimeout(r, dealDelay));
+        sfx.card();
+        el.playerCards.innerHTML = renderCard(pHand[0]) + renderCard(pHand[1]);
+        const pScore1 = calcHandScore(pHand);
+        el.playerScore.textContent = pScore1;
+
+        await new Promise(r => setTimeout(r, dealDelay));
+        sfx.card();
+        el.bankerCards.innerHTML = renderCard(bHand[0]) + renderCard(bHand[1]);
+        const bScore1 = calcHandScore(bHand);
+        el.bankerScore.textContent = bScore1;
+
+        // Baccarat Third Card Rule Evaluation
+        let pScore = pScore1;
+        let bScore = bScore1;
+        let playerDrewThird = false;
+        let pThirdCard = null;
+
+        // Check Natural Win (8 or 9)
+        const isNatural = (pScore >= 8 || bScore >= 8);
+
+        if (!isNatural) {
+          // Player rules: Draw if 0-5, Stand if 6-7
+          if (pScore <= 5) {
+            await new Promise(r => setTimeout(r, 600));
+            sfx.flip();
+            playerDrewThird = true;
+            pThirdCard = drawCard();
+            pHand.push(pThirdCard);
+            el.playerCards.innerHTML += renderCard(pThirdCard, true);
+            pScore = calcHandScore(pHand);
+            el.playerScore.textContent = pScore;
+            el.playerScore.classList.add('bump');
+            setTimeout(() => el.playerScore.classList.remove('bump'), 300);
+          }
+
+          // Banker rules
+          let bankerDraws = false;
+          if (!playerDrewThird) {
+            // Player stood on 6 or 7
+            if (bScore <= 5) bankerDraws = true;
+          } else {
+            // Player drew a 3rd card
+            const pVal = pThirdCard.val;
+            if (bScore <= 2) bankerDraws = true;
+            else if (bScore === 3 && pVal !== 8) bankerDraws = true;
+            else if (bScore === 4 && [2, 3, 4, 5, 6, 7].includes(pVal)) bankerDraws = true;
+            else if (bScore === 5 && [4, 5, 6, 7].includes(pVal)) bankerDraws = true;
+            else if (bScore === 6 && [6, 7].includes(pVal)) bankerDraws = true;
+          }
+
+          if (bankerDraws) {
+            await new Promise(r => setTimeout(r, 600));
+            sfx.flip();
+            const bThirdCard = drawCard();
+            bHand.push(bThirdCard);
+            el.bankerCards.innerHTML += renderCard(bThirdCard, true);
+            bScore = calcHandScore(bHand);
+            el.bankerScore.textContent = bScore;
+            el.bankerScore.classList.add('bump');
+            setTimeout(() => el.bankerScore.classList.remove('bump'), 300);
+          }
+        }
+
+        // Evaluate Winner & Payouts
+        await new Promise(r => setTimeout(r, 500));
+        let result = 'T';
+        let payout = 0;
+        let winTitle = 'TIE (เสมอ)!';
+
+        if (pScore > bScore) {
+          result = 'P';
+          winTitle = '🔵 PLAYER WINS!';
+          el.playerSideBox.classList.add('winner');
+          document.querySelector('.spot-player').classList.add('winning-spot');
+          payout += state.bets.player * 2;
+        } else if (bScore > pScore) {
+          result = 'B';
+          winTitle = '🔴 BANKER WINS!';
+          el.bankerSideBox.classList.add('winner');
+          document.querySelector('.spot-banker').classList.add('winning-spot');
+          if (state.mode === 'nocommission') {
+            payout += (bScore === 6) ? (state.bets.banker * 1.5) : (state.bets.banker * 2);
+          } else {
+            payout += state.bets.banker * 1.95; // 5% commission
+          }
+        } else {
+          result = 'T';
+          winTitle = '🟢 TIE (เสมอ)!';
+          document.querySelector('.spot-tie').classList.add('winning-spot');
+          payout += state.bets.tie * 9; // 8:1 payout + original bet
+          payout += state.bets.player;  // push
+          payout += state.bets.banker;  // push
+        }
+
+        // Check Pairs (11:1)
+        const isPlayerPair = pHand[0].rank === pHand[1].rank;
+        const isBankerPair = bHand[0].rank === bHand[1].rank;
+
+        if (isPlayerPair) {
+          payout += state.bets.player_pair * 12;
+          document.querySelector('.spot-p-pair').classList.add('winning-spot');
+        }
+        if (isBankerPair) {
+          payout += state.bets.banker_pair * 12;
+          document.querySelector('.spot-b-pair').classList.add('winning-spot');
+        }
+
+        // Apply Balance
+        state.balance += payout;
+        localStorage.setItem('balance', state.balance);
+        sfx.win();
+
+        // Update Bead Road
+        state.history.push(result);
+        state.stats[result]++;
+        el.statP.textContent = state.stats.P;
+        el.statB.textContent = state.stats.B;
+        el.statT.textContent = state.stats.T;
+
+        const beadBall = document.createElement('div');
+        beadBall.className = `bead-ball ${result}`;
+        beadBall.textContent = result;
+        el.beadRoad.appendChild(beadBall);
+        el.beadRoad.scrollLeft = el.beadRoad.scrollWidth;
+
+        // Announcement
+        el.winTitleText.textContent = `${winTitle} (${pScore} ต่อ ${bScore})`;
+        el.winPayoutText.textContent = payout > 0 ? `ได้รับรางวัล +${payout.toLocaleString()} THB 💰` : 'ไม่ถูกรางวัลในรอบนี้';
+        el.winAnnouncement.classList.add('show');
+
+        // Reset Bets for next round
+        for (const k in state.bets) state.bets[k] = 0;
+        state.isPlaying = false;
+        updateUI();
+
+        setTimeout(() => {
+          el.winAnnouncement.classList.remove('show');
+        }, 3500);
+
+      });
+
+      // Sound Toggle
+      el.btnSoundToggle.addEventListener('click', () => {
+        sfx.isMuted = !sfx.isMuted;
+        el.btnSoundToggle.textContent = sfx.isMuted ? '🔇' : '🔊';
+        if (!sfx.isMuted) sfx.chip();
+      });
+
+      // Rules Modal
+      el.btnOpenRules.addEventListener('click', () => {
+        sfx.chip();
+        el.modalRules.classList.add('open');
+      });
+      el.btnCloseRules.addEventListener('click', () => {
+        sfx.chip();
+        el.modalRules.classList.remove('open');
+      });
+
+      // --- Admin Backoffice Top-Up System (PIN: 888) ---
+      const modalAdmin = document.getElementById('modalAdmin');
+      const btnCloseAdmin = document.getElementById('btnCloseAdmin');
+      const btnAdminTopup = document.getElementById('btnAdminTopup');
+      const badgeBalance = document.getElementById('badgeBalance');
+      const adminPinInput = document.getElementById('adminPinInput');
+      const btnAdminLogin = document.getElementById('btnAdminLogin');
+      const adminErrorMsg = document.getElementById('adminErrorMsg');
+      const adminSuccessMsg = document.getElementById('adminSuccessMsg');
+      const adminAuthSection = document.getElementById('adminAuthSection');
+      const adminPanelSection = document.getElementById('adminPanelSection');
+      const adminCurrentBal = document.getElementById('adminCurrentBal');
+      const customAmountInput = document.getElementById('customAmountInput');
+      const btnCustomTopup = document.getElementById('btnCustomTopup');
+      const btnResetBal = document.getElementById('btnResetBal');
+
+      let isAdminAuthenticated = false;
+
+      function openAdminModal() {
+        sfx.chip();
+        modalAdmin.classList.add('open');
+        adminSuccessMsg.textContent = '';
+        adminErrorMsg.textContent = '';
+        if (isAdminAuthenticated) {
+          adminAuthSection.style.display = 'none';
+          adminPanelSection.style.display = 'block';
+          adminCurrentBal.textContent = state.balance.toLocaleString();
+        } else {
+          adminAuthSection.style.display = 'block';
+          adminPanelSection.style.display = 'none';
+          adminPinInput.value = '';
+          setTimeout(() => adminPinInput.focus(), 150);
+        }
+      }
+
+      function closeAdminModal() {
+        sfx.chip();
+        modalAdmin.classList.remove('open');
+      }
+
+      btnAdminTopup.addEventListener('click', openAdminModal);
+      badgeBalance.addEventListener('click', openAdminModal);
+      btnCloseAdmin.addEventListener('click', closeAdminModal);
+
+      // Verify PIN (888)
+      function verifyAdminPin() {
+        const pin = adminPinInput.value.trim();
+        if (pin === '888') {
+          isAdminAuthenticated = true;
+          sfx.win();
+          adminErrorMsg.textContent = '';
+          adminAuthSection.style.display = 'none';
+          adminPanelSection.style.display = 'block';
+          adminCurrentBal.textContent = state.balance.toLocaleString();
+        } else {
+          sfx.tone(200, 'sawtooth', 0.15, 0.2);
+          adminErrorMsg.textContent = '❌ รหัสผ่านไม่ถูกต้อง! (เฉพาะแอดมินเท่านั้น)';
+          adminPinInput.value = '';
+          adminPinInput.focus();
+        }
+      }
+
+      btnAdminLogin.addEventListener('click', verifyAdminPin);
+      adminPinInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') verifyAdminPin();
+      });
+
+      // Quick Top-Up Buttons
+      document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const addAmount = parseInt(btn.dataset.add, 10);
+          state.balance += addAmount;
+          adminCurrentBal.textContent = state.balance.toLocaleString();
+          adminSuccessMsg.textContent = `✅ เติมเงินสำเร็จ +${addAmount.toLocaleString()} THB`;
+          sfx.win();
+          updateUI();
+        });
+      });
+
+      // Custom Top-Up
+      btnCustomTopup.addEventListener('click', () => {
+        const val = parseInt(customAmountInput.value, 10);
+        if (isNaN(val) || val <= 0) {
+          adminSuccessMsg.textContent = 'กรุณาระบุจำนวนเงินที่มากกว่า 0';
+          return;
+        }
+        state.balance += val;
+        adminCurrentBal.textContent = state.balance.toLocaleString();
+        adminSuccessMsg.textContent = `✅ เติมเงินสำเร็จ +${val.toLocaleString()} THB`;
+        customAmountInput.value = '';
+        sfx.win();
+        updateUI();
+      });
+
+      // Reset Balance
+      btnResetBal.addEventListener('click', () => {
+        state.balance = 50000;
+        adminCurrentBal.textContent = state.balance.toLocaleString();
+        adminSuccessMsg.textContent = '🔄 รีเซ็ตยอดเงินเป็น 50,000 THB เรียบร้อย';
+        sfx.chip();
+        updateUI();
+      });
+
+      // Storage event listener for live sync
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'balance' && e.newValue !== null) {
+          state.balance = Number(e.newValue);
+          el.balanceVal.textContent = state.balance.toLocaleString();
+          if (adminCurrentBal) adminCurrentBal.textContent = state.balance.toLocaleString();
+        }
+      });
+
+      // Polling for instant sync across iframes
+      setInterval(() => {
+        const val = Number(localStorage.getItem('balance'));
+        if (!isNaN(val) && val > 0 && val !== state.balance && !state.isPlaying) {
+          state.balance = val;
+          el.balanceVal.textContent = state.balance.toLocaleString();
+          if (adminCurrentBal) adminCurrentBal.textContent = state.balance.toLocaleString();
+        }
+      }, 400);
+
+      // God Mode Buttons
+      const godStatusText = document.getElementById('godStatusText');
+      document.querySelectorAll('.god-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.god-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const force = btn.dataset.force;
+          if (force === 'none') {
+            state.adminForceResult = null;
+            godStatusText.textContent = 'สถานะ: 🎲 สุ่มตามดวงปกติ';
+          } else {
+            state.adminForceResult = force;
+            godStatusText.textContent = `🎯 สถานะ: ล็อคผลรอบถัดไปเป็น [ ${btn.textContent.trim()} ]`;
+          }
+          sfx.chip();
+        });
+      });
+
+      // Ask Player & Ask Banker Buttons
+      const btnAskP = document.getElementById('btnAskP');
+      const btnAskB = document.getElementById('btnAskB');
+      let ghostTimer = null;
+
+      function previewBead(predicted) {
+        if (ghostTimer) clearTimeout(ghostTimer);
+        document.querySelectorAll('.bead-ball.ghost').forEach(b => b.remove());
+
+        const ghost = document.createElement('div');
+        ghost.className = `bead-ball ${predicted} ghost`;
+        ghost.textContent = predicted;
+        el.beadRoad.appendChild(ghost);
+        el.beadRoad.scrollLeft = el.beadRoad.scrollWidth;
+        sfx.chip();
+
+        ghostTimer = setTimeout(() => {
+          ghost.remove();
+        }, 2500);
+      }
+
+      if (btnAskP) btnAskP.addEventListener('click', () => previewBead('P'));
+      if (btnAskB) btnAskB.addEventListener('click', () => previewBead('B'));
+
+      // Initialize
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
